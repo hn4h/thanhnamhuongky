@@ -8,10 +8,10 @@ export const keoXiuChauModule: ProducerProductModule = {
   description: 'Kẹo lạc mạch nha truyền thống, phù hợp đóng gói quà biếu.',
   origin: 'Nam Định',
   theme: {
-    primary: '#6C3218',
-    accent: '#C98A27',
-    soft: '#F3E0C4',
-    background: '#FFF8EA',
+    primary: '#4A2D1E',
+    accent: '#C0965A',
+    soft: '#F3E4D2',
+    background: '#FCF6EC',
   },
   routes: {
     dashboard: '/producer/keo-xiu-chau/dashboard',

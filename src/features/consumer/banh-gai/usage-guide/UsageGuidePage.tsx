@@ -10,13 +10,13 @@ export function UsageGuidePage() {
           ['Bảo quản', 'Để nơi khô mát, tránh nắng trực tiếp sau khi mở hộp.'],
           ['Quà biếu', 'Phù hợp biếu gia đình, đối tác và khách phương xa.'],
         ].map(([title, text]) => (
-          <article key={title} className="rounded-lg border border-[#ead7a4] bg-white p-5 shadow-sm">
+          <article key={title} className="rounded-lg border border-[#E0C69B] bg-white p-5 shadow-sm">
             <h2 className="font-bold">{title}</h2>
-            <p className="mt-2 text-sm leading-6 text-[#7a5a3a]">{text}</p>
+            <p className="mt-2 text-sm leading-6 text-[#6F4B35]">{text}</p>
           </article>
         ))}
       </div>
-      <Link to="/" className="mt-5 inline-flex rounded-md bg-gold px-5 py-3 font-semibold text-[#2b1710]">
+      <Link to="/" className="mt-5 inline-flex rounded-md bg-gold px-5 py-3 font-semibold text-[#4A2D1E]">
         Hoàn tất
       </Link>
     </ConsumerShell>

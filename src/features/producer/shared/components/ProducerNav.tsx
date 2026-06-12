@@ -24,7 +24,7 @@ export function ProducerNav({ product }: ProducerNavProps) {
           to={product.routes[key]}
           className={({ isActive }) =>
             `whitespace-nowrap rounded-full border px-3 py-2 text-sm font-medium transition ${
-              isActive ? 'border-transparent text-white' : 'border-[#dfc98b] bg-white/70 text-[#6f4b2d] hover:border-gold'
+              isActive ? 'border-transparent text-white' : 'border-[#D7BB8D] bg-white/70 text-[#4A2D1E] hover:border-gold'
             }`
           }
           style={({ isActive }) => (isActive ? { background: product.theme.primary } : undefined)}

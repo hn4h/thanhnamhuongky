@@ -8,10 +8,10 @@ export const doiModule: ProducerProductModule = {
   description: 'Dòng đặc sản đóng gói cần kiểm soát chặt nhiệt độ bảo quản.',
   origin: 'Nam Định',
   theme: {
-    primary: '#4A261F',
-    accent: '#B67A32',
-    soft: '#EBD5C2',
-    background: '#F8EDE2',
+    primary: '#4A2D1E',
+    accent: '#C0965A',
+    soft: '#F3E4D2',
+    background: '#F7EBDD',
   },
   routes: {
     dashboard: '/producer/doi/dashboard',

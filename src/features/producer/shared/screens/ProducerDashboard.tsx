@@ -19,8 +19,8 @@ export function ProducerDashboard({ product }: ProducerDashboardProps) {
             <MetricCard key={metric.key} metric={metric} />
           ))}
         </div>
-        <div className="rounded-lg border border-[#ead7a4] bg-white p-5 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#8a6417]">Tóm tắt vận hành</p>
+        <div className="rounded-lg border border-[#E0C69B] bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#8A6238]">Tóm tắt vận hành</p>
           <h2 className="mt-3 text-xl font-bold">{product.shortName}</h2>
           <div className="mt-5 space-y-3">
             <div className="flex justify-between"><span>Lô đang theo dõi</span><strong>{product.data.batches.length}</strong></div>
@@ -34,13 +34,13 @@ export function ProducerDashboard({ product }: ProducerDashboardProps) {
         </div>
       </section>
 
-      <section className="mt-5 rounded-lg border border-[#ead7a4] bg-white p-5 shadow-sm">
+      <section className="mt-5 rounded-lg border border-[#E0C69B] bg-white p-5 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-bold">Cảnh báo mới nhất</h2>
           <StatusBadge tone={product.data.alerts[0]?.severity === 'high' ? 'critical' : 'warning'}>{product.data.alerts[0]?.severity === 'high' ? 'Ưu tiên cao' : 'Theo dõi'}</StatusBadge>
         </div>
         <p className="font-medium">{product.data.alerts[0]?.title}</p>
-        <p className="mt-1 text-sm text-[#7a5a3a]">{product.data.alerts[0]?.message}</p>
+        <p className="mt-1 text-sm text-[#6F4B35]">{product.data.alerts[0]?.message}</p>
       </section>
     </ProducerScreenShell>
   )

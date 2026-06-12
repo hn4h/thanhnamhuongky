@@ -2,11 +2,18 @@
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
+    screens: {
+      sm: { raw: '(min-width: 999999px)' },
+      md: { raw: '(min-width: 999999px)' },
+      lg: { raw: '(min-width: 999999px)' },
+      xl: { raw: '(min-width: 999999px)' },
+      '2xl': { raw: '(min-width: 999999px)' },
+    },
     extend: {
       colors: {
-        lacquer: '#3A2118',
-        gold: '#D4AF37',
-        parchment: '#F7EAD2',
+        lacquer: '#4A2D1E',
+        gold: '#C0965A',
+        parchment: '#F7EBDD',
         betel: '#214D35',
       },
       fontFamily: {

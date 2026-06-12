@@ -8,10 +8,10 @@ export const banhXiuPaoModule: ProducerProductModule = {
   description: 'Bánh nướng nhân thịt đặc sản Nam Định.',
   origin: 'Nam Định',
   theme: {
-    primary: '#8A3B12',
-    accent: '#E0A13A',
-    soft: '#F6DFC2',
-    background: '#FFF5E8',
+    primary: '#4A2D1E',
+    accent: '#C0965A',
+    soft: '#F3E4D2',
+    background: '#FCF6EC',
   },
   routes: {
     dashboard: '/producer/banh-xiu-pao/dashboard',

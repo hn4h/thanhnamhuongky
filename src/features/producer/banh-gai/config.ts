@@ -8,10 +8,10 @@ export const banhGaiModule: ProducerProductModule = {
   description: 'Dòng bánh truyền thống chủ lực của Thành Nam hương ký.',
   origin: 'Nam Định',
   theme: {
-    primary: '#3A2118',
-    accent: '#D4AF37',
-    soft: '#F2E1B8',
-    background: '#F7EAD2',
+    primary: '#4A2D1E',
+    accent: '#C0965A',
+    soft: '#E8D1AA',
+    background: '#F7EBDD',
   },
   routes: {
     dashboard: '/producer/banh-gai/dashboard',

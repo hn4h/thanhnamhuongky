@@ -13,7 +13,7 @@ type ProducerScreenShellProps = {
 export function ProducerScreenShell({ product, eyebrow, title, children }: ProducerScreenShellProps) {
   return (
     <AppFrame title={title} subtitle={`${eyebrow} · ${product.description}`}>
-      <Link to="/" className="mb-4 inline-flex text-sm font-medium text-[#8a6417] hover:text-lacquer">
+      <Link to="/" className="mb-4 inline-flex text-sm font-medium text-[#8A6238] hover:text-lacquer">
         Quay về chọn vai trò
       </Link>
       <ProducerNav product={product} />
