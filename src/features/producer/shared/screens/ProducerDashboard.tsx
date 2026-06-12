@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { MetricCard } from '../components/MetricCard'
 import { StatusBadge } from '../components/StatusBadge'
 import { ProducerScreenShell } from './ProducerScreenShell'
@@ -9,38 +9,47 @@ type ProducerDashboardProps = {
 }
 
 export function ProducerDashboard({ product }: ProducerDashboardProps) {
-  const readyCount = product.data.batches.filter((batch) => batch.status === 'ready').length
+  const latestAlert = product.data.alerts[0]
 
   return (
-    <ProducerScreenShell product={product} eyebrow={product.name} title={`Dashboard ${product.name}`}>
-      <section className="grid gap-4 lg:grid-cols-[1.3fr_0.8fr]">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {product.data.metrics.map((metric) => (
-            <MetricCard key={metric.key} metric={metric} />
-          ))}
+    <ProducerScreenShell product={product} eyebrow={product.name} title="Bảng Điều Khiển">
+      <section>
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <h2 className="shrink-0 text-[24px] font-black leading-tight text-[#150807]">Chỉ số cảm biến</h2>
+          <span className="max-w-[116px] text-right text-sm font-medium leading-tight text-[#7A665B]">Cập nhật 2 phút trước</span>
         </div>
-        <div className="rounded-lg border border-[#E0C69B] bg-white p-5 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#8A6238]">Tóm tắt vận hành</p>
-          <h2 className="mt-3 text-xl font-bold">{product.shortName}</h2>
-          <div className="mt-5 space-y-3">
-            <div className="flex justify-between"><span>Lô đang theo dõi</span><strong>{product.data.batches.length}</strong></div>
-            <div className="flex justify-between"><span>Lô sẵn sàng</span><strong>{readyCount}</strong></div>
-            <div className="flex justify-between"><span>Cảnh báo</span><strong>{product.data.alerts.length}</strong></div>
-            <div className="flex justify-between"><span>Thiết bị</span><strong>{product.data.devices.length}</strong></div>
+
+        {product.data.metrics.length > 0 ? (
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
+            {product.data.metrics.map((metric) => (
+              <MetricCard key={metric.key} metric={metric} />
+            ))}
           </div>
-          <Link to={product.routes.batches} className="mt-6 inline-flex rounded-md px-4 py-2 text-sm font-semibold text-white" style={{ background: product.theme.primary }}>
-            Xem lô sản xuất
-          </Link>
-        </div>
+        ) : (
+          <div className="rounded-[22px] border border-gold-100 bg-white p-5 text-sm text-lacquer-700 shadow-parchment">
+            Chưa có chỉ số cảm biến.
+          </div>
+        )}
       </section>
 
-      <section className="mt-5 rounded-lg border border-[#E0C69B] bg-white p-5 shadow-sm">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-bold">Cảnh báo mới nhất</h2>
-          <StatusBadge tone={product.data.alerts[0]?.severity === 'high' ? 'critical' : 'warning'}>{product.data.alerts[0]?.severity === 'high' ? 'Ưu tiên cao' : 'Theo dõi'}</StatusBadge>
+      <section className="mt-6 rounded-[24px] border border-[#E6D4C4] bg-white p-5 shadow-[0_12px_30px_rgba(59,24,10,0.08)]">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-start gap-3">
+            <span className={`mt-0.5 grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${latestAlert ? 'bg-[#FFF3E3] text-[#C47D18]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
+              {latestAlert ? <AlertTriangle size={23} /> : <CheckCircle2 size={23} />}
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-[0.12em] text-[#8A6238]">Trung tâm cảnh báo</p>
+              <h2 className="mt-1 text-lg font-black leading-tight text-[#150807]">{latestAlert?.title ?? 'Không có cảnh báo mới'}</h2>
+            </div>
+          </div>
+          <StatusBadge tone={latestAlert?.severity === 'high' ? 'critical' : latestAlert?.severity === 'medium' ? 'warning' : 'good'}>
+            {latestAlert ? (latestAlert.severity === 'high' ? 'Khẩn cấp' : 'Theo dõi') : 'Tốt'}
+          </StatusBadge>
         </div>
-        <p className="font-medium">{product.data.alerts[0]?.title}</p>
-        <p className="mt-1 text-sm text-[#6F4B35]">{product.data.alerts[0]?.message}</p>
+        <p className="mt-4 text-sm leading-6 text-[#6F4B35]">
+          {latestAlert?.message ?? 'Hệ thống chưa ghi nhận cảnh báo vượt ngưỡng trong ca hiện tại.'}
+        </p>
       </section>
     </ProducerScreenShell>
   )

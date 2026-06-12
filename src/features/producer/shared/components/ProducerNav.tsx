@@ -1,14 +1,13 @@
+import { CircleUserRound, Layers3, LayoutGrid, Map, TrendingUp } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import type { ProducerProductModule } from '../types'
 
 const items = [
-  ['dashboard', 'Tổng quan'],
-  ['batches', 'Lô sản xuất'],
-  ['productionMap', 'Quy trình'],
-  ['alerts', 'Cảnh báo'],
-  ['aiInsights', 'AI'],
-  ['devices', 'Thiết bị'],
-  ['qrManagement', 'QR'],
+  ['dashboard', 'Bảng Điều Khiển', LayoutGrid],
+  ['productionMap', 'Sơ Đồ', Map],
+  ['devices', 'Kho Lạnh', Layers3],
+  ['aiInsights', 'Dự Báo', TrendingUp],
+  ['qrManagement', 'Hồ Sơ', CircleUserRound],
 ] as const
 
 type ProducerNavProps = {
@@ -17,19 +16,24 @@ type ProducerNavProps = {
 
 export function ProducerNav({ product }: ProducerNavProps) {
   return (
-    <nav className="mb-5 flex gap-2 overflow-x-auto pb-1">
-      {items.map(([key, label]) => (
+    <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto grid w-full max-w-[430px] grid-cols-5 overflow-hidden border-t border-gold-400/20 bg-[#130607] px-1 pb-0 pt-3 shadow-[0_-12px_30px_rgba(19,6,7,0.24)]">
+      {items.map(([key, label, Icon]) => (
         <NavLink
           key={key}
           to={product.routes[key]}
           className={({ isActive }) =>
-            `whitespace-nowrap rounded-full border px-3 py-2 text-sm font-medium transition ${
-              isActive ? 'border-transparent text-white' : 'border-[#D7BB8D] bg-white/70 text-[#4A2D1E] hover:border-gold'
+            `relative flex min-h-[58px] min-w-0 flex-col items-center justify-start gap-1 rounded-lg px-0.5 text-center text-[10px] font-black leading-tight tracking-normal transition ${
+              isActive ? 'text-[#D9BC45]' : 'text-[#817273] hover:text-parchment-200'
             }`
           }
-          style={({ isActive }) => (isActive ? { background: product.theme.primary } : undefined)}
         >
-          {label}
+          {({ isActive }) => (
+            <>
+              {isActive && <span className="absolute -top-3 h-1 w-16 rounded-full bg-[#D9BC45]" />}
+              <Icon size={25} strokeWidth={2.4} />
+              <span className="line-clamp-2">{label}</span>
+            </>
+          )}
         </NavLink>
       ))}
     </nav>
