@@ -9,6 +9,7 @@ export type ProducerMetric = {
   unit?: string
   type: MetricType
   status: 'good' | 'warning' | 'critical'
+  aiRecommendation?: string
 }
 
 export type ProducerBatch = {
@@ -82,6 +83,7 @@ export type ProducerProductConfig = {
     aiInsights: string
     devices: string
     qrManagement: string
+    profile: string
   }
   overrides?: {
     DashboardHero?: ComponentType<{ product: ProducerProductConfig; data: ProducerProductData }>

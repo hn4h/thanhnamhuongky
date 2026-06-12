@@ -1,4 +1,5 @@
 import { Bell, CloudSun } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { AppFrame } from '../../../../shared/components/layout/AppFrame'
 import { ProducerNav } from '../components/ProducerNav'
 import type { ProducerProductModule } from '../types'
@@ -39,14 +40,18 @@ export function ProducerScreenShell({ product, eyebrow, title, children, hideSum
               <button type="button" aria-label="Điều kiện môi trường" className="grid h-11 w-11 place-items-center rounded-full bg-white/12 text-[#D6B947] shadow-inner">
                 <CloudSun size={22} strokeWidth={2.2} />
               </button>
-              <button type="button" aria-label={`${alertCount} cảnh báo`} className="relative grid h-11 w-11 place-items-center rounded-full bg-white/12 text-[#D6B947] shadow-inner">
+              <Link 
+                to={product.routes.alerts} 
+                aria-label={`${alertCount} cảnh báo`} 
+                className="relative grid h-11 w-11 place-items-center rounded-full bg-white/12 text-[#D6B947] shadow-inner transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+              >
                 <Bell size={22} strokeWidth={2.2} />
                 {alertCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 grid h-6 min-w-6 place-items-center rounded-full bg-[#E64A35] px-1.5 text-xs font-black text-white">
+                  <span className="absolute -right-0.5 -top-0.5 grid h-6 min-w-6 place-items-center rounded-full bg-[#E64A35] px-1.5 text-xs font-black text-white animate-pulse">
                     {alertCount}
                   </span>
                 )}
-              </button>
+              </Link>
             </div>
           </div>
 

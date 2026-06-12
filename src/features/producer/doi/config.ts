@@ -21,6 +21,7 @@ export const doiModule: ProducerProductModule = {
     aiInsights: '/producer/doi/ai-insights',
     devices: '/producer/doi/devices',
     qrManagement: '/producer/doi/qr-management',
+    profile: '/producer/doi/profile',
   },
   data: doiData,
 }

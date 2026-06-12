@@ -2,10 +2,60 @@ import type { ProducerProductData } from '../../shared/types'
 
 export const banhGaiData: ProducerProductData = {
   metrics: [
-    { key: 'steamTemp', label: 'Nhiệt độ hấp', value: '96', unit: '°C', type: 'temperature', status: 'good' },
-    { key: 'storageHumidity', label: 'Độ ẩm bảo quản', value: '58', unit: '%', type: 'humidity', status: 'warning' },
-    { key: 'steamPressure', label: 'Áp suất hấp', value: '1.2', unit: 'bar', type: 'pressure', status: 'good' },
-    { key: 'quality', label: 'Điểm chất lượng AI', value: '94', unit: '/100', type: 'quality', status: 'good' },
+    { 
+      key: 'prepAreaTemp', 
+      label: 'Nhiệt độ khu vực làm bánh', 
+      value: '26', 
+      unit: '°C', 
+      type: 'temperature', 
+      status: 'good',
+      aiRecommendation: 'Nhiệt độ phòng làm bánh tối ưu, đảm bảo độ dính của lá gai và bột.'
+    },
+    { 
+      key: 'prepAreaHumidity', 
+      label: 'Độ ẩm môi trường làm bánh', 
+      value: '55', 
+      unit: '%', 
+      type: 'humidity', 
+      status: 'good',
+      aiRecommendation: 'Độ ẩm đạt chuẩn, giúp vỏ bánh không bị khô khi nhào nặn.'
+    },
+    { 
+      key: 'steamerTemp', 
+      label: 'Nhiệt độ lò hấp', 
+      value: '98', 
+      unit: '°C', 
+      type: 'temperature', 
+      status: 'good',
+      aiRecommendation: 'Nhiệt độ lò hấp đạt chuẩn chín đều bánh gai. Tiếp tục duy trì.'
+    },
+    { 
+      key: 'steamerHumidity', 
+      label: 'Độ ẩm trong lò hấp', 
+      value: '96', 
+      unit: '%', 
+      type: 'humidity', 
+      status: 'good',
+      aiRecommendation: 'Độ ẩm lò hấp lý tưởng giúp tăng độ dẫn nhiệt và làm bánh dẻo ngon.'
+    },
+    { 
+      key: 'steamerPressure', 
+      label: 'Áp suất lồng hấp', 
+      value: '1.2', 
+      unit: 'bar', 
+      type: 'pressure', 
+      status: 'good',
+      aiRecommendation: 'Áp suất an toàn. Giám sát kỹ van xả tránh nguy cơ nổ lồng hấp khi vượt 1.8 bar.'
+    },
+    { 
+      key: 'steamingTime', 
+      label: 'Thời gian đang hấp bánh', 
+      value: '45', 
+      unit: 'phút', 
+      type: 'time', 
+      status: 'good',
+      aiRecommendation: 'Thời gian hấp đạt 45/60 phút. Mẻ bánh gai sẽ sẵn sàng xuất xưởng sau 15 phút.'
+    },
   ],
   batches: [
     { id: 'BG-0626-01', name: 'Bánh gai hộp quà sen vàng', status: 'ready', startedAt: '08/06/2026', expectedAt: '11/06/2026', quantity: '480 hộp', qualityScore: 94, notes: 'Mẻ đạt độ dẻo và mùi lá gai ổn định.' },

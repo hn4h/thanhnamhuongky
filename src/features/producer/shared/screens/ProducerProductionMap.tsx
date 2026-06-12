@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ArrowLeft, Boxes, Droplets, Gauge, Snowflake, Thermometer, Trophy, Wind } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, Boxes, Droplets, Gauge, Snowflake, Thermometer, Trophy, Wind } from 'lucide-react'
 import { ProducerNav } from '../components/ProducerNav'
 import { ProducerScreenShell } from './ProducerScreenShell'
 import type { ProducerProductModule } from '../types'
@@ -34,16 +34,16 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
 
   return (
     <ProducerScreenShell product={product} eyebrow={product.name} title="Sơ Đồ" hideSummary>
-      <section className="rounded-[999px] border border-[#E6D4C4] bg-white p-1.5 shadow-[0_12px_30px_rgba(59,24,10,0.08)]">
+      <section className="rounded-[999px] border border-[#EFE4DC] bg-white p-1.5 shadow-[0_12px_28px_rgba(57,28,12,0.06)]">
         <div className="grid grid-cols-2 gap-1 rounded-[999px]">
           <button
             type="button"
             onClick={() => setActiveTab('steam')}
-            className="rounded-[999px] px-3 py-3 text-sm font-black transition"
+            className="rounded-[999px] px-3 py-3 text-sm font-black transition-all duration-300 hover:scale-[1.01]"
             style={{
-              background: isSteam ? '#8B2F23' : 'transparent',
-              color: isSteam ? '#FFFFFF' : '#756A63',
-              boxShadow: isSteam ? '0 8px 18px rgba(139,47,35,0.24)' : 'none',
+              background: isSteam ? '#721A18' : 'transparent',
+              color: isSteam ? '#FFFFFF' : '#806A5B',
+              boxShadow: isSteam ? '0 6px 14px rgba(114,26,24,0.2)' : 'none',
             }}
           >
             Lồng hấp
@@ -51,11 +51,11 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
           <button
             type="button"
             onClick={() => setActiveTab('storage')}
-            className="rounded-[999px] px-3 py-3 text-sm font-black transition"
+            className="rounded-[999px] px-3 py-3 text-sm font-black transition-all duration-300 hover:scale-[1.01]"
             style={{
-              background: !isSteam ? '#8B2F23' : 'transparent',
-              color: !isSteam ? '#FFFFFF' : '#756A63',
-              boxShadow: !isSteam ? '0 8px 18px rgba(139,47,35,0.24)' : 'none',
+              background: !isSteam ? '#721A18' : 'transparent',
+              color: !isSteam ? '#FFFFFF' : '#806A5B',
+              boxShadow: !isSteam ? '0 6px 14px rgba(114,26,24,0.2)' : 'none',
             }}
           >
             Kho bảo quản
@@ -106,7 +106,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
                         className="h-full rounded-full"
                         style={{
                           width: `${chamber.progress}%`,
-                          background: isWarning ? '#D9553F' : '#8B2F23',
+                          background: isWarning ? '#B23B2F' : '#721A18',
                         }}
                       />
                     </div>
@@ -182,34 +182,40 @@ function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDetailProp
 
   return (
     <AppFrameContent>
-      <header className="relative overflow-hidden bg-gradient-to-br from-[#3A0611] via-[#721A18] to-[#8B321F] px-5 pb-8 pt-5 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_0%,rgba(255,255,255,0.13),transparent_28%)]" />
-        <div className="relative">
+      <header className="relative overflow-hidden bg-gradient-to-br from-[#3A0611] via-[#721A18] to-[#8B321F] px-4 pb-6 pt-10 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.13),transparent_28%)]" />
+        <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full bg-[#F59E0B]/5 blur-xl pointer-events-none" />
+        
+        <div className="relative flex items-center justify-between">
           <button
             type="button"
             onClick={onBack}
-            className="mb-8 inline-flex items-center gap-3 text-[26px] font-black leading-none text-[#C8B0AE]"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-white/12 text-white/80 transition-transform active:scale-90"
             aria-label="Quay lại danh sách lồng hấp"
           >
-            <ArrowLeft size={28} strokeWidth={2.2} />
-            <span>Lồng hấp</span>
+            <ChevronLeft size={20} />
           </button>
+          <span className="text-[12px] font-medium tracking-wider text-[#FDF4E7]/55 uppercase">Lồng hấp</span>
+          <div className="w-9 h-9" /> {/* Spacer */}
+        </div>
 
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#A66B34] bg-[#75502A]/70 px-4 py-2 text-[24px] font-black text-[#E5BE45]">
-            <Trophy size={22} strokeWidth={2.2} />
+        <div className="relative mt-4 flex items-center justify-between">
+          <h1 className="text-[22px] font-extrabold tracking-tight text-[#FDF4E7]">{chamber.batch}</h1>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#F1C932]/25 text-[#F1C932] border border-[#F1C932]/20">
             Cao cấp
           </span>
+        </div>
 
-          <h1 className="mt-6 text-[35px] font-black leading-tight tracking-normal text-white">{chamber.batch}</h1>
-          <p className="mt-3 text-[24px] font-bold leading-tight text-[#CDB4B2]">B-2024-03 · {chamber.id} · Bánh gai Thành Nam</p>
+        <p className="relative mt-1 text-[12px] font-bold text-[#C9AAA5]">
+          B-2026-03 · {chamber.id} · Bánh gai Thành Nam
+        </p>
 
-          <div className="mt-8 flex items-center justify-between gap-5">
-            <p className="text-[22px] font-black text-[#D6BDBC]">{chamber.progress}% quy trình hấp</p>
-            <strong className="text-[22px] font-black text-[#E2CC47]">{chamber.remainingMinutes} phút</strong>
-          </div>
-          <div className="mt-4 h-3 overflow-hidden rounded-full bg-white/18">
-            <div className="h-full rounded-full bg-gradient-to-r from-[#DFC94F] to-[#B7672F]" style={{ width: `${chamber.progress}%` }} />
-          </div>
+        <div className="relative mt-5 flex items-center justify-between gap-5 text-xs font-bold text-[#D6BDBC]">
+          <span>{chamber.progress}% quy trình hấp</span>
+          <strong className="text-[#E2CC47]">{chamber.remainingMinutes} phút</strong>
+        </div>
+        <div className="relative mt-2 h-2 overflow-hidden rounded-full bg-white/18">
+          <div className="h-full rounded-full bg-gradient-to-r from-[#F1C932] to-[#B7672F]" style={{ width: `${chamber.progress}%` }} />
         </div>
       </header>
 
@@ -258,19 +264,19 @@ type DetailMetricProps = {
 }
 
 const metricTone = {
-  orange: 'bg-[#FFF0EC] text-[#E45B2B]',
-  blue: 'bg-[#F0F3FF] text-[#5A81E8]',
-  gold: 'bg-[#FBF7EC] text-[#CEAC39]',
+  orange: 'bg-[#FCE8E3] text-[#B23B2F]',
+  blue: 'bg-[#EDF9F0] text-[#4A9F57]',
+  gold: 'bg-[#FFF6E7] text-[#C78116]',
 }
 
 function DetailMetric({ icon: Icon, tone, value, label }: DetailMetricProps) {
   return (
-    <div className="min-w-0 rounded-[26px] border border-[#E8E5E0] bg-white px-2 py-6 text-center shadow-[0_2px_12px_rgba(26,10,0,0.04)]">
-      <span className={`mx-auto grid h-16 w-16 place-items-center rounded-full ${metricTone[tone]}`}>
-        <Icon size={30} strokeWidth={2.2} />
+    <div className="min-w-0 rounded-[22px] border border-[#EFE4DC] bg-white px-2 py-5 text-center shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300 hover:scale-[1.02]">
+      <span className={`mx-auto grid h-12 w-12 place-items-center rounded-2xl ${metricTone[tone]}`}>
+        <Icon size={22} strokeWidth={2.3} />
       </span>
-      <strong className="mt-5 block text-[22px] font-black leading-none text-[#150807]">{value}</strong>
-      <p className="mt-3 text-[18px] font-bold leading-tight text-[#806A5B]">{label}</p>
+      <strong className="mt-4 block text-[18px] font-extrabold leading-none text-[#150807]">{value}</strong>
+      <p className="mt-2 text-xs font-bold text-[#806A5B]">{label}</p>
     </div>
   )
 }
@@ -306,14 +312,14 @@ function TrendChart({ data }: TrendChartProps) {
   const padding = { top: 38, right: 18, bottom: 52, left: 54 }
   const plotWidth = width - padding.left - padding.right
   const plotHeight = height - padding.top - padding.bottom
-
+ 
   const xFor = (index: number) => padding.left + (plotWidth * index) / (data.length - 1)
   const yFor = (value: number, min: number, max: number) => padding.top + plotHeight - ((value - min) / (max - min)) * plotHeight
   const pointsFor = (key: keyof Omit<TrendPoint, 'minute'>, min: number, max: number) =>
     data.map((point, index) => `${xFor(index)},${yFor(point[key], min, max)}`).join(' ')
-
+ 
   return (
-    <div className="rounded-[28px] bg-white p-4 shadow-[0_14px_30px_rgba(57,28,12,0.08)]">
+    <div className="rounded-[22px] border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300 hover:scale-[1.01]">
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Biểu đồ nhiệt độ, độ ẩm và áp suất trong 15 phút gần nhất" className="h-auto w-full">
         {[0, 25, 50, 75, 100].map((tick) => {
           const y = yFor(tick, 0, 100)
@@ -326,7 +332,7 @@ function TrendChart({ data }: TrendChartProps) {
             </g>
           )
         })}
-
+ 
         {data.map((point, index) => {
           const x = xFor(index)
           return (
@@ -338,27 +344,27 @@ function TrendChart({ data }: TrendChartProps) {
             </g>
           )
         })}
-
+ 
         <line x1={padding.left} x2={padding.left} y1={padding.top} y2={padding.top + plotHeight} stroke="#6D625C" strokeWidth="2" />
         <line x1={padding.left} x2={width - padding.right} y1={padding.top + plotHeight} y2={padding.top + plotHeight} stroke="#6D625C" strokeWidth="2" />
-
-        <polyline fill="none" points={pointsFor('humidity', 0, 100)} stroke="#5B7FE8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
-        <polyline fill="none" points={pointsFor('temperature', 70, 110)} stroke="#D96635" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
-        <polyline fill="none" points={pointsFor('pressure', 0, 2)} stroke="#C9A33B" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
-
+ 
+        <polyline fill="none" points={pointsFor('humidity', 0, 100)} stroke="#4A9F57" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
+        <polyline fill="none" points={pointsFor('temperature', 70, 110)} stroke="#B23B2F" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
+        <polyline fill="none" points={pointsFor('pressure', 0, 2)} stroke="#C78116" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
+ 
         {data.map((point, index) => (
           <g key={`dots-${point.minute}`}>
-            <circle cx={xFor(index)} cy={yFor(point.humidity, 0, 100)} r="10" fill="#5B7FE8" />
-            <circle cx={xFor(index)} cy={yFor(point.temperature, 70, 110)} r="10" fill="#D96635" />
-            <circle cx={xFor(index)} cy={yFor(point.pressure, 0, 2)} r="10" fill="#C9A33B" />
+            <circle cx={xFor(index)} cy={yFor(point.humidity, 0, 100)} r="10" fill="#4A9F57" />
+            <circle cx={xFor(index)} cy={yFor(point.temperature, 70, 110)} r="10" fill="#B23B2F" />
+            <circle cx={xFor(index)} cy={yFor(point.pressure, 0, 2)} r="10" fill="#C78116" />
           </g>
         ))}
       </svg>
-
+ 
       <div className="mt-2 grid grid-cols-3 gap-2 text-center text-[12px] font-black text-[#6F4B35]">
-        <LegendItem color="#D96635" label="Nhiệt độ" />
-        <LegendItem color="#5B7FE8" label="Độ ẩm" />
-        <LegendItem color="#C9A33B" label="Áp suất" />
+        <LegendItem color="#B23B2F" label="Nhiệt độ" />
+        <LegendItem color="#4A9F57" label="Độ ẩm" />
+        <LegendItem color="#C78116" label="Áp suất" />
       </div>
     </div>
   )
@@ -387,9 +393,9 @@ type SensorMiniProps = {
 function SensorMini({ icon: Icon, label, value }: SensorMiniProps) {
   return (
     <div className="rounded-2xl bg-[#FAF2E8] px-2 py-3">
-      <Icon className="mx-auto text-[#8B2F23]" size={18} strokeWidth={2.4} />
+      <Icon className="mx-auto text-[#721A18]" size={18} strokeWidth={2.4} />
       <p className="mt-1 text-[11px] font-bold text-[#8A7464]">{label}</p>
-      <p className="mt-0.5 text-sm font-black text-[#150807]">{value}</p>
+      <p className="mt-0.5 text-sm font-extrabold text-[#150807]">{value}</p>
     </div>
   )
 }

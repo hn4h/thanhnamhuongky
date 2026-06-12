@@ -8,6 +8,7 @@ import { ProducerDashboard } from './screens/ProducerDashboard'
 import { ProducerDevices } from './screens/ProducerDevices'
 import { ProducerProductionMap } from './screens/ProducerProductionMap'
 import { ProducerQrManagement } from './screens/ProducerQrManagement'
+import { ProducerProfile } from './screens/ProducerProfile'
 import type { ProducerProductModule } from './types'
 
 export function createProducerRoutes(products: ProducerProductModule[]): RouteObject[] {
@@ -26,6 +27,7 @@ export function createProducerRoutes(products: ProducerProductModule[]): RouteOb
           { path: 'ai-insights', element: <ProducerAiInsights product={product} /> },
           { path: 'devices', element: <ProducerDevices product={product} /> },
           { path: 'qr-management', element: <ProducerQrManagement product={product} /> },
+          { path: 'profile', element: <ProducerProfile product={product} /> },
         ],
       })),
     },

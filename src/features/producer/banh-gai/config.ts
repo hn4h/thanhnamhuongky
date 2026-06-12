@@ -21,6 +21,7 @@ export const banhGaiModule: ProducerProductModule = {
     aiInsights: '/producer/banh-gai/ai-insights',
     devices: '/producer/banh-gai/devices',
     qrManagement: '/producer/banh-gai/qr-management',
+    profile: '/producer/banh-gai/profile',
   },
   data: banhGaiData,
 }

@@ -72,7 +72,7 @@ export function MetricCard({ metric }: MetricCardProps) {
 
       <div className="border-t border-[#EFE4DC] bg-gradient-to-r from-white to-[#FFFBF7] px-4 py-3 text-sm font-medium leading-5 text-[#3A0A04]">
         <span className="mr-2 inline-flex rounded-md bg-[#9A3529] px-2 py-1 text-xs font-black text-white">AI</span>
-        {status.ai}
+        {metric.aiRecommendation ?? status.ai}
       </div>
     </article>
   )

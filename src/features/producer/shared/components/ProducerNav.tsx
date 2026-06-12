@@ -7,7 +7,7 @@ const items = [
   ['productionMap', 'Sơ Đồ', Map],
   ['devices', 'Kho Lạnh', Layers3],
   ['aiInsights', 'Dự Báo', TrendingUp],
-  ['qrManagement', 'Hồ Sơ', CircleUserRound],
+  ['profile', 'Hồ Sơ', CircleUserRound],
 ] as const
 
 type ProducerNavProps = {

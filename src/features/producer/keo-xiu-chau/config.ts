@@ -21,6 +21,7 @@ export const keoXiuChauModule: ProducerProductModule = {
     aiInsights: '/producer/keo-xiu-chau/ai-insights',
     devices: '/producer/keo-xiu-chau/devices',
     qrManagement: '/producer/keo-xiu-chau/qr-management',
+    profile: '/producer/keo-xiu-chau/profile',
   },
   data: keoXiuChauData,
 }

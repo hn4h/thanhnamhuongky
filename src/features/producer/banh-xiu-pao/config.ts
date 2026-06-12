@@ -21,6 +21,7 @@ export const banhXiuPaoModule: ProducerProductModule = {
     aiInsights: '/producer/banh-xiu-pao/ai-insights',
     devices: '/producer/banh-xiu-pao/devices',
     qrManagement: '/producer/banh-xiu-pao/qr-management',
+    profile: '/producer/banh-xiu-pao/profile',
   },
   data: banhXiuPaoData,
 }
