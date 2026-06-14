@@ -340,7 +340,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
             {/* Actual line (Solid) */}
             <polyline fill="none" points={actualPath} stroke="#214D35" strokeLinecap="round" strokeLinejoin="round" strokeWidth="6" />
 
-            {/* Forecast line (Dashed) */}
+            {/* Forecast line (Solid) */}
             <path 
               d={`M ${forecastPath}`} 
               fill="none" 
@@ -348,7 +348,6 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
               strokeLinecap="round" 
               strokeLinejoin="round" 
               strokeWidth="6" 
-              strokeDasharray="12 8" 
             />
 
             {/* Data point circle markers */}
@@ -397,11 +396,11 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
         {/* Legend */}
         <div className="mt-4 flex justify-center gap-5 text-center text-xs font-black text-[#6F4B35]">
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-6 rounded-full bg-[#214D35]" />
+            <span className="h-1 w-6 bg-transparent border-t-2 border-solid border-[#214D35]" />
             Thực tế (N1-7)
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-6 rounded-full border border-dashed border-[#C78116] bg-[#C78116]/30" />
+            <span className="h-1 w-6 bg-transparent border-t-2 border-solid border-[#C78116]" />
             Dự báo AI (N8-12)
           </span>
           <span className="inline-flex items-center gap-1.5 text-[#B23B2F]">
