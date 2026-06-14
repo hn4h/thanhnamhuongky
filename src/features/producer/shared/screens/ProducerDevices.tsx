@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { ChevronLeft, Droplets, Gauge, Snowflake, Thermometer, Wind } from 'lucide-react'
+import { ChevronLeft, Droplets, Gauge, Snowflake, Thermometer, Wind, AlertTriangle } from 'lucide-react'
 import { ProducerScreenShell } from './ProducerScreenShell'
 import { coldRooms, steamChambers, SteamChamberDetail, SensorMini } from './ProducerProductionMap'
 import { ProducerNav } from '../components/ProducerNav'
@@ -38,7 +38,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
               : 'text-[#806A5B] hover:text-[#721A18]'
           }`}
         >
-          <span>Lồng hấp</span>
+          <span>Lồng hấp công nghiệp</span>
           <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
             activeTab === 'steamer' ? 'bg-white/20 text-white' : 'bg-[#EFE4DC] text-[#721A18]'
           }`}>
@@ -60,7 +60,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
               : 'text-[#806A5B] hover:text-[#721A18]'
           }`}
         >
-          <span>Kho bảo quản</span>
+          <span>Tủ lạnh công nghiệp</span>
           <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
             activeTab === 'storage' ? 'bg-white/20 text-white' : 'bg-[#EFE4DC] text-[#721A18]'
           }`}>
@@ -80,7 +80,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
         <section className="space-y-4">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold text-[#806A5B]">
-              Theo dõi nhiệt độ, độ ẩm, áp suất và tiến độ từng lồng.
+              Theo dõi nhiệt độ, độ ẩm, áp suất và tiến độ từng lồng hấp công nghiệp.
             </p>
             {hasSteamerWarning && (
               <span className="rounded-full bg-[#FCE8E3] px-2 py-0.5 text-[10px] font-black text-[#B23B2F] border border-[#EAA18F]">
@@ -146,7 +146,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
         <section className="space-y-4">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold text-[#806A5B]">
-              Theo dõi VOC, nhiệt độ và độ ẩm nguyên liệu.
+              Theo dõi VOC, nhiệt độ và độ ẩm nguyên liệu trong tủ lạnh công nghiệp.
             </p>
             {hasStorageWarning && (
               <span className="rounded-full bg-[#FFF6E7] px-2 py-0.5 text-[10px] font-black text-[#C78116] border border-[#EAA18F]">
@@ -206,6 +206,17 @@ type ColdRoomDetailProps = {
 
 function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
   const vocData = useMemo(() => {
+    if (room.id === 'Tủ 1') {
+      return [
+        { day: 1, value: 25 },
+        { day: 2, value: 27 },
+        { day: 3, value: 32 },
+        { day: 4, value: 34 },
+        { day: 5, value: 40 },
+        { day: 6, value: 47 },
+        { day: 7, value: 58 },
+      ]
+    }
     // Generate 7 days of historical VOC data ending at room.voc
     return [
       { day: 1, value: Math.round(room.voc * 0.72) },
@@ -231,11 +242,11 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
               type="button"
               onClick={onBack}
               className="flex items-center justify-center w-9 h-9 rounded-full bg-white/12 text-white/80 transition-transform active:scale-90"
-              aria-label="Quay lại danh sách kho bảo quản"
+              aria-label="Quay lại danh sách tủ lạnh công nghiệp"
             >
               <ChevronLeft size={20} />
             </button>
-            <span className="text-[12px] font-medium tracking-wider text-[#E2ECF8]/60 uppercase">Kho bảo quản</span>
+            <span className="text-[12px] font-medium tracking-wider text-[#E2ECF8]/60 uppercase">Tủ lạnh công nghiệp</span>
             <div className="w-9 h-9" /> {/* Spacer */}
           </div>
 
@@ -261,6 +272,20 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
         </header>
 
         <main className="px-4 pt-7">
+          {room.status === 'VOC tăng' && (
+            <div className="mb-6 rounded-[20px] border border-[#EAA18F] bg-[#FFF6F4] p-4 shadow-[0_8px_20px_rgba(230,74,53,0.06)] flex items-start gap-3">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#FCE8E3] text-[#B23B2F]">
+                <AlertTriangle size={20} strokeWidth={2.3} />
+              </span>
+              <div>
+                <h4 className="text-sm font-black text-[#721A18]">Cảnh báo: Bảo quản không tốt</h4>
+                <p className="mt-1 text-xs font-bold text-[#806A5B] leading-relaxed">
+                  Phát hiện nồng độ VOC tăng đột biến từ ngày 5 đến ngày 7 (lên 58 ppb) do nhiệt độ hoặc độ ẩm không được kiểm soát tốt. Vui lòng kiểm tra lại thiết bị làm lạnh.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Current Metrics Section */}
           <section>
             <h2 className="text-[22px] font-black leading-tight text-[#150807]">Chỉ số hiện tại</h2>

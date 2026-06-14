@@ -13,21 +13,21 @@ export const steamChambers = [
   { id: 'Lồng 2', batch: 'Loại 2', temp: 98, humidity: 84, pressure: 1.2, status: 'Đang hấp', progress: 54, remainingMinutes: 31 },
   { id: 'Lồng 3', batch: 'Loại 1', temp: 103, humidity: 88, pressure: 1.6, status: 'Quá nhiệt', progress: 83, remainingMinutes: 9 },
   { id: 'Lồng 4', batch: 'Loại 2', temp: 95, humidity: 80, pressure: 1.0, status: 'Ổn định', progress: 38, remainingMinutes: 46 },
-  { id: 'Lồng 5', batch: 'Chờ mẻ', temp: 72, humidity: 61, pressure: 0.4, status: 'Nghỉ', progress: 0, remainingMinutes: 0 },
+  { id: 'Lồng 5', batch: 'Chờ mẻ', temp: 27, humidity: 55, pressure: 0, status: 'Nghỉ', progress: 0, remainingMinutes: 0 },
 ]
 
 export const coldRooms = [
-  { id: 'Kho 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 100, status: 'VOC tăng' },
-  { id: 'Kho 2', item: 'Đậu xanh', temp: 5, humidity: 58, voc: 42, status: 'Ổn định' },
-  { id: 'Kho 3', item: 'Dừa nạo', temp: 3, humidity: 55, voc: 35, status: 'Ổn định' },
-  { id: 'Kho 4', item: 'Bánh thành phẩm', temp: 6, humidity: 60, voc: 48, status: 'Theo dõi' },
+  { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 58, status: 'VOC tăng' },
+  { id: 'Tủ 2', item: 'Đậu xanh', temp: 5, humidity: 58, voc: 42, status: 'Ổn định' },
+  { id: 'Tủ 3', item: 'Dừa nạo', temp: 3, humidity: 55, voc: 35, status: 'Ổn định' },
+  { id: 'Tủ 4', item: 'Bánh thành phẩm', temp: 6, humidity: 60, voc: 48, status: 'Theo dõi' },
 ]
 
-type JarIconProps = {
+type SteamerIconProps = {
   tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty'
 }
 
-function JarIcon({ tone }: JarIconProps) {
+export function SteamerIcon({ tone }: SteamerIconProps) {
   const styles = {
     good: { stroke: '#4ADE80', fill: '#EDF9F0', dot: false },
     ripe: { stroke: '#FCD34D', fill: '#FFFDF0', dot: false },
@@ -39,12 +39,104 @@ function JarIcon({ tone }: JarIconProps) {
   return (
     <div className="relative flex items-center justify-center w-10 h-10 select-none">
       <svg viewBox="0 0 24 24" className="w-8 h-8 transition-transform duration-200 hover:scale-110 cursor-pointer">
-        <path
-          d="M8,4 L16,4 C17,4 17,5 17,6 L17,7 C18.5,8 19.5,9.5 19.5,11.5 L19.5,17 C19.5,19 18.5,20 17,20 L7,20 C5.5,20 4.5,19 4.5,17 L4.5,11.5 C4.5,9.5 5.5,8 7,7 L7,6 C7,5 7,4 8,4 Z"
+        {/* Cabinet Main Body */}
+        <rect
+          x="4"
+          y="3"
+          width="16"
+          height="18"
+          rx="1.5"
           fill={styles.fill}
           stroke={styles.stroke}
           strokeWidth="1.8"
           strokeLinejoin="round"
+        />
+        {/* Top Control Panel */}
+        <rect
+          x="7"
+          y="5"
+          width="10"
+          height="3"
+          rx="0.5"
+          fill="none"
+          stroke={styles.stroke}
+          strokeWidth="1.5"
+        />
+        {/* Indicator LEDs on control panel */}
+        <circle cx="9" cy="6.5" r="0.6" fill={styles.stroke} />
+        <circle cx="11" cy="6.5" r="0.6" fill={styles.stroke} />
+        {/* Large Pressurized Door */}
+        <rect
+          x="6"
+          y="9.5"
+          width="12"
+          height="10"
+          rx="1"
+          fill="none"
+          stroke={styles.stroke}
+          strokeWidth="1.5"
+        />
+        {/* Industrial Wheel Lock / Handle in center of door */}
+        <circle cx="12" cy="14.5" r="2.5" fill="none" stroke={styles.stroke} strokeWidth="1.5" />
+        <path d="M 12,12 V 17 M 9.5,14.5 H 14.5" stroke={styles.stroke} strokeWidth="1.2" />
+      </svg>
+      {styles.dot && (
+        <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 bg-[#EF4444] rounded-full border border-white animate-pulse" />
+      )}
+    </div>
+  )
+}
+
+type StorageIconProps = {
+  tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty'
+}
+
+export function StorageIcon({ tone }: StorageIconProps) {
+  const styles = {
+    good: { stroke: '#4ADE80', fill: '#EDF9F0', dot: false },
+    ripe: { stroke: '#FCD34D', fill: '#FFFDF0', dot: false },
+    watch: { stroke: '#F59E0B', fill: '#FFF9E6', dot: false },
+    critical: { stroke: '#EF4444', fill: '#FEE2E2', dot: true },
+    empty: { stroke: '#9CA3AF', fill: '#F3F4F6', dot: false },
+  }[tone]
+
+  return (
+    <div className="relative flex items-center justify-center w-10 h-10 select-none">
+      <svg viewBox="0 0 24 24" className="w-8 h-8 transition-transform duration-200 hover:scale-110 cursor-pointer">
+        {/* Refrigerator Cabinet Body */}
+        <rect
+          x="4"
+          y="3"
+          width="16"
+          height="18"
+          rx="1.5"
+          fill={styles.fill}
+          stroke={styles.stroke}
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+        {/* Top Ventilation / Compressor Unit */}
+        <path
+          d="M 4,7 H 20"
+          stroke={styles.stroke}
+          strokeWidth="1.5"
+        />
+        <line x1="6" y1="5" x2="18" y2="5" stroke={styles.stroke} strokeWidth="1.2" strokeDasharray="3 2" />
+        {/* Double Doors Center Split */}
+        <line x1="12" y1="7" x2="12" y2="21" stroke={styles.stroke} strokeWidth="1.5" />
+        {/* Left Vertical Handle */}
+        <path
+          d="M 10,9.5 V 14.5"
+          stroke={styles.stroke}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        {/* Right Vertical Handle */}
+        <path
+          d="M 14,9.5 V 14.5"
+          stroke={styles.stroke}
+          strokeWidth="1.8"
+          strokeLinecap="round"
         />
       </svg>
       {styles.dot && (
@@ -71,10 +163,10 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot }: ZoneDiagramCa
         { id: 5, name: 'Lồng 5', tone: 'empty' as const },
       ]
     : [
-        { id: 1, name: 'Kho 1', tone: 'critical' as const },
-        { id: 2, name: 'Kho 2', tone: 'good' as const },
-        { id: 3, name: 'Kho 3', tone: 'good' as const },
-        { id: 4, name: 'Kho 4', tone: 'watch' as const },
+        { id: 1, name: 'Tủ 1', tone: 'critical' as const },
+        { id: 2, name: 'Tủ 2', tone: 'good' as const },
+        { id: 3, name: 'Tủ 3', tone: 'good' as const },
+        { id: 4, name: 'Tủ 4', tone: 'watch' as const },
       ]
 
   return (
@@ -96,7 +188,11 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot }: ZoneDiagramCa
             onClick={() => onSelectSlot('A', item.id, item.tone)}
             className="flex flex-col items-center border-0 bg-transparent p-0 focus:outline-none transition active:scale-90"
           >
-            <JarIcon tone={item.tone} />
+            {type === 'steam' ? (
+              <SteamerIcon tone={item.tone} />
+            ) : (
+              <StorageIcon tone={item.tone} />
+            )}
             <span className="mt-1.5 text-xs font-black text-[#5C4D43]">{item.name}</span>
           </button>
         ))}
@@ -129,7 +225,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
                    selectedItem.id === 2 ? 'ripe' :
                    selectedItem.id === 3 ? 'critical' : 'empty'
       return {
-        title: `Lồng Hấp ${selectedItem.id}`,
+        title: `Lồng Hấp Công Nghiệp ${selectedItem.id}`,
         subtitle: `Mẻ: ${chamber.batch}`,
         status: chamber.status,
         tone,
@@ -140,14 +236,14 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
         ],
         extra: chamber.progress > 0 
           ? `${chamber.progress}% quy trình · Còn ${chamber.remainingMinutes} phút`
-          : 'Lồng đang chờ mẻ mới'
+          : 'Lồng hấp công nghiệp đang chờ mẻ mới'
       }
     } else {
       const room = coldRooms[selectedItem.id - 1]
       const tone = selectedItem.id === 1 ? 'critical' :
                    selectedItem.id === 4 ? 'watch' : 'good'
       return {
-        title: `Kho Lạnh ${selectedItem.id}`,
+        title: `Tủ Lạnh Công Nghiệp ${selectedItem.id}`,
         subtitle: `Lưu trữ: ${room.item}`,
         status: room.status,
         tone,
@@ -156,7 +252,9 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
           { icon: Snowflake, label: 'Nhiệt', value: `${room.temp}°C` },
           { icon: Droplets, label: 'Độ ẩm', value: `${room.humidity}%` },
         ],
-        extra: 'Hệ thống đối lưu gió đang hoạt động'
+        extra: room.status === 'VOC tăng'
+          ? 'Cảnh báo: Phát hiện sự bảo quản không tốt do nhiệt độ hoặc độ ẩm không kiểm soát tốt!'
+          : 'Hệ thống tủ lạnh công nghiệp đang hoạt động'
       }
     }
   }, [selectedItem])
@@ -166,7 +264,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
       <div className="space-y-6">
         {/* Sơ đồ Lồng Hấp */}
         <ZoneDiagramCard
-          name="Lồng Hấp"
+          name="Lồng Hấp Công Nghiệp"
           icon={Thermometer}
           type="steam"
           onSelectSlot={(row, col, tone) => handleSelectSlot('steam', row, col, tone)}
@@ -174,7 +272,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
 
         {/* Sơ đồ Kho Bảo Quản */}
         <ZoneDiagramCard
-          name="Kho Bảo Quản"
+          name="Tủ Lạnh Công Nghiệp"
           icon={Snowflake}
           type="storage"
           onSelectSlot={(row, col, tone) => handleSelectSlot('storage', row, col, tone)}
@@ -224,24 +322,30 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
           
           <div className="grid grid-cols-2 gap-y-4 gap-x-6">
             <div className="flex items-center gap-3">
-              <JarIcon tone="good" />
+              <div className="flex gap-1 items-center">
+                <SteamerIcon tone="good" />
+                <StorageIcon tone="good" />
+              </div>
               <span className="text-sm font-black text-[#5C4D43]">Tốt</span>
             </div>
             <div className="flex items-center gap-3">
-              <JarIcon tone="ripe" />
-              <span className="text-sm font-black text-[#5C4D43]">Chín</span>
+              <SteamerIcon tone="ripe" />
+              <span className="text-sm font-black text-[#5C4D43]">Chín (Lồng hấp công nghiệp)</span>
             </div>
             <div className="flex items-center gap-3">
-              <JarIcon tone="watch" />
-              <span className="text-sm font-black text-[#5C4D43]">Chú ý</span>
+              <StorageIcon tone="watch" />
+              <span className="text-sm font-black text-[#5C4D43]">Chú ý (Tủ lạnh công nghiệp)</span>
             </div>
             <div className="flex items-center gap-3">
-              <JarIcon tone="critical" />
+              <div className="flex gap-1 items-center">
+                <SteamerIcon tone="critical" />
+                <StorageIcon tone="critical" />
+              </div>
               <span className="text-sm font-black text-[#5C4D43]">Cảnh báo</span>
             </div>
             <div className="flex items-center gap-3 col-span-2">
-              <JarIcon tone="empty" />
-              <span className="text-sm font-black text-[#5C4D43]">Trống</span>
+              <SteamerIcon tone="empty" />
+              <span className="text-sm font-black text-[#5C4D43]">Trống (Lồng hấp công nghiệp)</span>
             </div>
           </div>
         </div>
@@ -270,11 +374,11 @@ export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDet
             type="button"
             onClick={onBack}
             className="flex items-center justify-center w-9 h-9 rounded-full bg-white/12 text-white/80 transition-transform active:scale-90"
-            aria-label="Quay lại danh sách lồng hấp"
+            aria-label="Quay lại danh sách lồng hấp công nghiệp"
           >
             <ChevronLeft size={20} />
           </button>
-          <span className="text-[12px] font-medium tracking-wider text-[#FDF4E7]/55 uppercase">Lồng hấp</span>
+          <span className="text-[12px] font-medium tracking-wider text-[#FDF4E7]/55 uppercase">Lồng hấp công nghiệp</span>
           <div className="w-9 h-9" /> {/* Spacer */}
         </div>
 
@@ -368,15 +472,16 @@ type TrendPoint = {
 }
 
 function createTrendData(chamber: (typeof steamChambers)[number]): TrendPoint[] {
+  const isRunning = chamber.progress > 0
   return Array.from({ length: 15 }, (_, index) => {
     const wave = Math.sin((index / 14) * Math.PI * 2)
     const smallWave = Math.cos((index / 14) * Math.PI * 3)
 
     return {
       minute: index + 1,
-      temperature: Number((chamber.temp + wave * 2.4 + smallWave * 0.7).toFixed(1)),
-      humidity: Number((chamber.humidity + Math.cos((index / 14) * Math.PI * 2) * 3.2).toFixed(1)),
-      pressure: Number((chamber.pressure + wave * 0.08).toFixed(2)),
+      temperature: Number((chamber.temp + (isRunning ? wave * 2.4 + smallWave * 0.7 : wave * 0.4)).toFixed(1)),
+      humidity: Number((chamber.humidity + (isRunning ? Math.cos((index / 14) * Math.PI * 2) * 3.2 : Math.cos((index / 14) * Math.PI * 2) * 0.6)).toFixed(1)),
+      pressure: isRunning ? Number((chamber.pressure + wave * 0.08).toFixed(2)) : 0,
     }
   })
 }
@@ -397,6 +502,11 @@ function TrendChart({ data }: TrendChartProps) {
   const pointsFor = (key: keyof Omit<TrendPoint, 'minute'>, min: number, max: number) =>
     data.map((point, index) => `${xFor(index)},${yFor(point[key], min, max)}`).join(' ')
  
+  const tempValues = data.map((d) => d.temperature)
+  const minTemp = Math.min(...tempValues)
+  const tempMinScale = minTemp < 70 ? 20 : 70
+  const tempMaxScale = minTemp < 70 ? 120 : 110
+
   return (
     <div className="rounded-[22px] border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300 hover:scale-[1.01]">
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Biểu đồ nhiệt độ, độ ẩm và áp suất trong 15 phút gần nhất" className="h-auto w-full">
@@ -428,13 +538,13 @@ function TrendChart({ data }: TrendChartProps) {
         <line x1={padding.left} x2={width - padding.right} y1={padding.top + plotHeight} y2={padding.top + plotHeight} stroke="#6D625C" strokeWidth="2" />
  
         <polyline fill="none" points={pointsFor('humidity', 0, 100)} stroke="#4A9F57" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
-        <polyline fill="none" points={pointsFor('temperature', 70, 110)} stroke="#B23B2F" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
+        <polyline fill="none" points={pointsFor('temperature', tempMinScale, tempMaxScale)} stroke="#B23B2F" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
         <polyline fill="none" points={pointsFor('pressure', 0, 2)} stroke="#C78116" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
  
         {data.map((point, index) => (
           <g key={`dots-${point.minute}`}>
             <circle cx={xFor(index)} cy={yFor(point.humidity, 0, 100)} r="10" fill="#4A9F57" />
-            <circle cx={xFor(index)} cy={yFor(point.temperature, 70, 110)} r="10" fill="#B23B2F" />
+            <circle cx={xFor(index)} cy={yFor(point.temperature, tempMinScale, tempMaxScale)} r="10" fill="#B23B2F" />
             <circle cx={xFor(index)} cy={yFor(point.pressure, 0, 2)} r="10" fill="#C78116" />
           </g>
         ))}

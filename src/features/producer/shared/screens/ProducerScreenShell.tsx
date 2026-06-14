@@ -1,4 +1,4 @@
-import { Bell, CloudSun } from 'lucide-react'
+import { Bell } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { AppFrame } from '../../../../shared/components/layout/AppFrame'
 import { ProducerNav } from '../components/ProducerNav'
@@ -37,9 +37,6 @@ export function ProducerScreenShell({ product, eyebrow, title, children, hideSum
               </p>
             </div>
             <div className="flex shrink-0 gap-1.5">
-              <button type="button" aria-label="Điều kiện môi trường" className="grid h-11 w-11 place-items-center rounded-full bg-white/12 text-[#D6B947] shadow-inner">
-                <CloudSun size={22} strokeWidth={2.2} />
-              </button>
               <Link 
                 to={product.routes.alerts} 
                 aria-label={`${alertCount} cảnh báo`} 
