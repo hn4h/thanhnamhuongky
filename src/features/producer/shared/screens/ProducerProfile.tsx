@@ -339,7 +339,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
             {/* Terms of Use */}
             <button
               type="button"
-              onClick={() => navigate('/producer/terms')}
+              onClick={() => navigate(`/producer/${product.key}/terms`)}
               className="w-full flex items-center justify-between px-4 py-3.5 text-left focus:outline-none transition-colors duration-200 hover:bg-[#FDF9F5]"
             >
               <span className="text-sm font-extrabold text-[#150807]">{t.terms}</span>
@@ -349,7 +349,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
             {/* Privacy Policy */}
             <button
               type="button"
-              onClick={() => navigate('/producer/privacy')}
+              onClick={() => navigate(`/producer/${product.key}/privacy`)}
               className="w-full flex items-center justify-between px-4 py-3.5 text-left focus:outline-none transition-colors duration-200 hover:bg-[#FDF9F5]"
             >
               <span className="text-sm font-extrabold text-[#150807]">{t.privacy}</span>
@@ -359,7 +359,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
             {/* Tech Support */}
             <button
               type="button"
-              onClick={() => navigate('/producer/support')}
+              onClick={() => navigate(`/producer/${product.key}/support`)}
               className="w-full flex items-center justify-between px-4 py-3.5 text-left focus:outline-none transition-colors duration-200 hover:bg-[#FDF9F5]"
             >
               <span className="text-sm font-extrabold text-[#150807]">{t.support}</span>

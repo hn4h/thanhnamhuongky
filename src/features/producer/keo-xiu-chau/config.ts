@@ -18,7 +18,7 @@ export const keoXiuChauModule: ProducerProductModule = {
     batches: '/producer/keo-xiu-chau/batches',
     productionMap: '/producer/keo-xiu-chau/production-map',
     alerts: '/producer/keo-xiu-chau/alerts',
-    aiInsights: '/producer/keo-xiu-chau/ai-insights',
+    aiPredict: '/producer/keo-xiu-chau/ai-predict',
     devices: '/producer/keo-xiu-chau/devices',
     qrManagement: '/producer/keo-xiu-chau/qr-management',
     profile: '/producer/keo-xiu-chau/profile',

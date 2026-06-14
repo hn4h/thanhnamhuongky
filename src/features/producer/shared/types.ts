@@ -80,7 +80,7 @@ export type ProducerProductConfig = {
     batches: string
     productionMap: string
     alerts: string
-    aiInsights: string
+    aiPredict: string
     devices: string
     qrManagement: string
     profile: string

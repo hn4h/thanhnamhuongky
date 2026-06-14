@@ -18,7 +18,7 @@ export const banhXiuPaoModule: ProducerProductModule = {
     batches: '/producer/banh-xiu-pao/batches',
     productionMap: '/producer/banh-xiu-pao/production-map',
     alerts: '/producer/banh-xiu-pao/alerts',
-    aiInsights: '/producer/banh-xiu-pao/ai-insights',
+    aiPredict: '/producer/banh-xiu-pao/ai-predict',
     devices: '/producer/banh-xiu-pao/devices',
     qrManagement: '/producer/banh-xiu-pao/qr-management',
     profile: '/producer/banh-xiu-pao/profile',

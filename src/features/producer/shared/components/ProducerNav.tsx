@@ -6,7 +6,7 @@ const items = [
   ['dashboard', 'Bảng Điều Khiển', LayoutGrid],
   ['productionMap', 'Sơ Đồ', Map],
   ['devices', 'Kho Lạnh', Layers3],
-  ['aiInsights', 'Dự Báo', TrendingUp],
+  ['aiPredict', 'Dự Báo', TrendingUp],
   ['profile', 'Hồ Sơ', CircleUserRound],
 ] as const
 

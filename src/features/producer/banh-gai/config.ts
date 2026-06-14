@@ -18,7 +18,7 @@ export const banhGaiModule: ProducerProductModule = {
     batches: '/producer/banh-gai/batches',
     productionMap: '/producer/banh-gai/production-map',
     alerts: '/producer/banh-gai/alerts',
-    aiInsights: '/producer/banh-gai/ai-insights',
+    aiPredict: '/producer/banh-gai/ai-predict',
     devices: '/producer/banh-gai/devices',
     qrManagement: '/producer/banh-gai/qr-management',
     profile: '/producer/banh-gai/profile',

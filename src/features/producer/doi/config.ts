@@ -18,7 +18,7 @@ export const doiModule: ProducerProductModule = {
     batches: '/producer/doi/batches',
     productionMap: '/producer/doi/production-map',
     alerts: '/producer/doi/alerts',
-    aiInsights: '/producer/doi/ai-insights',
+    aiPredict: '/producer/doi/ai-predict',
     devices: '/producer/doi/devices',
     qrManagement: '/producer/doi/qr-management',
     profile: '/producer/doi/profile',
