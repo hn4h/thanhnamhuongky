@@ -9,18 +9,18 @@ type ProducerProductionMapProps = {
 }
 
 export const steamChambers = [
-  { id: 'Lồng 1', batch: 'Loại 1', temp: 96, humidity: 82, pressure: 1.1, status: 'Ổn định', progress: 72, remainingMinutes: 18 },
-  { id: 'Lồng 2', batch: 'Loại 2', temp: 98, humidity: 84, pressure: 1.2, status: 'Đang hấp', progress: 54, remainingMinutes: 31 },
-  { id: 'Lồng 3', batch: 'Loại 1', temp: 103, humidity: 88, pressure: 1.6, status: 'Quá nhiệt', progress: 83, remainingMinutes: 9 },
-  { id: 'Lồng 4', batch: 'Loại 2', temp: 95, humidity: 80, pressure: 1.0, status: 'Ổn định', progress: 38, remainingMinutes: 46 },
+  { id: 'Lồng 1', batch: 'Loại 1', temp: 96, humidity: 97, pressure: 1.1, status: 'Ổn định', progress: 72, remainingMinutes: 18 },
+  { id: 'Lồng 2', batch: 'Loại 2', temp: 98, humidity: 96, pressure: 1.2, status: 'Đang hấp', progress: 54, remainingMinutes: 31 },
+  { id: 'Lồng 3', batch: 'Loại 1', temp: 106, humidity: 98, pressure: 1.9, status: 'Quá nhiệt', progress: 83, remainingMinutes: 9 },
+  { id: 'Lồng 4', batch: 'Loại 2', temp: 95, humidity: 95, pressure: 1.0, status: 'Ổn định', progress: 38, remainingMinutes: 46 },
   { id: 'Lồng 5', batch: 'Chờ mẻ', temp: 27, humidity: 55, pressure: 0, status: 'Nghỉ', progress: 0, remainingMinutes: 0 },
 ]
 
 export const coldRooms = [
-  { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 58, status: 'VOC tăng', dehumidifier: true, ventilation: false },
-  { id: 'Tủ 2', item: 'Đậu xanh', temp: 5, humidity: 58, voc: 42, status: 'Ổn định', dehumidifier: false, ventilation: false },
-  { id: 'Tủ 3', item: 'Dừa nạo', temp: 3, humidity: 55, voc: 35, status: 'Ổn định', dehumidifier: false, ventilation: true },
-  { id: 'Tủ 4', item: 'Bánh thành phẩm', temp: 6, humidity: 60, voc: 48, status: 'Theo dõi', dehumidifier: true, ventilation: true },
+  { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 68, nh3: 25, status: 'VOC tăng', dehumidifier: true, ventilation: false },
+  { id: 'Tủ 2', item: 'Đậu xanh', temp: 0, humidity: 45, voc: 25, nh3: 12, status: 'Ổn định', dehumidifier: false, ventilation: false },
+  { id: 'Tủ 3', item: 'Dừa nạo', temp: -2, humidity: 42, voc: 18, nh3: 8, status: 'Ổn định', dehumidifier: false, ventilation: true },
+  { id: 'Tủ 4', item: 'Bánh thành phẩm', temp: 2.5, humidity: 52, voc: 35, nh3: 15, status: 'Theo dõi', dehumidifier: true, ventilation: true },
 ]
 
 type SteamerIconProps = {
@@ -242,25 +242,59 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
       }
     } else {
       const room = coldRooms[selectedItem.id - 1]
+      const isXiuPao = product.key === 'banh-xiu-pao'
+      const itemsMap: Record<string, Record<string, string>> = {
+        'banh-gai': {
+          'Tủ 1': 'Lá gai',
+          'Tủ 2': 'Đậu xanh',
+          'Tủ 3': 'Dừa nạo',
+          'Tủ 4': 'Bánh gai thành phẩm',
+        },
+        'banh-xiu-pao': {
+          'Tủ 1': 'Nhân thịt xá xíu',
+          'Tủ 2': 'Bột mì & mỡ heo',
+          'Tủ 3': 'Trứng muối',
+          'Tủ 4': 'Bánh xíu páo TP',
+        },
+        'doi': {
+          'Tủ 1': 'Mạch nha',
+          'Tủ 2': 'Lạc nhân',
+          'Tủ 3': 'Vừng rang',
+          'Tủ 4': 'Kẹo dồi thành phẩm',
+        },
+        'keo-xiu-chau': {
+          'Tủ 1': 'Mạch nha',
+          'Tủ 2': 'Lạc nhân',
+          'Tủ 3': 'Vừng rang',
+          'Tủ 4': 'Kẹo sìu châu TP',
+        }
+      }
+      const itemLabel = itemsMap[product.key]?.[room.id] || room.item
+      const gasLabel = isXiuPao ? 'NH3' : 'VOC'
+      const gasValue = isXiuPao ? `${room.nh3} ppm` : `${room.voc} ppb`
+      const currentStatus = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
+        ? (isXiuPao ? 'NH3 tăng' : 'VOC tăng')
+        : room.status
+
       const tone = selectedItem.id === 1 ? 'critical' :
                    selectedItem.id === 4 ? 'watch' : 'good'
       return {
         type: 'storage' as const,
         title: `Tủ Lạnh Công Nghiệp ${selectedItem.id}`,
-        subtitle: `Lưu trữ: ${room.item}`,
-        status: room.status,
+        subtitle: `Lưu trữ: ${itemLabel}`,
+        status: currentStatus,
         tone,
         metrics: [
-          { icon: Wind, label: 'VOC', value: `${room.voc} ppb` },
+          { icon: Wind, label: gasLabel, value: gasValue },
           { icon: Snowflake, label: 'Nhiệt', value: `${room.temp}°C` },
           { icon: Droplets, label: 'Độ ẩm', value: `${room.humidity}%` },
         ],
-        extra: room.status === 'VOC tăng'
-          ? 'Cảnh báo: Phát hiện sự bảo quản không tốt do nhiệt độ hoặc độ ẩm không kiểm soát tốt!'
+        extra: currentStatus === 'VOC tăng' || currentStatus === 'NH3 tăng'
+          ? `Cảnh báo: Phát hiện sự bảo quản không tốt do nhiệt độ hoặc độ ẩm không kiểm soát tốt!`
           : 'Hệ thống tủ lạnh công nghiệp đang hoạt động'
       }
     }
-  }, [selectedItem])
+  }, [selectedItem, product.key])
 
   return (
     <ProducerScreenShell product={product} eyebrow={product.name} title="Sơ Đồ" hideSummary>

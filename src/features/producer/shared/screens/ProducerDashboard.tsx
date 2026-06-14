@@ -11,11 +11,14 @@ type ProducerDashboardProps = {
 }
 
 export function ProducerDashboard({ product }: ProducerDashboardProps) {
+  const isXiuPao = product.key === 'banh-xiu-pao'
   // Recalculate latest alert dynamically based on coldRooms state
-  const latestAlert = coldRooms.some(r => r.status === 'VOC tăng')
+  const latestAlert = coldRooms.some(r => r.status === 'VOC tăng' || r.status === 'NH3 tăng')
     ? {
-      title: 'Nồng độ VOC tăng cao bất thường',
-      message: 'Chỉ số chất hữu cơ dễ bay hơi VOC tại kho bảo quản đạt 58 ppb. Có nguy cơ ảnh hưởng chất lượng bảo quản lá bánh gai.',
+      title: isXiuPao ? 'Nồng độ NH3 tăng cao bất thường' : 'Nồng độ VOC tăng cao bất thường',
+      message: isXiuPao
+        ? 'Chỉ số NH3 tại kho bảo quản đạt 25 ppm (ngưỡng an toàn <= 20 ppm). Có nguy cơ ảnh hưởng chất lượng bảo quản nhân bánh xíu páo.'
+        : 'Chỉ số chất hữu cơ dễ bay hơi VOC tại kho bảo quản đạt 68 ppb. Có nguy cơ ảnh hưởng chất lượng bảo quản lá bánh gai.',
       severity: 'medium' as const,
     }
     : product.data.alerts[0]

@@ -40,14 +40,29 @@ const INITIAL_VOC_DAYS = [
 
 export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
   const navigate = useNavigate()
+  const isXiuPao = product.key === 'banh-xiu-pao'
+  const gasLabel = isXiuPao ? 'NH3' : 'VOC'
+  const gasUnit = isXiuPao ? 'ppm' : 'ppb'
+  const defaultThreshold = isXiuPao ? 20 : 60
   
   // States
-  const [warningThreshold, setWarningThreshold] = useState<number>(120)
+  const [warningThreshold, setWarningThreshold] = useState<number>(defaultThreshold)
   const [tempReduced, setTempReduced] = useState<boolean>(false)
   const [tempLoading, setTempLoading] = useState<boolean>(false)
   
   const [humidityReduced, setHumidityReduced] = useState<boolean>(false)
   const [humidityLoading, setHumidityLoading] = useState<boolean>(false)
+
+  // Map values dynamically
+  const initialDays = useMemo(() => {
+    return INITIAL_VOC_DAYS.map(d => {
+      // Map 0-200 range to appropriate ranges:
+      // For NH3: range 0 - 50 (divide by 4.8)
+      // For VOC: range 0 - 100 (divide by 2)
+      let val = isXiuPao ? Math.round(d.value / 4.8) : Math.round(d.value / 2.0)
+      return { ...d, value: val }
+    })
+  }, [isXiuPao])
 
   // Trigger quick action to lower temperature
   const handleLowerTemp = () => {
@@ -73,20 +88,20 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
     setHumidityReduced(false)
   }
 
-  // Calculate dynamic VOC points based on user's IoT actions
+  // Calculate dynamic VOC/NH3 points based on user's IoT actions
   const vocPoints = useMemo(() => {
-    return INITIAL_VOC_DAYS.map(d => {
+    return initialDays.map(d => {
       if (!d.isForecast) return d
       let val = d.value
       if (tempReduced) {
-        val -= 12 // Reduce VOC due to lower temperature
+        val -= isXiuPao ? 3 : 8 // Reduce NH3/VOC due to lower temperature
       }
       if (humidityReduced) {
-        val -= 15 // Reduce VOC further due to lower humidity
+        val -= isXiuPao ? 4 : 10 // Reduce NH3/VOC further due to lower humidity
       }
-      return { ...d, value: Math.max(40, val) }
+      return { ...d, value: Math.max(isXiuPao ? 5 : 20, val) }
     })
-  }, [tempReduced, humidityReduced])
+  }, [initialDays, tempReduced, humidityReduced, isXiuPao])
 
   // Check if any forecast days exceed the threshold
   const exceededDays = useMemo(() => {
@@ -105,7 +120,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
   const xFor = (index: number) => padding.left + (plotWidth * index) / (vocPoints.length - 1)
   const yFor = (value: number) => {
     const min = 0
-    const max = 200
+    const max = isXiuPao ? 50 : 100
     return padding.top + plotHeight - ((value - min) / (max - min)) * plotHeight
   }
 
@@ -152,13 +167,13 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
           <div className="min-w-0 flex-1">
             <h2 className="text-[18px] font-black text-[#150807] leading-snug">
               {hasWarning 
-                ? 'Dự báo chỉ số VOC Kho 1 vượt ngưỡng' 
-                : 'Chỉ số VOC Kho 1 được tối ưu hóa'}
+                ? `Dự báo chỉ số ${gasLabel} Kho 1 vượt ngưỡng` 
+                : `Chỉ số ${gasLabel} Kho 1 được tối ưu hóa`}
             </h2>
             <p className="mt-1.5 text-sm font-bold text-[#806A5B] leading-relaxed">
               {hasWarning 
-                ? `Hệ thống AI phát hiện chỉ số VOC dự kiến tăng cao, đạt đỉnh ${Math.max(...exceededDays.map(d=>d.value))} ppm tại ngày thứ ${exceededDays[0].day > 9 ? exceededDays[0].day : `0${exceededDays[0].day}`}. Cần can thiệp môi trường kho.` 
-                : 'Môi trường kho bảo quản lá bánh gai đang đạt các chỉ số vi sinh tối ưu. Không có nguy cơ tăng VOC bất thường trong vòng 12 ngày tới.'}
+                ? `Hệ thống AI phát hiện chỉ số ${gasLabel} dự kiến tăng cao, đạt đỉnh ${Math.max(...exceededDays.map(d=>d.value))} ${gasUnit} tại ngày thứ ${exceededDays[0].day > 9 ? exceededDays[0].day : `0${exceededDays[0].day}`}. Cần can thiệp môi trường kho.` 
+                : `Môi trường kho bảo quản ${isXiuPao ? 'nhân bánh xíu páo' : 'lá bánh gai'} đang đạt các chỉ số vi sinh tối ưu. Không có nguy cơ tăng ${gasLabel} bất thường trong vòng 12 ngày tới.`}
             </p>
           </div>
         </div>
@@ -171,7 +186,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
               Gợi ý thông minh từ AI:
             </div>
             <p className="mt-2 text-xs font-bold text-[#6D5C54]">
-              Giảm nhiệt độ bảo quản kho về 18°C và giảm độ ẩm kho xuống dưới 45% để kiểm soát vi sinh vật kỵ khí phân hủy chất hữu cơ trên lá gai.
+              Giảm nhiệt độ bảo quản kho về ${isXiuPao ? '-2' : '0'}°C và giảm độ ẩm kho xuống dưới 45% để kiểm soát vi sinh vật kỵ khí phân hủy chất hữu cơ trên ${isXiuPao ? 'nhân bánh xíu páo' : 'lá gai'}.
             </p>
 
             <div className="mt-4 flex flex-col gap-2">
@@ -192,12 +207,12 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
                 ) : tempReduced ? (
                   <>
                     <CheckCircle size={15} />
-                    Đã hạ nhiệt độ kho xuống 18°C
+                    Đã hạ nhiệt độ kho xuống {isXiuPao ? '-2' : '0'}°C
                   </>
                 ) : (
                   <>
                     <Thermometer size={15} />
-                    Tự động hạ nhiệt độ bảo quản (18°C)
+                    Tự động hạ nhiệt độ bảo quản ({isXiuPao ? '-2' : '0'}°C)
                   </>
                 )}
               </button>
@@ -246,15 +261,15 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
         )}
       </div>
 
-      {/* Interactive VOC Forecast Chart Card */}
+      {/* Interactive VOC/NH3 Forecast Chart Card */}
       <section className="mb-5 rounded-[24px] border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)]">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <h3 className="text-base font-black text-[#150807]">Biểu đồ VOC của Kho 1</h3>
+            <h3 className="text-base font-black text-[#150807]">Biểu đồ {gasLabel} của Kho 1</h3>
             <p className="text-xs font-bold text-[#806A5B]">Theo dõi thực tế & dự đoán 12 ngày</p>
           </div>
           <span className="rounded-full bg-[#FFF6E7] border border-[#F1C932]/30 px-3 py-1 text-xs font-black text-[#C78116]">
-            Kho Lá Gai
+            Kho {isXiuPao ? 'Nhân Bánh' : 'Lá Gai'}
           </span>
         </div>
 
@@ -263,23 +278,23 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
           <div className="flex items-center justify-between">
             <label htmlFor="voc-threshold-slider" className="flex items-center gap-1.5 text-xs font-black text-[#6F4B35]">
               <Settings2 size={14} className="text-[#A77D42]" />
-              Ngưỡng cảnh báo VOC
+              Ngưỡng cảnh báo {gasLabel}
             </label>
-            <strong className="text-sm font-black text-[#721A18]">{warningThreshold} ppm</strong>
+            <strong className="text-sm font-black text-[#721A18]">{warningThreshold} {gasUnit}</strong>
           </div>
           <input
             id="voc-threshold-slider"
             type="range"
-            min="80"
-            max="180"
+            min={isXiuPao ? "10" : "30"}
+            max={isXiuPao ? "40" : "120"}
             value={warningThreshold}
             onChange={(e) => setWarningThreshold(Number(e.target.value))}
             className="mt-3 w-full h-1.5 bg-[#E8D9CE] rounded-lg appearance-none cursor-pointer accent-[#721A18]"
           />
           <div className="mt-2 flex justify-between text-[10px] font-bold text-[#A78A7A]">
-            <span>80 ppm</span>
-            <span>120 ppm (Mặc định)</span>
-            <span>180 ppm</span>
+            <span>{isXiuPao ? "10 ppm" : "30 ppb"}</span>
+            <span>{isXiuPao ? "20 ppm (Mặc định)" : "60 ppb (Mặc định)"}</span>
+            <span>{isXiuPao ? "40 ppm" : "120 ppb"}</span>
           </div>
         </div>
 
@@ -287,7 +302,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
         <div className="relative">
           <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full">
             {/* Grid Y-Ticks & dashed lines */}
-            {[0, 50, 100, 150, 200].map((tick) => {
+            {(isXiuPao ? [0, 10, 20, 30, 40, 50] : [0, 25, 50, 75, 100]).map((tick) => {
               const y = yFor(tick)
               return (
                 <g key={tick}>
@@ -333,7 +348,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
                 textAnchor="end" 
                 className="fill-[#B23B2F] text-[15px] font-black"
               >
-                Ngưỡng {warningThreshold} ppm
+                Ngưỡng {warningThreshold} {gasUnit}
               </text>
             </g>
 
@@ -410,11 +425,11 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
         </div>
       </section>
 
-      {/* VOC Batch Predictions list */}
+      {/* VOC/NH3 Batch Predictions list */}
       <section className="mb-5">
         <h3 className="mb-3 text-base font-black text-[#150807] flex items-center gap-2">
           <TrendingUp size={18} className="text-[#721A18]" />
-          Dự báo mẻ chỉ số VOC
+          Dự báo mẻ chỉ số {gasLabel}
         </h3>
 
         <div className="grid gap-3">
@@ -422,9 +437,9 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
           <article className="rounded-2xl border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.06)]">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <span className="text-[11px] font-black uppercase tracking-wider text-[#A77D42]">Mẻ Lá Gai Mới Nhất</span>
-                <h4 className="text-base font-black text-[#150807] mt-0.5">Mẻ BG-2026-06</h4>
-                <p className="text-xs font-bold text-[#806A5B] mt-1">Quá trình lên men lá gai để làm bánh nhãn hiệu Bánh Gai.</p>
+                <span className="text-[11px] font-black uppercase tracking-wider text-[#A77D42]">Mẻ {isXiuPao ? 'Nhân Bánh' : 'Lá Gai'} Mới Nhất</span>
+                <h4 className="text-base font-black text-[#150807] mt-0.5">Mẻ {isXiuPao ? 'XP' : 'BG'}-2026-06</h4>
+                <p className="text-xs font-bold text-[#806A5B] mt-1">Quá trình bảo quản nguyên liệu cho {product.name} Thành Phương.</p>
               </div>
               <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${
                 hasWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'
@@ -435,9 +450,9 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
 
             <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#FAF2E8] pt-3 text-xs">
               <div>
-                <p className="font-bold text-[#806A5B]">Dự báo VOC cực đại</p>
+                <p className="font-bold text-[#806A5B]">Dự báo {gasLabel} cực đại</p>
                 <strong className={`mt-0.5 block text-sm font-black ${hasWarning ? 'text-[#B23B2F]' : 'text-[#214D35]'}`}>
-                  {Math.max(...vocPoints.map(d=>d.value))} ppm
+                  {Math.max(...vocPoints.map(d=>d.value))} {gasUnit}
                 </strong>
               </div>
               <div>
@@ -452,7 +467,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <span className="text-[11px] font-black uppercase tracking-wider text-[#8A7464]">Mẻ Khô Đã Đóng Gói</span>
-                <h4 className="text-base font-black text-[#150807] mt-0.5">Mẻ BG-2026-05</h4>
+                <h4 className="text-base font-black text-[#150807] mt-0.5">Mẻ {isXiuPao ? 'XP' : 'BG'}-2026-05</h4>
                 <p className="text-xs font-bold text-[#806A5B] mt-1">Đã kiểm nghiệm đóng gói thành phẩm an toàn sinh học.</p>
               </div>
               <span className="rounded-full bg-[#EDF9F0] px-2.5 py-1 text-[10px] font-black text-[#4A9F57]">
@@ -462,8 +477,8 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
 
             <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#FAF2E8] pt-3 text-xs">
               <div>
-                <p className="font-bold text-[#806A5B]">VOC cực đại lịch sử</p>
-                <strong className="mt-0.5 block text-sm font-black text-[#214D35]">92 ppm</strong>
+                <p className="font-bold text-[#806A5B]">{gasLabel} cực đại lịch sử</p>
+                <strong className="mt-0.5 block text-sm font-black text-[#214D35]">{isXiuPao ? '18 ppm' : '92 ppb'}</strong>
               </div>
               <div>
                 <p className="font-bold text-[#806A5B]">Đánh giá chất lượng</p>

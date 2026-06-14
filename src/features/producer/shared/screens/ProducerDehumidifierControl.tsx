@@ -21,13 +21,16 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
 
       if (id === 'Tủ 1') {
         const room = coldRooms[idx]
+        const isXiuPao = product.key === 'banh-xiu-pao'
         // If temperature <= 3 OR both dehumidifier and ventilation are active, resolve warning
         if (room.temp <= 3 || (room.dehumidifier && room.ventilation)) {
           room.status = 'Ổn định'
           room.voc = 28
+          room.nh3 = 12
         } else {
-          room.status = 'VOC tăng'
-          room.voc = 58
+          room.status = isXiuPao ? 'NH3 tăng' : 'VOC tăng'
+          room.voc = 68
+          room.nh3 = 25
         }
       }
     }
@@ -76,9 +79,40 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
         {/* Main Content Area */}
         <div className="px-4 mt-6 space-y-4">
           {rooms.map((room) => {
-            const isAlert = room.status === 'VOC tăng'
+            const isAlert = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
             const isWatch = room.status === 'Theo dõi'
             const tone = isAlert ? 'critical' : isWatch ? 'watch' : 'good'
+            const isXiuPao = product.key === 'banh-xiu-pao'
+            const itemsMap: Record<string, Record<string, string>> = {
+              'banh-gai': {
+                'Tủ 1': 'Lá gai',
+                'Tủ 2': 'Đậu xanh',
+                'Tủ 3': 'Dừa nạo',
+                'Tủ 4': 'Bánh gai thành phẩm',
+              },
+              'banh-xiu-pao': {
+                'Tủ 1': 'Nhân thịt xá xíu',
+                'Tủ 2': 'Bột mì & mỡ heo',
+                'Tủ 3': 'Trứng muối',
+                'Tủ 4': 'Bánh xíu páo TP',
+              },
+              'doi': {
+                'Tủ 1': 'Mạch nha',
+                'Tủ 2': 'Lạc nhân',
+                'Tủ 3': 'Vừng rang',
+                'Tủ 4': 'Kẹo dồi thành phẩm',
+              },
+              'keo-xiu-chau': {
+                'Tủ 1': 'Mạch nha',
+                'Tủ 2': 'Lạc nhân',
+                'Tủ 3': 'Vừng rang',
+                'Tủ 4': 'Kẹo sìu châu TP',
+              }
+            }
+            const itemLabel = itemsMap[product.key]?.[room.id] || room.item
+            const currentStatus = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
+              ? (isXiuPao ? 'NH3 tăng' : 'VOC tăng')
+              : room.status
 
             return (
               <div
@@ -100,19 +134,19 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
                     </div>
                     <div>
                       <h4 className="text-sm font-extrabold text-[#150807]">{room.id}</h4>
-                      <p className="text-[11px] font-bold text-[#806A5B] mt-0.5">Bảo quản: {room.item}</p>
+                      <p className="text-[11px] font-bold text-[#806A5B] mt-0.5">Bảo quản: {itemLabel}</p>
                     </div>
                   </div>
                   <span
                     className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${
                       isAlert
-                        ? 'bg-[#FFF6E7] text-[#C78116]'
+                        ? 'bg-[#FCE8E3] text-[#B23B2F]'
                         : isWatch
                         ? 'bg-[#FFF9E6] text-[#C78116]'
                         : 'bg-[#EDF9F0] text-[#4A9F57]'
                     }`}
                   >
-                    {room.status}
+                    {currentStatus}
                   </span>
                 </div>
 
@@ -129,8 +163,8 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
                     <div className="relative flex items-center">
                       <input
                         type="range"
-                        min="-5"
-                        max="15"
+                        min="-10"
+                        max="10"
                         value={room.temp}
                         onChange={(e) => handleUpdateRoom(room.id, 'temp', parseInt(e.target.value))}
                         className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
@@ -188,7 +222,7 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
 
                   {/* Extra Status */}
                   <div className="pt-2 border-t border-[#FAF2E8] text-[11px] text-[#806A5B] font-bold flex justify-between">
-                    <span>Nồng độ khí VOC: {room.voc} ppb</span>
+                    <span>Nồng độ khí {isXiuPao ? 'NH3' : 'VOC'}: {isXiuPao ? room.nh3 : room.voc} {isXiuPao ? 'ppm' : 'ppb'}</span>
                     <span>Độ ẩm kho: {room.humidity}%</span>
                   </div>
                 </div>

@@ -50,11 +50,11 @@ export const banhGaiData: ProducerProductData = {
     { 
       key: 'steamingTime', 
       label: 'Thời gian đang hấp bánh', 
-      value: '45', 
+      value: '32', 
       unit: 'phút', 
       type: 'time', 
       status: 'good',
-      aiRecommendation: 'Thời gian hấp đạt 45/60 phút. Mẻ bánh gai sẽ sẵn sàng xuất xưởng sau 15 phút.'
+      aiRecommendation: 'Thời gian hấp đạt 32/35 phút. Mẻ bánh gai sẽ sẵn sàng xuất xưởng sau 3 phút.'
     },
   ],
   batches: [
