@@ -261,13 +261,14 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
         {/* Dynamic Warning Threshold Config Slider */}
         <div className="mb-5 rounded-2xl bg-[#FAF2E8] p-3.5 border border-[#EFE4DC]/60">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-xs font-black text-[#6F4B35]">
+            <label htmlFor="voc-threshold-slider" className="flex items-center gap-1.5 text-xs font-black text-[#6F4B35]">
               <Settings2 size={14} className="text-[#A77D42]" />
               Ngưỡng cảnh báo VOC
-            </span>
+            </label>
             <strong className="text-sm font-black text-[#721A18]">{warningThreshold} ppm</strong>
           </div>
           <input
+            id="voc-threshold-slider"
             type="range"
             min="80"
             max="180"

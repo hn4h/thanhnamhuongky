@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ArrowLeft, ChevronLeft, Boxes, Droplets, Gauge, Snowflake, Thermometer, Trophy, Wind } from 'lucide-react'
+import { ChevronLeft, Compass, X, Boxes, Droplets, Gauge, Snowflake, Thermometer, Wind } from 'lucide-react'
 import { ProducerNav } from '../components/ProducerNav'
 import { ProducerScreenShell } from './ProducerScreenShell'
 import type { ProducerProductModule } from '../types'
@@ -8,7 +8,7 @@ type ProducerProductionMapProps = {
   product: ProducerProductModule
 }
 
-const steamChambers = [
+export const steamChambers = [
   { id: 'Lồng 1', batch: 'Loại 1', temp: 96, humidity: 82, pressure: 1.1, status: 'Ổn định', progress: 72, remainingMinutes: 18 },
   { id: 'Lồng 2', batch: 'Loại 2', temp: 98, humidity: 84, pressure: 1.2, status: 'Đang hấp', progress: 54, remainingMinutes: 31 },
   { id: 'Lồng 3', batch: 'Loại 1', temp: 103, humidity: 88, pressure: 1.6, status: 'Quá nhiệt', progress: 83, remainingMinutes: 9 },
@@ -16,157 +16,240 @@ const steamChambers = [
   { id: 'Lồng 5', batch: 'Chờ mẻ', temp: 72, humidity: 61, pressure: 0.4, status: 'Nghỉ', progress: 0, remainingMinutes: 0 },
 ]
 
-const coldRooms = [
+export const coldRooms = [
   { id: 'Kho 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 100, status: 'VOC tăng' },
   { id: 'Kho 2', item: 'Đậu xanh', temp: 5, humidity: 58, voc: 42, status: 'Ổn định' },
   { id: 'Kho 3', item: 'Dừa nạo', temp: 3, humidity: 55, voc: 35, status: 'Ổn định' },
   { id: 'Kho 4', item: 'Bánh thành phẩm', temp: 6, humidity: 60, voc: 48, status: 'Theo dõi' },
 ]
 
-export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
-  const [activeTab, setActiveTab] = useState<'steam' | 'storage'>('steam')
-  const [selectedChamber, setSelectedChamber] = useState<(typeof steamChambers)[number] | null>(null)
-  const isSteam = activeTab === 'steam'
+type JarIconProps = {
+  tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty'
+}
 
-  if (selectedChamber) {
-    return <SteamChamberDetail chamber={selectedChamber} product={product} onBack={() => setSelectedChamber(null)} />
+function JarIcon({ tone }: JarIconProps) {
+  const styles = {
+    good: { stroke: '#4ADE80', fill: '#EDF9F0', dot: false },
+    ripe: { stroke: '#FCD34D', fill: '#FFFDF0', dot: false },
+    watch: { stroke: '#F59E0B', fill: '#FFF9E6', dot: false },
+    critical: { stroke: '#EF4444', fill: '#FEE2E2', dot: true },
+    empty: { stroke: '#9CA3AF', fill: '#F3F4F6', dot: false },
+  }[tone]
+
+  return (
+    <div className="relative flex items-center justify-center w-10 h-10 select-none">
+      <svg viewBox="0 0 24 24" className="w-8 h-8 transition-transform duration-200 hover:scale-110 cursor-pointer">
+        <path
+          d="M8,4 L16,4 C17,4 17,5 17,6 L17,7 C18.5,8 19.5,9.5 19.5,11.5 L19.5,17 C19.5,19 18.5,20 17,20 L7,20 C5.5,20 4.5,19 4.5,17 L4.5,11.5 C4.5,9.5 5.5,8 7,7 L7,6 C7,5 7,4 8,4 Z"
+          fill={styles.fill}
+          stroke={styles.stroke}
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {styles.dot && (
+        <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 bg-[#EF4444] rounded-full border border-white animate-pulse" />
+      )}
+    </div>
+  )
+}
+
+type ZoneDiagramCardProps = {
+  name: string
+  icon: typeof Compass
+  type: 'steam' | 'storage'
+  onSelectSlot: (row: string, col: number, tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty') => void
+}
+
+function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot }: ZoneDiagramCardProps) {
+  const items = type === 'steam'
+    ? [
+        { id: 1, name: 'Lồng 1', tone: 'good' as const },
+        { id: 2, name: 'Lồng 2', tone: 'ripe' as const },
+        { id: 3, name: 'Lồng 3', tone: 'critical' as const },
+        { id: 4, name: 'Lồng 4', tone: 'good' as const },
+        { id: 5, name: 'Lồng 5', tone: 'empty' as const },
+      ]
+    : [
+        { id: 1, name: 'Kho 1', tone: 'critical' as const },
+        { id: 2, name: 'Kho 2', tone: 'good' as const },
+        { id: 3, name: 'Kho 3', tone: 'good' as const },
+        { id: 4, name: 'Kho 4', tone: 'watch' as const },
+      ]
+
+  return (
+    <div className="rounded-[24px] border border-[#EFE4DC] bg-white p-5 shadow-[0_12px_28px_rgba(57,28,12,0.06)]">
+      {/* Title & Compass Header */}
+      <div className="flex items-center justify-between mb-4 border-b border-[#FAF2E8]/60 pb-3">
+        <div className="flex items-center gap-2 text-[#721A18]">
+          <Icon size={20} strokeWidth={2.4} />
+          <span className="text-base font-black text-[#150807]">{name}</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs font-black text-[#A77D42]">
+          <Compass size={13} strokeWidth={2.4} />
+          <span>Bắc ↑</span>
+        </div>
+      </div>
+
+      {/* Grid container */}
+      <div className="flex items-center justify-around gap-2 select-none py-2">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onSelectSlot('A', item.id, item.tone)}
+            className="flex flex-col items-center border-0 bg-transparent p-0 focus:outline-none transition active:scale-90"
+          >
+            <JarIcon tone={item.tone} />
+            <span className="mt-1.5 text-xs font-black text-[#5C4D43]">{item.name}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
+  const [selectedItem, setSelectedItem] = useState<{
+    type: 'steam' | 'storage'
+    id: number
+  } | null>(null)
+
+  const handleSelectSlot = (
+    type: 'steam' | 'storage',
+    row: string,
+    col: number,
+    tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty'
+  ) => {
+    setSelectedItem({ type, id: col })
   }
+
+  const selectedDetails = useMemo(() => {
+    if (!selectedItem) return null
+
+    if (selectedItem.type === 'steam') {
+      const chamber = steamChambers[selectedItem.id - 1]
+      const tone = selectedItem.id === 1 || selectedItem.id === 4 ? 'good' :
+                   selectedItem.id === 2 ? 'ripe' :
+                   selectedItem.id === 3 ? 'critical' : 'empty'
+      return {
+        title: `Lồng Hấp ${selectedItem.id}`,
+        subtitle: `Mẻ: ${chamber.batch}`,
+        status: chamber.status,
+        tone,
+        metrics: [
+          { icon: Thermometer, label: 'Nhiệt', value: `${chamber.temp}°C` },
+          { icon: Droplets, label: 'Độ ẩm', value: `${chamber.humidity}%` },
+          { icon: Gauge, label: 'Áp suất', value: `${chamber.pressure} bar` },
+        ],
+        extra: chamber.progress > 0 
+          ? `${chamber.progress}% quy trình · Còn ${chamber.remainingMinutes} phút`
+          : 'Lồng đang chờ mẻ mới'
+      }
+    } else {
+      const room = coldRooms[selectedItem.id - 1]
+      const tone = selectedItem.id === 1 ? 'critical' :
+                   selectedItem.id === 4 ? 'watch' : 'good'
+      return {
+        title: `Kho Lạnh ${selectedItem.id}`,
+        subtitle: `Lưu trữ: ${room.item}`,
+        status: room.status,
+        tone,
+        metrics: [
+          { icon: Wind, label: 'VOC', value: `${room.voc} ppb` },
+          { icon: Snowflake, label: 'Nhiệt', value: `${room.temp}°C` },
+          { icon: Droplets, label: 'Độ ẩm', value: `${room.humidity}%` },
+        ],
+        extra: 'Hệ thống đối lưu gió đang hoạt động'
+      }
+    }
+  }, [selectedItem])
 
   return (
     <ProducerScreenShell product={product} eyebrow={product.name} title="Sơ Đồ" hideSummary>
-      <section className="rounded-[999px] border border-[#EFE4DC] bg-white p-1.5 shadow-[0_12px_28px_rgba(57,28,12,0.06)]">
-        <div className="grid grid-cols-2 gap-1 rounded-[999px]">
-          <button
-            type="button"
-            onClick={() => setActiveTab('steam')}
-            className="rounded-[999px] px-3 py-3 text-sm font-black transition-all duration-300 hover:scale-[1.01]"
-            style={{
-              background: isSteam ? '#721A18' : 'transparent',
-              color: isSteam ? '#FFFFFF' : '#806A5B',
-              boxShadow: isSteam ? '0 6px 14px rgba(114,26,24,0.2)' : 'none',
-            }}
-          >
-            Lồng hấp
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('storage')}
-            className="rounded-[999px] px-3 py-3 text-sm font-black transition-all duration-300 hover:scale-[1.01]"
-            style={{
-              background: !isSteam ? '#721A18' : 'transparent',
-              color: !isSteam ? '#FFFFFF' : '#806A5B',
-              boxShadow: !isSteam ? '0 6px 14px rgba(114,26,24,0.2)' : 'none',
-            }}
-          >
-            Kho bảo quản
-          </button>
+      <div className="space-y-6">
+        {/* Sơ đồ Lồng Hấp */}
+        <ZoneDiagramCard
+          name="Lồng Hấp"
+          icon={Thermometer}
+          type="steam"
+          onSelectSlot={(row, col, tone) => handleSelectSlot('steam', row, col, tone)}
+        />
+
+        {/* Sơ đồ Kho Bảo Quản */}
+        <ZoneDiagramCard
+          name="Kho Bảo Quản"
+          icon={Snowflake}
+          type="storage"
+          onSelectSlot={(row, col, tone) => handleSelectSlot('storage', row, col, tone)}
+        />
+
+        {/* Chi tiết giám sát */}
+        {selectedDetails && (
+          <div className="rounded-[24px] border border-[#EFE4DC] bg-white p-5 shadow-[0_12px_28px_rgba(57,28,12,0.06)] transition-all duration-300">
+            <div className="flex items-start justify-between border-b border-[#FAF2E8]/60 pb-3">
+              <div>
+                <span className="text-xs font-black uppercase tracking-wider text-[#A77D42]">
+                  Chi tiết giám sát
+                </span>
+                <h4 className="text-xl font-black text-[#150807] mt-0.5">
+                  {selectedDetails.title}
+                </h4>
+                <p className="text-xs font-bold text-[#806A5B] mt-0.5">
+                  {selectedDetails.subtitle}
+                </p>
+              </div>
+              <span className={`rounded-full px-3 py-1 text-xs font-black ${
+                selectedDetails.tone === 'good' ? 'bg-[#EDF9F0] text-[#4A9F57]' :
+                selectedDetails.tone === 'ripe' ? 'bg-[#FEFBE8] text-[#D97706]' :
+                selectedDetails.tone === 'watch' ? 'bg-[#FFF9E6] text-[#C78116]' :
+                selectedDetails.tone === 'critical' ? 'bg-[#FCE8E3] text-[#B23B2F]' :
+                'bg-[#F3F4F6] text-[#6B7280]'
+              }`}>
+                {selectedDetails.status}
+              </span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+              {selectedDetails.metrics.map((m, idx) => (
+                <SensorMini key={idx} icon={m.icon} label={m.label} value={m.value} />
+              ))}
+            </div>
+
+            <p className="mt-4 text-xs font-bold text-[#806A5B] bg-[#FAF2E8] rounded-xl py-2 px-3 text-center">
+              {selectedDetails.extra}
+            </p>
+          </div>
+        )}
+
+        {/* Chú thích màu sắc */}
+        <div className="rounded-[24px] border border-[#EFE4DC] bg-white p-5 shadow-[0_12px_28px_rgba(57,28,12,0.06)]">
+          <h3 className="text-base font-black text-[#150807] mb-4">Chú thích màu sắc</h3>
+          
+          <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+            <div className="flex items-center gap-3">
+              <JarIcon tone="good" />
+              <span className="text-sm font-black text-[#5C4D43]">Tốt</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <JarIcon tone="ripe" />
+              <span className="text-sm font-black text-[#5C4D43]">Chín</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <JarIcon tone="watch" />
+              <span className="text-sm font-black text-[#5C4D43]">Chú ý</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <JarIcon tone="critical" />
+              <span className="text-sm font-black text-[#5C4D43]">Cảnh báo</span>
+            </div>
+            <div className="flex items-center gap-3 col-span-2">
+              <JarIcon tone="empty" />
+              <span className="text-sm font-black text-[#5C4D43]">Trống</span>
+            </div>
+          </div>
         </div>
-      </section>
-
-      {isSteam ? (
-        <section className="mt-5">
-          <div className="mb-4 flex items-end justify-between gap-3">
-            <div>
-              <h2 className="text-[24px] font-black leading-tight text-[#150807]">5 lồng hấp</h2>
-              <p className="mt-1 text-sm font-medium text-[#7A665B]">Theo dõi nhiệt độ, độ ẩm, áp suất và tiến độ từng lồng.</p>
-            </div>
-            <span className="rounded-full bg-[#FFF6E7] px-3 py-1 text-xs font-black text-[#C78116]">1 cảnh báo</span>
-          </div>
-
-          <div className="grid gap-3">
-            {steamChambers.map((chamber) => {
-              const isWarning = chamber.status === 'Quá nhiệt'
-              const isIdle = chamber.progress === 0
-
-              return (
-                <button
-                  key={chamber.id}
-                  type="button"
-                  onClick={() => setSelectedChamber(chamber)}
-                  className={`w-full rounded-[24px] border bg-white p-4 text-left shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition active:scale-[0.99] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#FFF0EC] text-[#E45B2B]'}`}>
-                        <Thermometer size={24} strokeWidth={2.3} />
-                      </span>
-                      <div className="min-w-0">
-                        <h3 className="text-lg font-black text-[#150807]">{chamber.id}</h3>
-                        <p className="truncate text-sm font-bold text-[#806A5B]">{chamber.batch}</p>
-                      </div>
-                    </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
-                      {chamber.status}
-                    </span>
-                  </div>
-
-                  <div className="mt-4 rounded-[18px] bg-[#FAF2E8] px-3 py-3">
-                    <div className="h-4 overflow-hidden rounded-full bg-[#E8D9C8] shadow-[inset_0_1px_2px_rgba(74,45,30,0.12)]">
-                      <div
-                        className="h-full rounded-full"
-                        style={{
-                          width: `${chamber.progress}%`,
-                          background: isWarning ? '#B23B2F' : '#721A18',
-                        }}
-                      />
-                    </div>
-                    <p className="mt-2 text-sm font-bold text-[#6F4B35]">
-                      {isIdle ? 'Lồng đang chờ mẻ mới' : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                    <SensorMini icon={Thermometer} label="Nhiệt" value={`${chamber.temp}°C`} />
-                    <SensorMini icon={Droplets} label="Độ ẩm" value={`${chamber.humidity}%`} />
-                    <SensorMini icon={Gauge} label="Áp suất" value={`${chamber.pressure} bar`} />
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        </section>
-      ) : (
-        <section className="mt-5">
-          <div className="mb-4 flex items-end justify-between gap-3">
-            <div>
-              <h2 className="text-[24px] font-black leading-tight text-[#150807]">4 kho bảo quản</h2>
-              <p className="mt-1 text-sm font-medium text-[#7A665B]">Theo dõi VOC, nhiệt độ và độ ẩm nguyên liệu.</p>
-            </div>
-            <span className="rounded-full bg-[#FFF6E7] px-3 py-1 text-xs font-black text-[#C78116]">VOC</span>
-          </div>
-
-          <div className="grid gap-3">
-            {coldRooms.map((room) => {
-              const isWarning = room.status === 'VOC tăng'
-
-              return (
-                <article key={room.id} className={`rounded-[24px] border bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EEF7FF] text-[#4C79B8]'}`}>
-                        <Snowflake size={24} strokeWidth={2.3} />
-                      </span>
-                      <div className="min-w-0">
-                        <h3 className="text-lg font-black text-[#150807]">{room.id}</h3>
-                        <p className="truncate text-sm font-bold text-[#806A5B]">{room.item}</p>
-                      </div>
-                    </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
-                      {room.status}
-                    </span>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                    <SensorMini icon={Wind} label="VOC" value={`${room.voc} ppb`} />
-                    <SensorMini icon={Snowflake} label="Nhiệt" value={`${room.temp}°C`} />
-                    <SensorMini icon={Droplets} label="Độ ẩm" value={`${room.humidity}%`} />
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-        </section>
-      )}
+      </div>
     </ProducerScreenShell>
   )
 }
@@ -177,7 +260,7 @@ type SteamChamberDetailProps = {
   onBack: () => void
 }
 
-function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDetailProps) {
+export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDetailProps) {
   const trendData = useMemo(() => createTrendData(chamber), [chamber])
 
   return (
@@ -390,7 +473,7 @@ type SensorMiniProps = {
   value: string
 }
 
-function SensorMini({ icon: Icon, label, value }: SensorMiniProps) {
+export function SensorMini({ icon: Icon, label, value }: SensorMiniProps) {
   return (
     <div className="rounded-2xl bg-[#FAF2E8] px-2 py-3">
       <Icon className="mx-auto text-[#721A18]" size={18} strokeWidth={2.4} />

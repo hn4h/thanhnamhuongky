@@ -1,11 +1,11 @@
-import { CircleUserRound, Layers3, LayoutGrid, Map, TrendingUp } from 'lucide-react'
+import { CircleUserRound, Compass, Layers3, LayoutGrid, TrendingUp } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import type { ProducerProductModule } from '../types'
 
 const items = [
   ['dashboard', 'Bảng Điều Khiển', LayoutGrid],
-  ['productionMap', 'Sơ Đồ', Map],
-  ['devices', 'Kho Lạnh', Layers3],
+  ['productionMap', 'Sơ Đồ', Compass],
+  ['devices', 'Tổng Quan', Layers3],
   ['aiPredict', 'Dự Báo', TrendingUp],
   ['profile', 'Hồ Sơ', CircleUserRound],
 ] as const

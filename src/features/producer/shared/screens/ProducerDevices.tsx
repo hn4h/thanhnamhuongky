@@ -1,5 +1,8 @@
-import { StatusBadge } from '../components/StatusBadge'
+import { useState, useMemo } from 'react'
+import { ChevronLeft, Droplets, Gauge, Snowflake, Thermometer, Wind } from 'lucide-react'
 import { ProducerScreenShell } from './ProducerScreenShell'
+import { coldRooms, steamChambers, SteamChamberDetail, SensorMini } from './ProducerProductionMap'
+import { ProducerNav } from '../components/ProducerNav'
 import type { ProducerProductModule } from '../types'
 
 type ProducerDevicesProps = {
@@ -7,26 +10,337 @@ type ProducerDevicesProps = {
 }
 
 export function ProducerDevices({ product }: ProducerDevicesProps) {
+  const [selectedChamber, setSelectedChamber] = useState<(typeof steamChambers)[number] | null>(null)
+  const [selectedRoom, setSelectedRoom] = useState<(typeof coldRooms)[number] | null>(null)
+
+  if (selectedChamber) {
+    return <SteamChamberDetail chamber={selectedChamber} product={product} onBack={() => setSelectedChamber(null)} />
+  }
+
+  if (selectedRoom) {
+    return <ColdRoomDetail room={selectedRoom} product={product} onBack={() => setSelectedRoom(null)} />
+  }
+
   return (
-    <ProducerScreenShell product={product} eyebrow={product.name} title={`Thiết bị ${product.name}`}>
-      <div className="grid gap-3 md:grid-cols-2">
-        {product.data.devices.map((device) => (
-          <article key={device.id} className="rounded-lg border border-[#E0C69B] bg-white p-4 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold text-[#8A6238]">{device.id}</p>
-                <h2 className="mt-1 text-lg font-bold">{device.name}</h2>
-                <p className="mt-1 text-sm text-[#6F4B35]">{device.location}</p>
-              </div>
-              <StatusBadge tone={device.status === 'online' ? 'good' : device.status === 'warning' ? 'warning' : 'critical'}>{device.status}</StatusBadge>
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-              <div><p className="text-[#8B7460]">Pin</p><strong>{device.battery}%</strong></div>
-              <div><p className="text-[#8B7460]">Tín hiệu cuối</p><strong>{device.lastSignal}</strong></div>
-            </div>
-          </article>
-        ))}
-      </div>
+    <ProducerScreenShell product={product} eyebrow={product.name} title="Tổng Quan" hideSummary>
+      {/* 5 Lồng Hấp */}
+      <section>
+        <div className="mb-4 flex items-end justify-between gap-3">
+          <div>
+            <h2 className="text-[24px] font-black leading-tight text-[#150807]">5 lồng hấp</h2>
+            <p className="mt-1 text-sm font-medium text-[#7A665B]">Theo dõi nhiệt độ, độ ẩm, áp suất và tiến độ từng lồng.</p>
+          </div>
+          <span className="rounded-full bg-[#FFF6E7] px-3 py-1 text-xs font-black text-[#C78116]">1 cảnh báo</span>
+        </div>
+
+        <div className="grid gap-3">
+          {steamChambers.map((chamber) => {
+            const isWarning = chamber.status === 'Quá nhiệt'
+            const isIdle = chamber.progress === 0
+
+            return (
+              <button
+                key={chamber.id}
+                type="button"
+                onClick={() => setSelectedChamber(chamber)}
+                className={`w-full rounded-[24px] border bg-white p-4 text-left shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition active:scale-[0.99] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#FFF0EC] text-[#E45B2B]'}`}>
+                      <Thermometer size={24} strokeWidth={2.3} />
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-black text-[#150807]">{chamber.id}</h3>
+                      <p className="truncate text-sm font-bold text-[#806A5B]">{chamber.batch}</p>
+                    </div>
+                  </div>
+                  <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
+                    {chamber.status}
+                  </span>
+                </div>
+
+                <div className="mt-4 rounded-[18px] bg-[#FAF2E8] px-3 py-3">
+                  <div className="h-4 overflow-hidden rounded-full bg-[#E8D9C8] shadow-[inset_0_1px_2px_rgba(74,45,30,0.12)]">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${chamber.progress}%`,
+                        background: isWarning ? '#B23B2F' : '#721A18',
+                      }}
+                    />
+                  </div>
+                  <p className="mt-2 text-sm font-bold text-[#6F4B35]">
+                    {isIdle ? 'Lồng đang chờ mẻ mới' : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
+                  </p>
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                  <SensorMini icon={Thermometer} label="Nhiệt" value={`${chamber.temp}°C`} />
+                  <SensorMini icon={Droplets} label="Độ ẩm" value={`${chamber.humidity}%`} />
+                  <SensorMini icon={Gauge} label="Áp suất" value={`${chamber.pressure} bar`} />
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* 4 Kho Bảo Quản */}
+      <section className="mt-8">
+        <div className="mb-4 flex items-end justify-between gap-3">
+          <div>
+            <h2 className="text-[24px] font-black leading-tight text-[#150807]">4 kho bảo quản</h2>
+            <p className="mt-1 text-sm font-medium text-[#7A665B]">Theo dõi VOC, nhiệt độ và độ ẩm nguyên liệu.</p>
+          </div>
+          <span className="rounded-full bg-[#FFF6E7] px-3 py-1 text-xs font-black text-[#C78116]">VOC</span>
+        </div>
+
+        <div className="grid gap-3">
+          {coldRooms.map((room) => {
+            const isWarning = room.status === 'VOC tăng'
+
+            return (
+              <button
+                key={room.id}
+                type="button"
+                onClick={() => setSelectedRoom(room)}
+                className={`w-full rounded-[24px] border bg-white p-4 text-left shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition active:scale-[0.99] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EEF7FF] text-[#4C79B8]'}`}>
+                      <Snowflake size={24} strokeWidth={2.3} />
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-black text-[#150807]">{room.id}</h3>
+                      <p className="truncate text-sm font-bold text-[#806A5B]">{room.item}</p>
+                    </div>
+                  </div>
+                  <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
+                    {room.status}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                  <SensorMini icon={Wind} label="VOC" value={`${room.voc} ppb`} />
+                  <SensorMini icon={Snowflake} label="Nhiệt" value={`${room.temp}°C`} />
+                  <SensorMini icon={Droplets} label="Độ ẩm" value={`${room.humidity}%`} />
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </section>
     </ProducerScreenShell>
   )
 }
+
+// Subcomponents for Cold Room Details Page
+
+type ColdRoomDetailProps = {
+  product: ProducerProductModule
+  room: (typeof coldRooms)[number]
+  onBack: () => void
+}
+
+function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
+  const vocData = useMemo(() => {
+    // Generate 7 days of historical VOC data ending at room.voc
+    return [
+      { day: 1, value: Math.round(room.voc * 0.72) },
+      { day: 2, value: Math.round(room.voc * 0.85) },
+      { day: 3, value: Math.round(room.voc * 0.78) },
+      { day: 4, value: Math.round(room.voc * 0.94) },
+      { day: 5, value: Math.round(room.voc * 0.81) },
+      { day: 6, value: Math.round(room.voc * 0.89) },
+      { day: 7, value: room.voc },
+    ]
+  }, [room])
+
+  return (
+    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#F8EFE2] text-[#150807] shadow-[0_0_80px_rgba(74,45,30,0.32)]">
+      <div className="min-h-screen overflow-x-hidden bg-[#F8EFE2] pb-24">
+        {/* Header with cool blue/teal gradient for Cold Room */}
+        <header className="relative overflow-hidden bg-gradient-to-br from-[#0F1E36] via-[#1F3A60] to-[#2E548A] px-4 pb-6 pt-10 text-white">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.1),transparent_28%)]" />
+          <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full bg-[#3B82F6]/5 blur-xl pointer-events-none" />
+          
+          <div className="relative flex items-center justify-between">
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-white/12 text-white/80 transition-transform active:scale-90"
+              aria-label="Quay lại danh sách kho bảo quản"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <span className="text-[12px] font-medium tracking-wider text-[#E2ECF8]/60 uppercase">Kho bảo quản</span>
+            <div className="w-9 h-9" /> {/* Spacer */}
+          </div>
+
+          <div className="relative mt-4 flex items-center justify-between">
+            <h1 className="text-[22px] font-extrabold tracking-tight text-[#F3F7FC]">{room.item}</h1>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#60A5FA]/25 text-[#93C5FD] border border-[#60A5FA]/20">
+              {room.id}
+            </span>
+          </div>
+
+          <p className="relative mt-1 text-[12px] font-bold text-[#AEC2DC]">
+            B-2026-03 · Cảm biến hoạt động · Bánh gai Thành Nam
+          </p>
+
+          <div className="relative mt-5 flex items-center justify-between gap-5 text-xs font-bold text-[#D0DFEE]">
+            <span>Trạng thái hệ thống bảo quản</span>
+            <strong className={`${
+              room.status === 'VOC tăng' ? 'text-[#F59E0B]' :
+              room.status === 'Theo dõi' ? 'text-[#F59E0B]' :
+              'text-[#34D399]'
+            }`}>{room.status}</strong>
+          </div>
+        </header>
+
+        <main className="px-4 pt-7">
+          {/* Current Metrics Section */}
+          <section>
+            <h2 className="text-[22px] font-black leading-tight text-[#150807]">Chỉ số hiện tại</h2>
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              <DetailMetric icon={Snowflake} tone="blue" value={`${room.temp}°C`} label="Nhiệt độ" />
+              <DetailMetric icon={Droplets} tone="teal" value={`${room.humidity}%`} label="Độ ẩm" />
+              <DetailMetric icon={Wind} tone="orange" value={`${room.voc} ppb`} label="VOC" />
+            </div>
+          </section>
+
+          {/* Historical VOC Chart Section */}
+          <section className="mt-8">
+            <div className="mb-4">
+              <h2 className="text-[22px] font-black leading-tight text-[#150807]">Biểu đồ VOC</h2>
+              <p className="mt-1 text-xs font-bold text-[#806A5B]">7 ngày gần nhất · Chỉ số thực tế (ppb)</p>
+            </div>
+            <VocChart data={vocData} />
+          </section>
+        </main>
+        <ProducerNav product={product} />
+      </div>
+    </div>
+  )
+}
+
+const detailMetricTone = {
+  orange: 'bg-[#FFF6E7] text-[#C78116]',
+  blue: 'bg-[#EEF7FF] text-[#4C79B8]',
+  teal: 'bg-[#EDF9F0] text-[#4A9F57]',
+}
+
+type DetailMetricProps = {
+  icon: typeof Snowflake
+  tone: 'orange' | 'blue' | 'teal'
+  value: string
+  label: string
+}
+
+function DetailMetric({ icon: Icon, tone, value, label }: DetailMetricProps) {
+  return (
+    <div className="min-w-0 rounded-[22px] border border-[#EFE4DC] bg-white px-2 py-5 text-center shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300 hover:scale-[1.02]">
+      <span className={`mx-auto grid h-12 w-12 place-items-center rounded-2xl ${detailMetricTone[tone]}`}>
+        <Icon size={22} strokeWidth={2.3} />
+      </span>
+      <strong className="mt-4 block text-[18px] font-extrabold leading-none text-[#150807]">{value}</strong>
+      <p className="mt-2 text-xs font-bold text-[#806A5B]">{label}</p>
+    </div>
+  )
+}
+
+type VocChartProps = {
+  data: Array<{ day: number; value: number }>
+}
+
+function VocChart({ data }: VocChartProps) {
+  const width = 720
+  const height = 360
+  const padding = { top: 38, right: 30, bottom: 52, left: 54 }
+  const plotWidth = width - padding.left - padding.right
+  const plotHeight = height - padding.top - padding.bottom
+
+  const xFor = (index: number) => padding.left + (plotWidth * index) / (data.length - 1)
+  
+  // Calculate dynamic min and max for Y axis
+  const values = data.map((d) => d.value)
+  const maxVal = Math.max(...values, 100)
+  const minVal = 0
+  const yLimit = Math.ceil(maxVal / 50) * 50
+
+  const yFor = (value: number) => {
+    return padding.top + plotHeight - ((value - minVal) / (yLimit - minVal)) * plotHeight
+  }
+
+  const pathPoints = data.map((p, i) => `${xFor(i)},${yFor(p.value)}`).join(' ')
+  const ticks = Array.from({ length: 5 }, (_, i) => Math.round(minVal + ((yLimit - minVal) * i) / 4))
+
+  return (
+    <div className="rounded-[22px] border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300 hover:scale-[1.01]">
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Biểu đồ VOC" className="h-auto w-full">
+        {/* Y Grid lines and Ticks */}
+        {ticks.map((tick) => {
+          const y = yFor(tick)
+          return (
+            <g key={tick}>
+              <line x1={padding.left} x2={width - padding.right} y1={y} y2={y} stroke="#F0E8DF" strokeDasharray="8 8" />
+              <text x={padding.left - 15} y={y + 6} textAnchor="end" className="fill-[#8B6B52] text-[18px] font-bold">
+                {tick}
+              </text>
+            </g>
+          )
+        })}
+
+        {/* X Ticks */}
+        {data.map((point, index) => {
+          const x = xFor(index)
+          return (
+            <g key={point.day}>
+              <line x1={x} x2={x} y1={padding.top} y2={padding.top + plotHeight} stroke="#F7F1EB" strokeDasharray="6 6" />
+              <text x={x} y={height - 12} textAnchor="middle" className="fill-[#8B6B52] text-[16px] font-bold">
+                N{point.day}
+              </text>
+            </g>
+          )
+        })}
+
+        {/* Axis Lines */}
+        <line x1={padding.left} x2={padding.left} y1={padding.top} y2={padding.top + plotHeight} stroke="#7E726A" strokeWidth="2" />
+        <line x1={padding.left} x2={width - padding.right} y1={padding.top + plotHeight} y2={padding.top + plotHeight} stroke="#7E726A" strokeWidth="2" />
+
+        {/* Line path */}
+        <polyline fill="none" points={pathPoints} stroke="#214D35" strokeLinecap="round" strokeLinejoin="round" strokeWidth="6" />
+
+        {/* Data points */}
+        {data.map((point, index) => {
+          const cx = xFor(index)
+          const cy = yFor(point.value)
+
+          return (
+            <g key={`marker-${point.day}`}>
+              <circle cx={cx} cy={cy} r="8" fill="#214D35" stroke="#FFFFFF" strokeWidth="2" />
+              {index === data.length - 1 && (
+                <g>
+                  <rect x={cx - 25} y={cy - 34} width="50" height="22" rx="6" fill="#4F423B" />
+                  <text x={cx} y={cy - 19} textAnchor="middle" className="fill-white text-[12px] font-extrabold">
+                    {point.value}
+                  </text>
+                </g>
+              )}
+            </g>
+          )
+        })}
+      </svg>
+
+      <div className="mt-4 flex justify-center gap-5 text-center text-xs font-black text-[#6F4B35]">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-6 rounded-full bg-[#214D35]" />
+          Nồng độ VOC thực tế (ppb)
+        </span>
+      </div>
+    </div>
+  )
+}
+
