@@ -151,9 +151,10 @@ type ZoneDiagramCardProps = {
   icon: typeof Thermometer
   type: 'steam' | 'storage'
   onSelectSlot: (row: string, col: number, tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty') => void
+  product: ProducerProductModule
 }
 
-function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot }: ZoneDiagramCardProps) {
+function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: ZoneDiagramCardProps) {
   const items = type === 'steam'
     ? [
         { id: 1, name: 'Lồng 1', tone: 'good' as const },
@@ -182,19 +183,107 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot }: ZoneDiagramCa
       {/* Grid container */}
       <div className="flex items-center justify-around gap-2 select-none py-2">
         {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => onSelectSlot('A', item.id, item.tone)}
-            className="flex flex-col items-center border-0 bg-transparent p-0 focus:outline-none transition active:scale-90"
-          >
-            {type === 'steam' ? (
-              <SteamerIcon tone={item.tone} />
-            ) : (
-              <StorageIcon tone={item.tone} />
+          <div key={item.id} className="relative group flex flex-col items-center">
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onSelectSlot('A', item.id, item.tone)}
+              className="flex flex-col items-center border-0 bg-transparent p-0 focus:outline-none transition active:scale-90"
+            >
+              {type === 'steam' ? (
+                <SteamerIcon tone={item.tone} />
+              ) : (
+                <StorageIcon tone={item.tone} />
+              )}
+              <span className="mt-1.5 text-xs font-black text-[#5C4D43]">{item.name}</span>
+            </button>
+
+            {/* Hover Tooltip for Steam Chambers */}
+            {type === 'steam' && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover:block z-50 w-48 rounded-[16px] border border-[#EFE4DC] bg-white p-3 shadow-[0_8px_24px_rgba(57,28,12,0.12)] text-left pointer-events-none transition-all duration-200">
+                <div className="border-b border-[#FAF2E8] pb-1.5 mb-1.5 text-center text-sm font-black text-[#150807]">
+                  {item.name}
+                </div>
+                {item.tone === 'empty' ? (
+                  <div className="text-center text-[#806A5B] font-bold py-1">Đang chờ mẻ mới</div>
+                ) : (
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
+                        <Thermometer size={14} className="text-[#ff7f0e]" />
+                        Nhiệt độ
+                      </span>
+                      <span className="text-[#150807] font-black">
+                        {steamChambers[item.id - 1].temp} °C
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
+                        <Droplets size={14} className="text-[#2ca02c]" />
+                        Độ ẩm
+                      </span>
+                      <span className="text-[#150807] font-black">
+                        {steamChambers[item.id - 1].humidity} %
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
+                        <Gauge size={14} className="text-[#1f77b4]" />
+                        Áp suất
+                      </span>
+                      <span className="text-[#150807] font-black">
+                        {Math.round(steamChambers[item.id - 1].pressure * 100)} cb
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {/* Tooltip Arrow */}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 rotate-45 border-r border-b border-[#EFE4DC] bg-white" />
+              </div>
             )}
-            <span className="mt-1.5 text-xs font-black text-[#5C4D43]">{item.name}</span>
-          </button>
+
+            {/* Hover Tooltip for Cold Rooms */}
+            {type === 'storage' && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover:block z-50 w-48 rounded-[16px] border border-[#EFE4DC] bg-white p-3 shadow-[0_8px_24px_rgba(57,28,12,0.12)] text-left pointer-events-none transition-all duration-200">
+                <div className="border-b border-[#FAF2E8] pb-1.5 mb-1.5 text-center text-sm font-black text-[#150807]">
+                  {item.name}
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
+                      <Wind size={14} className={product.key === 'banh-xiu-pao' ? 'text-[#4C79B8]' : 'text-[#8B5CF6]'} />
+                      {product.key === 'banh-xiu-pao' ? 'NH3' : 'VOC'}
+                    </span>
+                    <span className="text-[#150807] font-black">
+                      {product.key === 'banh-xiu-pao' 
+                        ? `${coldRooms[item.id - 1].nh3} ppm` 
+                        : `${coldRooms[item.id - 1].voc} ppb`}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
+                      <Snowflake size={14} className="text-[#3B82F6]" />
+                      Nhiệt độ
+                    </span>
+                    <span className="text-[#150807] font-black">
+                      {coldRooms[item.id - 1].temp} °C
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
+                      <Droplets size={14} className="text-[#10B981]" />
+                      Độ ẩm
+                    </span>
+                    <span className="text-[#150807] font-black">
+                      {coldRooms[item.id - 1].humidity} %
+                    </span>
+                  </div>
+                </div>
+                {/* Tooltip Arrow */}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 rotate-45 border-r border-b border-[#EFE4DC] bg-white" />
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
@@ -305,6 +394,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
           icon={Thermometer}
           type="steam"
           onSelectSlot={(row, col, tone) => handleSelectSlot('steam', row, col, tone)}
+          product={product}
         />
 
         {/* Sơ đồ Kho Bảo Quản */}
@@ -313,6 +403,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
           icon={Snowflake}
           type="storage"
           onSelectSlot={(row, col, tone) => handleSelectSlot('storage', row, col, tone)}
+          product={product}
         />
 
         {/* Chi tiết giám sát */}
@@ -538,15 +629,44 @@ type TrendPoint = {
 
 function createTrendData(chamber: (typeof steamChambers)[number]): TrendPoint[] {
   const isRunning = chamber.progress > 0
+  const elapsedMinutes = isRunning ? Math.round((chamber.progress / 100) * 35) : 0
+
   return Array.from({ length: 15 }, (_, index) => {
-    const wave = Math.sin((index / 14) * Math.PI * 2)
-    const smallWave = Math.cos((index / 14) * Math.PI * 3)
+    const t = isRunning ? Math.max(0.5, elapsedMinutes - 14 + index) : index + 1
+    
+    // Ambient starting levels
+    const T_ambient = 27
+    const H_ambient = 55
+    
+    let temp = T_ambient
+    let humidity = H_ambient
+    let pressure = 0 // in cb (original chamber.pressure is in bar, so 1.2 bar = 120 cb)
+
+    if (isRunning) {
+      // Bezier-like rising curves matching bieu_do_vector.svg
+      temp = T_ambient + (chamber.temp - T_ambient) * (1 - Math.exp(-t / 12))
+      humidity = H_ambient + (chamber.humidity - H_ambient) * (1 - Math.exp(-t / 8))
+      
+      // Pressure spikes fast in first 5 minutes then oscillates
+      const currentPressureCb = chamber.pressure * 100
+      if (t < 5) {
+        pressure = (currentPressureCb * t) / 5
+      } else {
+        pressure = currentPressureCb + 4 * Math.sin((t - 5) * 1.5)
+      }
+    } else {
+      // Resting chamber
+      const wave = Math.sin((index / 14) * Math.PI * 2)
+      temp = T_ambient + wave * 0.4
+      humidity = H_ambient + Math.cos((index / 14) * Math.PI * 2) * 0.6
+      pressure = 0
+    }
 
     return {
-      minute: index + 1,
-      temperature: Number((chamber.temp + (isRunning ? wave * 2.4 + smallWave * 0.7 : wave * 0.4)).toFixed(1)),
-      humidity: Number((chamber.humidity + (isRunning ? Math.cos((index / 14) * Math.PI * 2) * 3.2 : Math.cos((index / 14) * Math.PI * 2) * 0.6)).toFixed(1)),
-      pressure: isRunning ? Number((chamber.pressure + wave * 0.08).toFixed(2)) : 0,
+      minute: isRunning ? Math.max(1, elapsedMinutes - 14 + index) : index + 1,
+      temperature: Number(temp.toFixed(1)),
+      humidity: Number(humidity.toFixed(1)),
+      pressure: Number(pressure.toFixed(1))
     }
   })
 }
@@ -556,69 +676,169 @@ type TrendChartProps = {
 }
 
 function TrendChart({ data }: TrendChartProps) {
-  const width = 720
-  const height = 360
-  const padding = { top: 38, right: 18, bottom: 52, left: 54 }
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
+  
+  const width = 1000
+  const height = 550
+  const padding = { top: 50, right: 80, bottom: 80, left: 80 }
   const plotWidth = width - padding.left - padding.right
   const plotHeight = height - padding.top - padding.bottom
- 
+  
   const xFor = (index: number) => padding.left + (plotWidth * index) / (data.length - 1)
-  const yFor = (value: number, min: number, max: number) => padding.top + plotHeight - ((value - min) / (max - min)) * plotHeight
-  const pointsFor = (key: keyof Omit<TrendPoint, 'minute'>, min: number, max: number) =>
-    data.map((point, index) => `${xFor(index)},${yFor(point[key], min, max)}`).join(' ')
- 
-  const tempValues = data.map((d) => d.temperature)
-  const minTemp = Math.min(...tempValues)
-  const tempMinScale = minTemp < 70 ? 20 : 70
-  const tempMaxScale = minTemp < 70 ? 120 : 110
+  
+  // Scale so that 200 is at y=50, 0 is at y=470 (plotHeight = 420)
+  // y = 470 - (value / 200) * 420
+  const yFor = (value: number) => padding.top + plotHeight - (value / 200) * plotHeight
+  
+  const pointsFor = (key: 'temperature' | 'humidity' | 'pressure') =>
+    data.map((point, index) => `${xFor(index)},${yFor(point[key])}`).join(' ')
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    const svg = e.currentTarget
+    const rect = svg.getBoundingClientRect()
+    const mouseX = ((e.clientX - rect.left) / rect.width) * width
+    const index = Math.round(((mouseX - padding.left) / plotWidth) * (data.length - 1))
+    if (index >= 0 && index < data.length) {
+      setHoveredIdx(index)
+    } else {
+      setHoveredIdx(null)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    setHoveredIdx(null)
+  }
+
+  const hoveredPoint = hoveredIdx !== null ? data[hoveredIdx] : null
+  const hoveredX = hoveredIdx !== null ? xFor(hoveredIdx) : 0
 
   return (
-    <div className="rounded-[22px] border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300 hover:scale-[1.01]">
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Biểu đồ nhiệt độ, độ ẩm và áp suất trong 15 phút gần nhất" className="h-auto w-full">
-        {[0, 25, 50, 75, 100].map((tick) => {
-          const y = yFor(tick, 0, 100)
+    <div className="relative rounded-[22px] border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300">
+      <svg 
+        viewBox={`0 0 ${width} ${height}`} 
+        role="img" 
+        aria-label="Biểu đồ nhiệt độ, độ ẩm và áp suất trong 15 phút gần nhất" 
+        className="h-auto w-full select-none"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Grid Lines at 0, 50, 150, 200 */}
+        {[0, 50, 150, 200].map((tick) => {
+          const y = yFor(tick)
           return (
             <g key={tick}>
               <line x1={padding.left} x2={width - padding.right} y1={y} y2={y} stroke="#EFE8E2" strokeDasharray="8 8" />
-              <text x={padding.left - 16} y={y + 6} textAnchor="end" className="fill-[#8B6B52] text-[20px] font-bold">
+              <text x={padding.left - 16} y={y + 6} textAnchor="end" className="fill-[#8B6B52] text-[18px] font-bold">
                 {tick}
               </text>
             </g>
           )
         })}
- 
+
+        {/* Reference Line at 100 */}
+        <line x1={padding.left} x2={width - padding.right} y1={yFor(100)} y2={yFor(100)} stroke="#444444" strokeWidth="3" />
+        <text x={padding.left - 16} y={yFor(100) + 6} textAnchor="end" className="fill-[#444444] text-[20px] font-black">
+          100
+        </text>
+
+        {/* X-Axis Ticks (Minutes) */}
         {data.map((point, index) => {
           const x = xFor(index)
           return (
             <g key={point.minute}>
               <line x1={x} x2={x} y1={padding.top} y2={padding.top + plotHeight} stroke="#F1E8DF" strokeDasharray="8 8" />
-              <text x={x} y={height - 14} textAnchor="middle" className="fill-[#8B6B52] text-[17px] font-bold">
+              <text x={x} y={height - 20} textAnchor="middle" className="fill-[#8B6B52] text-[16px] font-bold">
                 {point.minute}'
               </text>
             </g>
           )
         })}
- 
+
+        {/* Axes lines */}
         <line x1={padding.left} x2={padding.left} y1={padding.top} y2={padding.top + plotHeight} stroke="#6D625C" strokeWidth="2" />
         <line x1={padding.left} x2={width - padding.right} y1={padding.top + plotHeight} y2={padding.top + plotHeight} stroke="#6D625C" strokeWidth="2" />
- 
-        <polyline fill="none" points={pointsFor('humidity', 0, 100)} stroke="#4A9F57" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
-        <polyline fill="none" points={pointsFor('temperature', tempMinScale, tempMaxScale)} stroke="#B23B2F" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
-        <polyline fill="none" points={pointsFor('pressure', 0, 2)} stroke="#C78116" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
- 
+
+        {/* Curves */}
+        {/* Humidity: Green #2ca02c */}
+        <polyline fill="none" points={pointsFor('humidity')} stroke="#2ca02c" strokeLinecap="round" strokeLinejoin="round" strokeWidth="5" />
+        {/* Temperature: Orange #ff7f0e */}
+        <polyline fill="none" points={pointsFor('temperature')} stroke="#ff7f0e" strokeLinecap="round" strokeLinejoin="round" strokeWidth="5" />
+        {/* Pressure: Blue #1f77b4 */}
+        <polyline fill="none" points={pointsFor('pressure')} stroke="#1f77b4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="5" />
+
+        {/* Data points */}
         {data.map((point, index) => (
           <g key={`dots-${point.minute}`}>
-            <circle cx={xFor(index)} cy={yFor(point.humidity, 0, 100)} r="10" fill="#4A9F57" />
-            <circle cx={xFor(index)} cy={yFor(point.temperature, tempMinScale, tempMaxScale)} r="10" fill="#B23B2F" />
-            <circle cx={xFor(index)} cy={yFor(point.pressure, 0, 2)} r="10" fill="#C78116" />
+            <circle cx={xFor(index)} cy={yFor(point.humidity)} r="6" fill="#2ca02c" stroke="#fff" strokeWidth="1.5" />
+            <circle cx={xFor(index)} cy={yFor(point.temperature)} r="6" fill="#ff7f0e" stroke="#fff" strokeWidth="1.5" />
+            <circle cx={xFor(index)} cy={yFor(point.pressure)} r="6" fill="#1f77b4" stroke="#fff" strokeWidth="1.5" />
           </g>
         ))}
+
+        {/* Vertical hover line */}
+        {hoveredIdx !== null && (
+          <g>
+            <line 
+              x1={hoveredX} 
+              x2={hoveredX} 
+              y1={padding.top} 
+              y2={padding.top + plotHeight} 
+              stroke="#8B6B52" 
+              strokeWidth="2" 
+              strokeDasharray="4 4" 
+            />
+            {/* Highlighted dots */}
+            <circle cx={hoveredX} cy={yFor(hoveredPoint!.humidity)} r="9" fill="#2ca02c" stroke="#fff" strokeWidth="2" />
+            <circle cx={hoveredX} cy={yFor(hoveredPoint!.temperature)} r="9" fill="#ff7f0e" stroke="#fff" strokeWidth="2" />
+            <circle cx={hoveredX} cy={yFor(hoveredPoint!.pressure)} r="9" fill="#1f77b4" stroke="#fff" strokeWidth="2" />
+          </g>
+        )}
       </svg>
- 
-      <div className="mt-2 grid grid-cols-3 gap-2 text-center text-[12px] font-black text-[#6F4B35]">
-        <LegendItem color="#B23B2F" label="Nhiệt độ" />
-        <LegendItem color="#4A9F57" label="Độ ẩm" />
-        <LegendItem color="#C78116" label="Áp suất" />
+
+      {/* Tooltip Popup */}
+      {hoveredPoint && (
+        <div 
+          className="absolute z-30 pointer-events-none rounded-xl border border-[#EFE4DC] bg-white/95 p-3 shadow-lg backdrop-blur-sm text-xs font-bold text-[#6F4B35]"
+          style={{
+            left: hoveredX > width / 2 ? `${(hoveredX - 180) / width * 100}%` : `${(hoveredX + 20) / width * 100}%`,
+            top: '20%',
+            width: '160px'
+          }}
+        >
+          <div className="border-b border-[#FAF2E8] pb-1.5 mb-1.5 text-center text-sm font-black text-[#150807]">
+            Phút thứ {hoveredPoint.minute}
+          </div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#ff7f0e]" />
+              Nhiệt độ
+            </span>
+            <span className="text-[#150807]">{hoveredPoint.temperature} °C</span>
+          </div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#2ca02c]" />
+              Độ ẩm
+            </span>
+            <span className="text-[#150807]">{hoveredPoint.humidity} %</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#1f77b4]" />
+              Áp suất
+            </span>
+            <span className="text-[#150807]">
+              {hoveredPoint.pressure} cb ({ (hoveredPoint.pressure / 100).toFixed(1) } bar)
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Legend */}
+      <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[12px] font-black text-[#6F4B35]">
+        <LegendItem color="#ff7f0e" label="Nhiệt độ (°C)" />
+        <LegendItem color="#2ca02c" label="Độ ẩm (%)" />
+        <LegendItem color="#1f77b4" label="Áp suất (cb)" />
       </div>
     </div>
   )
