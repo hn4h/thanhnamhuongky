@@ -348,15 +348,21 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
                 <SteamerIcon tone="good" />
                 <StorageIcon tone="good" />
               </div>
-              <span className="text-sm font-black text-[#5C4D43]">Tốt</span>
+              <span className="text-sm font-black text-[#5C4D43]">Đã hoàn tất hoặc bảo quản tốt</span>
             </div>
             <div className="flex items-center gap-3">
-              <SteamerIcon tone="ripe" />
-              <span className="text-sm font-black text-[#5C4D43]">Chín (Lồng hấp công nghiệp)</span>
+              <div className="flex gap-1 items-center">
+                <SteamerIcon tone="ripe" />
+                <StorageIcon tone="ripe" />
+              </div>
+              <span className="text-sm font-black text-[#5C4D43]">Trong quá trình</span>
             </div>
             <div className="flex items-center gap-3">
-              <StorageIcon tone="watch" />
-              <span className="text-sm font-black text-[#5C4D43]">Chú ý (Tủ lạnh công nghiệp)</span>
+              <div className="flex gap-1 items-center">
+                <SteamerIcon tone="watch" />
+                <StorageIcon tone="watch" />
+              </div>
+              <span className="text-sm font-black text-[#5C4D43]">Cần chú ý</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex gap-1 items-center">
@@ -366,8 +372,11 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
               <span className="text-sm font-black text-[#5C4D43]">Cảnh báo</span>
             </div>
             <div className="flex items-center gap-3 col-span-2">
-              <SteamerIcon tone="empty" />
-              <span className="text-sm font-black text-[#5C4D43]">Trống (Lồng hấp công nghiệp)</span>
+              <div className="flex gap-1 items-center">
+                <SteamerIcon tone="empty" />
+                <StorageIcon tone="empty" />
+              </div>
+              <span className="text-sm font-black text-[#5C4D43]">Trống</span>
             </div>
           </div>
         </div>
