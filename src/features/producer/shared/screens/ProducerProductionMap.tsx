@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ChevronLeft, Compass, X, Boxes, Droplets, Gauge, Snowflake, Thermometer, Wind } from 'lucide-react'
+import { ChevronLeft, X, Boxes, Droplets, Gauge, Snowflake, Thermometer, Wind } from 'lucide-react'
 import { ProducerNav } from '../components/ProducerNav'
 import { ProducerScreenShell } from './ProducerScreenShell'
 import type { ProducerProductModule } from '../types'
@@ -56,7 +56,7 @@ function JarIcon({ tone }: JarIconProps) {
 
 type ZoneDiagramCardProps = {
   name: string
-  icon: typeof Compass
+  icon: typeof Thermometer
   type: 'steam' | 'storage'
   onSelectSlot: (row: string, col: number, tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty') => void
 }
@@ -79,15 +79,11 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot }: ZoneDiagramCa
 
   return (
     <div className="rounded-[24px] border border-[#EFE4DC] bg-white p-5 shadow-[0_12px_28px_rgba(57,28,12,0.06)]">
-      {/* Title & Compass Header */}
+      {/* Title Header */}
       <div className="flex items-center justify-between mb-4 border-b border-[#FAF2E8]/60 pb-3">
         <div className="flex items-center gap-2 text-[#721A18]">
           <Icon size={20} strokeWidth={2.4} />
           <span className="text-base font-black text-[#150807]">{name}</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-xs font-black text-[#A77D42]">
-          <Compass size={13} strokeWidth={2.4} />
-          <span>Bắc ↑</span>
         </div>
       </div>
 

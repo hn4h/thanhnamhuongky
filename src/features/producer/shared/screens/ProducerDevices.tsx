@@ -12,6 +12,10 @@ type ProducerDevicesProps = {
 export function ProducerDevices({ product }: ProducerDevicesProps) {
   const [selectedChamber, setSelectedChamber] = useState<(typeof steamChambers)[number] | null>(null)
   const [selectedRoom, setSelectedRoom] = useState<(typeof coldRooms)[number] | null>(null)
+  const [activeTab, setActiveTab] = useState<'steamer' | 'storage'>('steamer')
+
+  const hasSteamerWarning = useMemo(() => steamChambers.some((chamber) => chamber.status === 'Quá nhiệt'), [])
+  const hasStorageWarning = useMemo(() => coldRooms.some((room) => room.status === 'VOC tăng'), [])
 
   if (selectedChamber) {
     return <SteamChamberDetail chamber={selectedChamber} product={product} onBack={() => setSelectedChamber(null)} />
@@ -23,115 +27,171 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
 
   return (
     <ProducerScreenShell product={product} eyebrow={product.name} title="Tổng Quan" hideSummary>
-      {/* 5 Lồng Hấp */}
-      <section>
-        <div className="mb-4 flex items-end justify-between gap-3">
-          <div>
-            <h2 className="text-[24px] font-black leading-tight text-[#150807]">5 lồng hấp</h2>
-            <p className="mt-1 text-sm font-medium text-[#7A665B]">Theo dõi nhiệt độ, độ ẩm, áp suất và tiến độ từng lồng.</p>
+      {/* Tabs Switcher */}
+      <div className="mb-6 flex rounded-[20px] bg-[#FAF2E8] p-1 shadow-[inset_0_1px_3px_rgba(74,45,30,0.08)]">
+        <button
+          type="button"
+          onClick={() => setActiveTab('steamer')}
+          className={`flex-1 rounded-[16px] py-3 px-2 text-center text-sm font-black transition-all duration-300 flex items-center justify-center gap-1.5 relative ${
+            activeTab === 'steamer'
+              ? 'bg-[#721A18] text-white shadow-sm'
+              : 'text-[#806A5B] hover:text-[#721A18]'
+          }`}
+        >
+          <span>Lồng hấp</span>
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
+            activeTab === 'steamer' ? 'bg-white/20 text-white' : 'bg-[#EFE4DC] text-[#721A18]'
+          }`}>
+            {steamChambers.length}
+          </span>
+          {hasSteamerWarning && (
+            <span className="absolute top-2.5 right-2.5 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E64A35] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E64A35]"></span>
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('storage')}
+          className={`flex-1 rounded-[16px] py-3 px-2 text-center text-sm font-black transition-all duration-300 flex items-center justify-center gap-1.5 relative ${
+            activeTab === 'storage'
+              ? 'bg-[#721A18] text-white shadow-sm'
+              : 'text-[#806A5B] hover:text-[#721A18]'
+          }`}
+        >
+          <span>Kho bảo quản</span>
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
+            activeTab === 'storage' ? 'bg-white/20 text-white' : 'bg-[#EFE4DC] text-[#721A18]'
+          }`}>
+            {coldRooms.length}
+          </span>
+          {hasStorageWarning && (
+            <span className="absolute top-2.5 right-2.5 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E64A35] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E64A35]"></span>
+            </span>
+          )}
+        </button>
+      </div>
+
+      {activeTab === 'steamer' ? (
+        /* Lồng Hấp Section */
+        <section className="space-y-4">
+          <div className="flex justify-between items-center">
+            <p className="text-xs font-bold text-[#806A5B]">
+              Theo dõi nhiệt độ, độ ẩm, áp suất và tiến độ từng lồng.
+            </p>
+            {hasSteamerWarning && (
+              <span className="rounded-full bg-[#FCE8E3] px-2 py-0.5 text-[10px] font-black text-[#B23B2F] border border-[#EAA18F]">
+                1 cảnh báo
+              </span>
+            )}
           </div>
-          <span className="rounded-full bg-[#FFF6E7] px-3 py-1 text-xs font-black text-[#C78116]">1 cảnh báo</span>
-        </div>
 
-        <div className="grid gap-3">
-          {steamChambers.map((chamber) => {
-            const isWarning = chamber.status === 'Quá nhiệt'
-            const isIdle = chamber.progress === 0
+          <div className="grid gap-3">
+            {steamChambers.map((chamber) => {
+              const isWarning = chamber.status === 'Quá nhiệt'
+              const isIdle = chamber.progress === 0
 
-            return (
-              <button
-                key={chamber.id}
-                type="button"
-                onClick={() => setSelectedChamber(chamber)}
-                className={`w-full rounded-[24px] border bg-white p-4 text-left shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition active:scale-[0.99] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#FFF0EC] text-[#E45B2B]'}`}>
-                      <Thermometer size={24} strokeWidth={2.3} />
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="text-lg font-black text-[#150807]">{chamber.id}</h3>
-                      <p className="truncate text-sm font-bold text-[#806A5B]">{chamber.batch}</p>
+              return (
+                <button
+                  key={chamber.id}
+                  type="button"
+                  onClick={() => setSelectedChamber(chamber)}
+                  className={`w-full rounded-[24px] border bg-white p-4 text-left shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition active:scale-[0.99] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#FFF0EC] text-[#E45B2B]'}`}>
+                        <Thermometer size={24} strokeWidth={2.3} />
+                      </span>
+                      <div className="min-w-0">
+                        <h3 className="text-lg font-black text-[#150807]">{chamber.id}</h3>
+                        <p className="truncate text-sm font-bold text-[#806A5B]">{chamber.batch}</p>
+                      </div>
                     </div>
+                    <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
+                      {chamber.status}
+                    </span>
                   </div>
-                  <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
-                    {chamber.status}
-                  </span>
-                </div>
 
-                <div className="mt-4 rounded-[18px] bg-[#FAF2E8] px-3 py-3">
-                  <div className="h-4 overflow-hidden rounded-full bg-[#E8D9C8] shadow-[inset_0_1px_2px_rgba(74,45,30,0.12)]">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${chamber.progress}%`,
-                        background: isWarning ? '#B23B2F' : '#721A18',
-                      }}
-                    />
+                  <div className="mt-4 rounded-[18px] bg-[#FAF2E8] px-3 py-3">
+                    <div className="h-4 overflow-hidden rounded-full bg-[#E8D9C8] shadow-[inset_0_1px_2px_rgba(74,45,30,0.12)]">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${chamber.progress}%`,
+                          background: isWarning ? '#B23B2F' : '#721A18',
+                        }}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm font-bold text-[#6F4B35]">
+                      {isIdle ? 'Lồng đang chờ mẻ mới' : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
+                    </p>
                   </div>
-                  <p className="mt-2 text-sm font-bold text-[#6F4B35]">
-                    {isIdle ? 'Lồng đang chờ mẻ mới' : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
-                  </p>
-                </div>
 
-                <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                  <SensorMini icon={Thermometer} label="Nhiệt" value={`${chamber.temp}°C`} />
-                  <SensorMini icon={Droplets} label="Độ ẩm" value={`${chamber.humidity}%`} />
-                  <SensorMini icon={Gauge} label="Áp suất" value={`${chamber.pressure} bar`} />
-                </div>
-              </button>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* 4 Kho Bảo Quản */}
-      <section className="mt-8">
-        <div className="mb-4 flex items-end justify-between gap-3">
-          <div>
-            <h2 className="text-[24px] font-black leading-tight text-[#150807]">4 kho bảo quản</h2>
-            <p className="mt-1 text-sm font-medium text-[#7A665B]">Theo dõi VOC, nhiệt độ và độ ẩm nguyên liệu.</p>
+                  <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                    <SensorMini icon={Thermometer} label="Nhiệt" value={`${chamber.temp}°C`} />
+                    <SensorMini icon={Droplets} label="Độ ẩm" value={`${chamber.humidity}%`} />
+                    <SensorMini icon={Gauge} label="Áp suất" value={`${chamber.pressure} bar`} />
+                  </div>
+                </button>
+              )
+            })}
           </div>
-          <span className="rounded-full bg-[#FFF6E7] px-3 py-1 text-xs font-black text-[#C78116]">VOC</span>
-        </div>
+        </section>
+      ) : (
+        /* Kho Bảo Quản Section */
+        <section className="space-y-4">
+          <div className="flex justify-between items-center">
+            <p className="text-xs font-bold text-[#806A5B]">
+              Theo dõi VOC, nhiệt độ và độ ẩm nguyên liệu.
+            </p>
+            {hasStorageWarning && (
+              <span className="rounded-full bg-[#FFF6E7] px-2 py-0.5 text-[10px] font-black text-[#C78116] border border-[#EAA18F]">
+                Cảnh báo VOC
+              </span>
+            )}
+          </div>
 
-        <div className="grid gap-3">
-          {coldRooms.map((room) => {
-            const isWarning = room.status === 'VOC tăng'
+          <div className="grid gap-3">
+            {coldRooms.map((room) => {
+              const isWarning = room.status === 'VOC tăng'
 
-            return (
-              <button
-                key={room.id}
-                type="button"
-                onClick={() => setSelectedRoom(room)}
-                className={`w-full rounded-[24px] border bg-white p-4 text-left shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition active:scale-[0.99] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EEF7FF] text-[#4C79B8]'}`}>
-                      <Snowflake size={24} strokeWidth={2.3} />
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="text-lg font-black text-[#150807]">{room.id}</h3>
-                      <p className="truncate text-sm font-bold text-[#806A5B]">{room.item}</p>
+              return (
+                <button
+                  key={room.id}
+                  type="button"
+                  onClick={() => setSelectedRoom(room)}
+                  className={`w-full rounded-[24px] border bg-white p-4 text-left shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition active:scale-[0.99] ${isWarning ? 'border-[#EAA18F]' : 'border-[#EFE4DC]'}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[18px] ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EEF7FF] text-[#4C79B8]'}`}>
+                        <Snowflake size={24} strokeWidth={2.3} />
+                      </span>
+                      <div className="min-w-0">
+                        <h3 className="text-lg font-black text-[#150807]">{room.id}</h3>
+                        <p className="truncate text-sm font-bold text-[#806A5B]">{room.item}</p>
+                      </div>
                     </div>
+                    <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
+                      {room.status}
+                    </span>
                   </div>
-                  <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
-                    {room.status}
-                  </span>
-                </div>
 
-                <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                  <SensorMini icon={Wind} label="VOC" value={`${room.voc} ppb`} />
-                  <SensorMini icon={Snowflake} label="Nhiệt" value={`${room.temp}°C`} />
-                  <SensorMini icon={Droplets} label="Độ ẩm" value={`${room.humidity}%`} />
-                </div>
-              </button>
-            )
-          })}
-        </div>
-      </section>
+                  <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                    <SensorMini icon={Wind} label="VOC" value={`${room.voc} ppb`} />
+                    <SensorMini icon={Snowflake} label="Nhiệt" value={`${room.temp}°C`} />
+                    <SensorMini icon={Droplets} label="Độ ẩm" value={`${room.humidity}%`} />
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        </section>
+      )}
     </ProducerScreenShell>
   )
 }
