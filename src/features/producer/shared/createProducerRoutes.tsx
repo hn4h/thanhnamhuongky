@@ -12,6 +12,8 @@ import { ProducerProfile } from './screens/ProducerProfile'
 import { ProducerTerms } from './screens/ProducerTerms'
 import { ProducerPrivacy } from './screens/ProducerPrivacy'
 import { ProducerSupport } from './screens/ProducerSupport'
+import { ProducerSteamerControl } from './screens/ProducerSteamerControl'
+import { ProducerDehumidifierControl } from './screens/ProducerDehumidifierControl'
 import type { ProducerProductModule } from './types'
 
 export function createProducerRoutes(products: ProducerProductModule[]): RouteObject[] {
@@ -34,6 +36,8 @@ export function createProducerRoutes(products: ProducerProductModule[]): RouteOb
           { path: 'terms', element: <ProducerTerms product={product} /> },
           { path: 'privacy', element: <ProducerPrivacy product={product} /> },
           { path: 'support', element: <ProducerSupport product={product} /> },
+          { path: 'steamer-control', element: <ProducerSteamerControl product={product} /> },
+          { path: 'dehumidifier-control', element: <ProducerDehumidifierControl product={product} /> },
         ],
       })),
     },

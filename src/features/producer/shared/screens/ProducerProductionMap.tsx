@@ -17,10 +17,10 @@ export const steamChambers = [
 ]
 
 export const coldRooms = [
-  { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 58, status: 'VOC tăng' },
-  { id: 'Tủ 2', item: 'Đậu xanh', temp: 5, humidity: 58, voc: 42, status: 'Ổn định' },
-  { id: 'Tủ 3', item: 'Dừa nạo', temp: 3, humidity: 55, voc: 35, status: 'Ổn định' },
-  { id: 'Tủ 4', item: 'Bánh thành phẩm', temp: 6, humidity: 60, voc: 48, status: 'Theo dõi' },
+  { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 58, status: 'VOC tăng', dehumidifier: true, ventilation: false },
+  { id: 'Tủ 2', item: 'Đậu xanh', temp: 5, humidity: 58, voc: 42, status: 'Ổn định', dehumidifier: false, ventilation: false },
+  { id: 'Tủ 3', item: 'Dừa nạo', temp: 3, humidity: 55, voc: 35, status: 'Ổn định', dehumidifier: false, ventilation: true },
+  { id: 'Tủ 4', item: 'Bánh thành phẩm', temp: 6, humidity: 60, voc: 48, status: 'Theo dõi', dehumidifier: true, ventilation: true },
 ]
 
 type SteamerIconProps = {
@@ -225,9 +225,11 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
                    selectedItem.id === 2 ? 'ripe' :
                    selectedItem.id === 3 ? 'critical' : 'empty'
       return {
+        type: 'steam' as const,
         title: `Lồng Hấp Công Nghiệp ${selectedItem.id}`,
         subtitle: `Mẻ: ${chamber.batch}`,
         status: chamber.status,
+        progress: chamber.progress,
         tone,
         metrics: [
           { icon: Thermometer, label: 'Nhiệt', value: `${chamber.temp}°C` },
@@ -243,6 +245,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
       const tone = selectedItem.id === 1 ? 'critical' :
                    selectedItem.id === 4 ? 'watch' : 'good'
       return {
+        type: 'storage' as const,
         title: `Tủ Lạnh Công Nghiệp ${selectedItem.id}`,
         subtitle: `Lưu trữ: ${room.item}`,
         status: room.status,
@@ -309,6 +312,25 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
                 <SensorMini key={idx} icon={m.icon} label={m.label} value={m.value} />
               ))}
             </div>
+
+            {/* Progress Bar for Steaming Oven */}
+            {selectedDetails.type === 'steam' && selectedDetails.progress !== undefined && selectedDetails.progress > 0 && (
+              <div className="mt-4 rounded-[18px] bg-[#FAF2E8] p-3">
+                <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-1.5">
+                  <span>Tiến độ hấp</span>
+                  <span>{selectedDetails.progress}%</span>
+                </div>
+                <div className="h-3 overflow-hidden rounded-full bg-[#E8D9C8] shadow-[inset_0_1px_2px_rgba(74,45,30,0.12)]">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${selectedDetails.progress}%`,
+                      background: selectedDetails.tone === 'critical' ? '#B23B2F' : '#721A18',
+                    }}
+                  />
+                </div>
+              </div>
+            )}
 
             <p className="mt-4 text-xs font-bold text-[#806A5B] bg-[#FAF2E8] rounded-xl py-2 px-3 text-center">
               {selectedDetails.extra}
