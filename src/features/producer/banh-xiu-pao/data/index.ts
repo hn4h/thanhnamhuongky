@@ -2,9 +2,10 @@ import type { ProducerProductData } from '../../shared/types'
 
 export const banhXiuPaoData: ProducerProductData = {
   metrics: [
-    { key: 'ovenTemp', label: 'Nhiệt lò nướng', value: '182', unit: '°C', type: 'temperature', status: 'good' },
-    { key: 'bakingTime', label: 'Thời gian nướng', value: '24', unit: 'phút', type: 'time', status: 'good' },
+    { key: 'ovenTemp', label: 'Nhiệt lò nướng', value: '180', unit: '°C', type: 'temperature', status: 'good' },
+    { key: 'bakingTime', label: 'Thời gian nướng (Gđ 2)', value: '14', unit: 'phút', type: 'time', status: 'good' },
     { key: 'fillingHumidity', label: 'Độ ẩm nhân', value: '42', unit: '%', type: 'humidity', status: 'good' },
+    { key: 'nh3Index', label: 'Chỉ số NH3 bảo quản', value: '12', unit: 'ppm', type: 'count', status: 'good', aiRecommendation: 'Chỉ số NH3 ổn định (12 ppm <= 20 ppm), kho bảo quản đạt chuẩn chống ôi thiu.' },
     { key: 'quality', label: 'Điểm chất lượng AI', value: '91', unit: '/100', type: 'quality', status: 'good' },
   ],
   batches: [

@@ -36,6 +36,7 @@ interface CustomAlert {
 export function ProducerAlerts({ product }: ProducerAlertsProps) {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<AlertFilter>('all')
+  const isXiuPao = product.key === 'banh-xiu-pao'
 
   // IoT Interactive States
   const [steamVented, setSteamVented] = useState<boolean>(false)
@@ -46,11 +47,11 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
   const [humidityLoading, setHumidityLoading] = useState<boolean>(false)
 
   // Local simulated alerts state
-  const [alerts, setAlerts] = useState<CustomAlert[]>([
+  const [alerts, setAlerts] = useState<CustomAlert[]>(() => [
     {
       id: 'AL-01',
       title: 'Lồng hấp buồng A quá nhiệt & quá áp suất',
-      message: 'Nhiệt độ hiện tại: 108°C (ngưỡng 100°C), Áp suất: 2.1 bar (ngưỡng 1.5 bar). Vui lòng xử lý xả áp suất khẩn cấp.',
+      message: 'Nhiệt độ hiện tại: 108°C (ngưỡng 105°C), Áp suất: 2.1 bar (ngưỡng 1.8 bar). Vui lòng xử lý xả áp suất khẩn cấp.',
       createdAt: '2 phút trước',
       severity: 'high',
       isRead: false,
@@ -59,8 +60,10 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
     },
     {
       id: 'AL-02',
-      title: 'Nồng độ VOC tăng cao bất thường',
-      message: 'Chỉ số chất hữu cơ dễ bay hơi VOC tại kho bảo quản đạt 3.5 ppm (ngưỡng 1.0 ppm). Có nguy cơ ảnh hưởng chất lượng bảo quản lá bánh gai.',
+      title: isXiuPao ? 'Nồng độ NH3 tăng cao bất thường' : 'Nồng độ VOC tăng cao bất thường',
+      message: isXiuPao
+        ? 'Chỉ số NH3 tại kho bảo quản đạt 25 ppm (ngưỡng an toàn <= 20 ppm). Có nguy cơ ảnh hưởng chất lượng bảo quản nhân bánh xíu páo.'
+        : 'Chỉ số chất hữu cơ dễ bay hơi VOC tại kho bảo quản đạt 68 ppb (ngưỡng an toàn <= 60 ppb). Có nguy cơ ảnh hưởng chất lượng bảo quản lá bánh gai.',
       createdAt: '10 phút trước',
       severity: 'medium',
       isRead: false,
@@ -70,7 +73,7 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
     {
       id: 'AL-03',
       title: 'Độ ẩm kho thành phẩm tăng nhẹ',
-      message: 'Độ ẩm vượt 58%, hệ thống tự động bật quạt thông gió phụ trợ.',
+      message: 'Độ ẩm vượt 52%, hệ thống tự động bật quạt thông gió phụ trợ.',
       createdAt: '45 phút trước',
       severity: 'medium',
       isRead: true,
@@ -287,8 +290,12 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
                             {alert.id === 'AL-01' && steamVented 
                               ? 'Hệ thống buồng IoT đã thực hiện xả hơi tự động. Áp suất buồng hiện đã trở lại ngưỡng an toàn: 1.1 bar, Nhiệt độ buồng hấp: 95°C.' 
                               : alert.id === 'AL-02' 
-                                ? `Nồng độ VOC hiện tại: 3.5 ppm (ngưỡng an toàn: <1.0 ppm).${
-                                    tempReduced ? ' [Đã giảm nhiệt độ bảo quản xuống 18°C]' : ''
+                                ? `Nồng độ ${isXiuPao ? 'NH3' : 'VOC'} hiện tại: ${
+                                    isXiuPao
+                                      ? (tempReduced || humidityReduced ? '12 ppm' : '25 ppm')
+                                      : (tempReduced || humidityReduced ? '28 ppb' : '68 ppb')
+                                  } (ngưỡng an toàn: ${isXiuPao ? '<= 20 ppm' : '<= 60 ppb'}).${
+                                    tempReduced ? ` [Đã giảm nhiệt độ bảo quản xuống ${isXiuPao ? '-2' : '0'}°C]` : ''
                                   }${
                                     humidityReduced ? ' [Đã bật hút ẩm sâu xuống 45%]' : ''
                                   }`

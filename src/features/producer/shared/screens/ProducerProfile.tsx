@@ -34,7 +34,7 @@ const translations = {
     verified: 'Đã xác minh',
     memberSince: 'Thành viên từ',
     batches: 'Mẻ bánh',
-    ovens: 'Lò hấp/nướng',
+    ovens: 'Lồng hấp/nướng',
     years: 'Kinh nghiệm',
     personalInfo: 'Thông tin cá nhân',
     fullName: 'Họ và tên',
@@ -88,7 +88,7 @@ const translations = {
 export function ProducerProfile({ product }: ProducerProfileProps) {
   const navigate = useNavigate()
   const [lang, setLang] = useState<Language>('vi')
-  
+
   // Interactive States
   const [notifyActive, setNotifyActive] = useState(true)
   const [biometricActive, setBiometricActive] = useState(true)
@@ -142,19 +142,19 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
   return (
     <AppFrame contentClassName="p-0">
       <div className="min-h-screen overflow-x-hidden bg-[#F8EFE2] pb-24 text-[#150807]">
-        
+
         {/* Profile Premium Header */}
-        <header 
+        <header
           className="relative overflow-hidden px-5 pb-7 pt-14 text-white bg-gradient-to-br from-[#3A0611] via-[#721A18] to-[#8B321F]"
         >
           {/* Glowing Accents */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.13),transparent_28%)] pointer-events-none" />
           <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full bg-[#F1C932]/10 blur-xl pointer-events-none" />
           <div className="absolute -left-6 -bottom-10 h-36 w-36 rounded-full bg-[#F1C932]/12 blur-lg pointer-events-none" />
-          
+
           <div className="relative flex items-center justify-between mb-6">
             <span className="text-lg font-bold tracking-wide font-sans">{t.title}</span>
-            <button 
+            <button
               type="button"
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F1C932]/10 border border-[#F1C932]/30 transition-all duration-300 hover:bg-[#F1C932]/20 hover:scale-105 active:scale-95"
             >
@@ -166,7 +166,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
           {/* User Details */}
           <div className="relative flex items-center gap-4">
             <div className="relative">
-              <div 
+              <div
                 className="flex items-center justify-center w-[76px] h-[76px] rounded-full text-white font-bold text-2xl border border-[#F1C932]/40 shadow-lg transition-transform duration-500 hover:rotate-[360deg]"
                 style={{
                   borderWidth: '3px',
@@ -177,7 +177,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
               </div>
               <div className="absolute bottom-0.5 right-0.5 h-[18px] w-[18px] rounded-full bg-[#22C55E] border border-[#1A0A00]" style={{ borderWidth: '2px' }} />
             </div>
-            
+
             <div className="flex-1">
               <h1 className="text-[19px] font-bold tracking-wide text-white leading-tight">{producerData.fullName}</h1>
               <div className="flex items-center gap-2 mt-1">
@@ -199,7 +199,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
         {/* Stats Section */}
         <section className="px-4 -mt-4 mb-4 relative z-10">
           <div className="grid grid-cols-3 gap-1.5 p-3.5 rounded-2xl bg-white shadow-[0_12px_28px_rgba(57,28,12,0.08)] border border-[#EFE4DC] transition-all duration-300 hover:scale-[1.01]">
-            
+
             {/* Column 1 */}
             <div className="flex flex-col items-center py-1.5 text-center">
               <span className="text-[20px] font-extrabold text-[#3A0611] leading-none">{producerData.batches}</span>
@@ -246,7 +246,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
         <section className="px-4 mb-4">
           <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-[#806A5B]">{t.settings}</div>
           <div className="rounded-2xl bg-white shadow-[0_12px_28px_rgba(57,28,12,0.08)] border border-[#EFE4DC] overflow-hidden divide-y divide-[#EFE4DC] transition-all duration-300 hover:scale-[1.01]">
-            
+
             {/* Language Selection Toggle */}
             <div className="flex flex-col gap-2.5 px-4 py-3.5 transition-colors duration-200 hover:bg-[#FDF9F5]">
               <div className="flex items-center gap-3">
@@ -255,7 +255,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
                 </div>
                 <span className="text-sm font-extrabold text-[#150807]">{t.languageLabel}</span>
               </div>
-              
+
               <div className="flex gap-2 pl-[44px]">
                 {/* Tiếng Việt Button */}
                 <button
@@ -271,7 +271,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
                   <span>🇻🇳</span>
                   <span>Tiếng Việt</span>
                 </button>
-                
+
                 {/* English Button */}
                 <button
                   type="button"
@@ -329,7 +329,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
         <section className="px-4 mb-4">
           <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-[#806A5B]">{t.app}</div>
           <div className="rounded-2xl bg-white shadow-[0_12px_28px_rgba(57,28,12,0.08)] border border-[#EFE4DC] overflow-hidden divide-y divide-[#EFE4DC] transition-all duration-300 hover:scale-[1.01]">
-            
+
             {/* Version */}
             <div className="flex items-center justify-between px-4 py-3.5 transition-colors duration-200 hover:bg-[#FDF9F5]">
               <span className="text-sm font-extrabold text-[#150807]">{t.version}</span>

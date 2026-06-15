@@ -2,10 +2,11 @@ import type { ProducerProductData } from '../../shared/types'
 
 export const doiData: ProducerProductData = {
   metrics: [
-    { key: 'steamTemp', label: 'Nhiệt hấp', value: '91', unit: '°C', type: 'temperature', status: 'good' },
-    { key: 'coolStorage', label: 'Nhiệt kho mát', value: '5', unit: '°C', type: 'temperature', status: 'good' },
-    { key: 'packingHumidity', label: 'Độ ẩm đóng gói', value: '54', unit: '%', type: 'humidity', status: 'good' },
-    { key: 'quality', label: 'Điểm chất lượng AI', value: '88', unit: '/100', type: 'quality', status: 'warning' },
+    { key: 'syrupTemp', label: 'Nhiệt độ nồi kẹo', value: '120', unit: '°C', type: 'temperature', status: 'good' },
+    { key: 'cookingTime', label: 'Thời gian nấu kẹo', value: '18', unit: 'phút', type: 'time', status: 'good' },
+    { key: 'prepAreaTemp', label: 'Nhiệt độ môi trường', value: '25', unit: '°C', type: 'temperature', status: 'good' },
+    { key: 'prepAreaHumidity', label: 'Độ ẩm môi trường', value: '58', unit: '%', type: 'humidity', status: 'good' },
+    { key: 'quality', label: 'Điểm chất lượng AI', value: '88', unit: '/100', type: 'quality', status: 'good' },
   ],
   batches: [
     { id: 'DO-0626-01', name: 'Dồi truyền thống hút chân không', status: 'in-progress', startedAt: '11/06/2026', expectedAt: '11/06/2026', quantity: '420 gói', qualityScore: 88, notes: 'Theo dõi nhiệt kho mát sau đóng gói.' },

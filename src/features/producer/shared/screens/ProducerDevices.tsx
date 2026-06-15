@@ -15,7 +15,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
   const [activeTab, setActiveTab] = useState<'steamer' | 'storage'>('steamer')
 
   const hasSteamerWarning = useMemo(() => steamChambers.some((chamber) => chamber.status === 'Quá nhiệt'), [])
-  const hasStorageWarning = useMemo(() => coldRooms.some((room) => room.status === 'VOC tăng'), [])
+  const hasStorageWarning = useMemo(() => coldRooms.some((room) => room.status === 'VOC tăng' || room.status === 'NH3 tăng'), [])
 
   if (selectedChamber) {
     return <SteamChamberDetail chamber={selectedChamber} product={product} onBack={() => setSelectedChamber(null)} />
@@ -146,18 +146,49 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
         <section className="space-y-4">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold text-[#806A5B]">
-              Theo dõi VOC, nhiệt độ và độ ẩm nguyên liệu trong tủ lạnh công nghiệp.
+              Theo dõi {product.key === 'banh-xiu-pao' ? 'NH3' : 'VOC'}, nhiệt độ và độ ẩm nguyên liệu trong tủ lạnh công nghiệp.
             </p>
             {hasStorageWarning && (
               <span className="rounded-full bg-[#FFF6E7] px-2 py-0.5 text-[10px] font-black text-[#C78116] border border-[#EAA18F]">
-                Cảnh báo VOC
+                Cảnh báo {product.key === 'banh-xiu-pao' ? 'NH3' : 'VOC'}
               </span>
             )}
           </div>
 
           <div className="grid gap-3">
             {coldRooms.map((room) => {
-              const isWarning = room.status === 'VOC tăng'
+              const isWarning = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
+              const isXiuPao = product.key === 'banh-xiu-pao'
+              const itemsMap: Record<string, Record<string, string>> = {
+                'banh-gai': {
+                  'Tủ 1': 'Lá gai',
+                  'Tủ 2': 'Đậu xanh',
+                  'Tủ 3': 'Dừa nạo',
+                  'Tủ 4': 'Bánh gai thành phẩm',
+                },
+                'banh-xiu-pao': {
+                  'Tủ 1': 'Nhân thịt xá xíu',
+                  'Tủ 2': 'Bột mì & mỡ heo',
+                  'Tủ 3': 'Trứng muối',
+                  'Tủ 4': 'Bánh xíu páo TP',
+                },
+                'doi': {
+                  'Tủ 1': 'Mạch nha',
+                  'Tủ 2': 'Lạc nhân',
+                  'Tủ 3': 'Vừng rang',
+                  'Tủ 4': 'Kẹo dồi thành phẩm',
+                },
+                'keo-xiu-chau': {
+                  'Tủ 1': 'Mạch nha',
+                  'Tủ 2': 'Lạc nhân',
+                  'Tủ 3': 'Vừng rang',
+                  'Tủ 4': 'Kẹo sìu châu TP',
+                }
+              }
+              const itemLabel = itemsMap[product.key]?.[room.id] || room.item
+              const currentStatus = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
+                ? (isXiuPao ? 'NH3 tăng' : 'VOC tăng')
+                : room.status
 
               return (
                 <button
@@ -173,16 +204,16 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
                       </span>
                       <div className="min-w-0">
                         <h3 className="text-lg font-black text-[#150807]">{room.id}</h3>
-                        <p className="truncate text-sm font-bold text-[#806A5B]">{room.item}</p>
+                        <p className="truncate text-sm font-bold text-[#806A5B]">{itemLabel}</p>
                       </div>
                     </div>
                     <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FFF6E7] text-[#C78116]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
-                      {room.status}
+                      {currentStatus}
                     </span>
                   </div>
 
                   <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                    <SensorMini icon={Wind} label="VOC" value={`${room.voc} ppb`} />
+                    <SensorMini icon={Wind} label={isXiuPao ? 'NH3' : 'VOC'} value={isXiuPao ? `${room.nh3} ppm` : `${room.voc} ppb`} />
                     <SensorMini icon={Snowflake} label="Nhiệt" value={`${room.temp}°C`} />
                     <SensorMini icon={Droplets} label="Độ ẩm" value={`${room.humidity}%`} />
                   </div>
@@ -205,29 +236,64 @@ type ColdRoomDetailProps = {
 }
 
 function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
+  const isXiuPao = product.key === 'banh-xiu-pao'
+  const itemsMap: Record<string, Record<string, string>> = {
+    'banh-gai': {
+      'Tủ 1': 'Lá gai',
+      'Tủ 2': 'Đậu xanh',
+      'Tủ 3': 'Dừa nạo',
+      'Tủ 4': 'Bánh gai thành phẩm',
+    },
+    'banh-xiu-pao': {
+      'Tủ 1': 'Nhân thịt xá xíu',
+      'Tủ 2': 'Bột mì & mỡ heo',
+      'Tủ 3': 'Trứng muối',
+      'Tủ 4': 'Bánh xíu páo TP',
+    },
+    'doi': {
+      'Tủ 1': 'Mạch nha',
+      'Tủ 2': 'Lạc nhân',
+      'Tủ 3': 'Vừng rang',
+      'Tủ 4': 'Kẹo dồi thành phẩm',
+    },
+    'keo-xiu-chau': {
+      'Tủ 1': 'Mạch nha',
+      'Tủ 2': 'Lạc nhân',
+      'Tủ 3': 'Vừng rang',
+      'Tủ 4': 'Kẹo sìu châu TP',
+    }
+  }
+  const itemLabel = itemsMap[product.key]?.[room.id] || room.item
+  const gasLabel = isXiuPao ? 'NH3' : 'VOC'
+  const gasUnit = isXiuPao ? 'ppm' : 'ppb'
+  const targetVal = isXiuPao ? (room.nh3 ?? 25) : room.voc
+  const currentStatus = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
+    ? (isXiuPao ? 'NH3 tăng' : 'VOC tăng')
+    : room.status
+
   const vocData = useMemo(() => {
     if (room.id === 'Tủ 1') {
       return [
-        { day: 1, value: 25 },
-        { day: 2, value: 27 },
-        { day: 3, value: 32 },
-        { day: 4, value: 34 },
-        { day: 5, value: 40 },
-        { day: 6, value: 47 },
-        { day: 7, value: 58 },
+        { day: 1, value: Math.round(targetVal * 0.4) },
+        { day: 2, value: Math.round(targetVal * 0.45) },
+        { day: 3, value: Math.round(targetVal * 0.55) },
+        { day: 4, value: Math.round(targetVal * 0.6) },
+        { day: 5, value: Math.round(targetVal * 0.7) },
+        { day: 6, value: Math.round(targetVal * 0.8) },
+        { day: 7, value: targetVal },
       ]
     }
-    // Generate 7 days of historical VOC data ending at room.voc
+    // Generate 7 days of historical VOC/NH3 data ending at targetVal
     return [
-      { day: 1, value: Math.round(room.voc * 0.72) },
-      { day: 2, value: Math.round(room.voc * 0.85) },
-      { day: 3, value: Math.round(room.voc * 0.78) },
-      { day: 4, value: Math.round(room.voc * 0.94) },
-      { day: 5, value: Math.round(room.voc * 0.81) },
-      { day: 6, value: Math.round(room.voc * 0.89) },
-      { day: 7, value: room.voc },
+      { day: 1, value: Math.round(targetVal * 0.72) },
+      { day: 2, value: Math.round(targetVal * 0.85) },
+      { day: 3, value: Math.round(targetVal * 0.78) },
+      { day: 4, value: Math.round(targetVal * 0.94) },
+      { day: 5, value: Math.round(targetVal * 0.81) },
+      { day: 6, value: Math.round(targetVal * 0.89) },
+      { day: 7, value: targetVal },
     ]
-  }, [room])
+  }, [room, targetVal])
 
   return (
     <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#F8EFE2] text-[#150807] shadow-[0_0_80px_rgba(74,45,30,0.32)]">
@@ -251,28 +317,28 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
           </div>
 
           <div className="relative mt-4 flex items-center justify-between">
-            <h1 className="text-[22px] font-extrabold tracking-tight text-[#F3F7FC]">{room.item}</h1>
+            <h1 className="text-[22px] font-extrabold tracking-tight text-[#F3F7FC]">{itemLabel}</h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#60A5FA]/25 text-[#93C5FD] border border-[#60A5FA]/20">
               {room.id}
             </span>
           </div>
 
           <p className="relative mt-1 text-[12px] font-bold text-[#AEC2DC]">
-            B-2026-03 · Cảm biến hoạt động · Bánh gai Thành Nam
+            B-2026-03 · Cảm biến hoạt động · {product.name} Thành Phương
           </p>
 
           <div className="relative mt-5 flex items-center justify-between gap-5 text-xs font-bold text-[#D0DFEE]">
             <span>Trạng thái hệ thống bảo quản</span>
             <strong className={`${
-              room.status === 'VOC tăng' ? 'text-[#F59E0B]' :
+              room.status === 'VOC tăng' || room.status === 'NH3 tăng' ? 'text-[#F59E0B]' :
               room.status === 'Theo dõi' ? 'text-[#F59E0B]' :
               'text-[#34D399]'
-            }`}>{room.status}</strong>
+            }`}>{currentStatus}</strong>
           </div>
         </header>
 
         <main className="px-4 pt-7">
-          {room.status === 'VOC tăng' && (
+          {(room.status === 'VOC tăng' || room.status === 'NH3 tăng') && (
             <div className="mb-6 rounded-[20px] border border-[#EAA18F] bg-[#FFF6F4] p-4 shadow-[0_8px_20px_rgba(230,74,53,0.06)] flex items-start gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#FCE8E3] text-[#B23B2F]">
                 <AlertTriangle size={20} strokeWidth={2.3} />
@@ -280,7 +346,7 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
               <div>
                 <h4 className="text-sm font-black text-[#721A18]">Cảnh báo: Bảo quản không tốt</h4>
                 <p className="mt-1 text-xs font-bold text-[#806A5B] leading-relaxed">
-                  Phát hiện nồng độ VOC tăng đột biến từ ngày 5 đến ngày 7 (lên 58 ppb) do nhiệt độ hoặc độ ẩm không được kiểm soát tốt. Vui lòng kiểm tra lại thiết bị làm lạnh.
+                  Phát hiện nồng độ {gasLabel} tăng đột biến từ ngày 5 đến ngày 7 (lên {targetVal} {gasUnit}) do nhiệt độ hoặc độ ẩm không được kiểm soát tốt. Vui lòng kiểm tra lại thiết bị làm lạnh.
                 </p>
               </div>
             </div>
@@ -292,17 +358,17 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
             <div className="mt-4 grid grid-cols-3 gap-3">
               <DetailMetric icon={Snowflake} tone="blue" value={`${room.temp}°C`} label="Nhiệt độ" />
               <DetailMetric icon={Droplets} tone="teal" value={`${room.humidity}%`} label="Độ ẩm" />
-              <DetailMetric icon={Wind} tone="orange" value={`${room.voc} ppb`} label="VOC" />
+              <DetailMetric icon={Wind} tone="orange" value={`${targetVal} ${gasUnit}`} label={gasLabel} />
             </div>
           </section>
 
           {/* Historical VOC Chart Section */}
           <section className="mt-8">
             <div className="mb-4">
-              <h2 className="text-[22px] font-black leading-tight text-[#150807]">Biểu đồ VOC</h2>
-              <p className="mt-1 text-xs font-bold text-[#806A5B]">7 ngày gần nhất · Chỉ số thực tế (ppb)</p>
+              <h2 className="text-[22px] font-black leading-tight text-[#150807]">Biểu đồ {gasLabel}</h2>
+              <p className="mt-1 text-xs font-bold text-[#806A5B]">7 ngày gần nhất · Chỉ số thực tế ({gasUnit})</p>
             </div>
-            <VocChart data={vocData} />
+            <VocChart data={vocData} isXiuPao={isXiuPao} />
           </section>
         </main>
         <ProducerNav product={product} />
@@ -338,9 +404,10 @@ function DetailMetric({ icon: Icon, tone, value, label }: DetailMetricProps) {
 
 type VocChartProps = {
   data: Array<{ day: number; value: number }>
+  isXiuPao: boolean
 }
 
-function VocChart({ data }: VocChartProps) {
+function VocChart({ data, isXiuPao }: VocChartProps) {
   const width = 720
   const height = 360
   const padding = { top: 38, right: 30, bottom: 52, left: 54 }
@@ -422,7 +489,7 @@ function VocChart({ data }: VocChartProps) {
       <div className="mt-4 flex justify-center gap-5 text-center text-xs font-black text-[#6F4B35]">
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-6 rounded-full bg-[#214D35]" />
-          Nồng độ VOC thực tế (ppb)
+          Nồng độ {isXiuPao ? 'NH3' : 'VOC'} thực tế ({isXiuPao ? 'ppm' : 'ppb'})
         </span>
       </div>
     </div>
