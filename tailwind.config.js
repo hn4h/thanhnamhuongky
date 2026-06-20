@@ -54,6 +54,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Lora', 'Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'gold-glow': '0 0 40px rgba(192, 150, 90, 0.34)',

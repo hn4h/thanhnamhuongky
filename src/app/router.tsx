@@ -3,14 +3,15 @@ import { App } from './App'
 import { RoleSelectionPage } from '../features/role-selection/pages/RoleSelectionPage'
 import { createProducerRoutes } from '../features/producer/shared/createProducerRoutes'
 import { producerProducts } from '../features/producer/shared/productRegistry'
-import { AuthResultPage } from '../features/consumer/banh-gai/auth-result/AuthResultPage'
-import { CertificatePage } from '../features/consumer/banh-gai/certificate/CertificatePage'
-import { HeritagePage } from '../features/consumer/banh-gai/heritage/HeritagePage'
-import { ProductProfilePage } from '../features/consumer/banh-gai/product-profile/ProductProfilePage'
-import { QualityPage } from '../features/consumer/banh-gai/quality/QualityPage'
-import { ScanPage } from '../features/consumer/banh-gai/scan/ScanPage'
-import { TimelinePage } from '../features/consumer/banh-gai/timeline/TimelinePage'
-import { UsageGuidePage } from '../features/consumer/banh-gai/usage-guide/UsageGuidePage'
+import { ScanPage } from '../features/consumer/shared/screens/ScanPage'
+import { AuthResultPage } from '../features/consumer/shared/screens/AuthResultPage'
+import { ProductProfilePage } from '../features/consumer/shared/screens/ProductProfilePage'
+import { CertificatePage } from '../features/consumer/shared/screens/CertificatePage'
+import { TimelinePage } from '../features/consumer/shared/screens/TimelinePage'
+import { QualityPage } from '../features/consumer/shared/screens/QualityPage'
+import { HeritagePage } from '../features/consumer/shared/screens/HeritagePage'
+import { PairingPage } from '../features/consumer/shared/screens/PairingPage'
+import { UsageGuidePage } from '../features/consumer/shared/screens/UsageGuidePage'
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <RoleSelectionPage /> },
       {
-        path: 'consumer/banh-gai',
+        path: 'consumer/:productKey',
         children: [
           { index: true, element: <ScanPage /> },
           { path: 'scan', element: <ScanPage /> },
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
           { path: 'timeline', element: <TimelinePage /> },
           { path: 'quality', element: <QualityPage /> },
           { path: 'heritage', element: <HeritagePage /> },
+          { path: 'pairing', element: <PairingPage /> },
           { path: 'usage-guide', element: <UsageGuidePage /> },
         ],
       },
@@ -36,3 +38,4 @@ export const router = createBrowserRouter([
     ],
   },
 ])
+

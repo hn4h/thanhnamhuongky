@@ -44,6 +44,18 @@ export function RoleSelectionPage() {
     }
   }
 
+  const handleConsumerClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!selectedKey) {
+      setToast({
+        show: true,
+        message: 'Vui lòng chọn sản phẩm trước khi tiếp tục.',
+      })
+      return
+    }
+    navigate(`/consumer/${selectedKey}/scan`)
+  }
+
   return (
     <main className="mx-auto min-h-screen w-full max-w-[430px] bg-[#1a0a00] text-[#FDF4E7] shadow-[0_0_80px_rgba(74,45,30,0.32)] relative">
       {/* Toast Warning */}
@@ -155,9 +167,9 @@ export function RoleSelectionPage() {
               <ArrowRight size={20} strokeWidth={1.75} className="text-[#FDF4E7]/60" />
             </button>
 
-            <Link
-              to="/consumer/banh-gai/scan"
-              className="flex items-center gap-4 overflow-hidden rounded-2xl border border-gold/35 bg-[#FDF4E7]/10 p-5 text-left backdrop-blur-md transition active:scale-[0.98]"
+            <button
+              onClick={handleConsumerClick}
+              className="flex w-full items-center gap-4 overflow-hidden rounded-2xl border border-gold/35 bg-[#FDF4E7]/10 p-5 text-left backdrop-blur-md transition active:scale-[0.98]"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold">
                 <QrCode size={22} strokeWidth={1.75} />
@@ -167,7 +179,7 @@ export function RoleSelectionPage() {
                 <span className="mt-0.5 block text-xs text-[#FDF4E7]/60">Xác thực sản phẩm · Truy xuất nguồn gốc</span>
               </span>
               <ArrowRight size={20} strokeWidth={1.75} className="text-gold/65" />
-            </Link>
+            </button>
           </div>
 
           <p className="mt-8 text-center text-[11px] text-[#FDF4E7]/35">© 2026 Thành Nam Hương Ký</p>
