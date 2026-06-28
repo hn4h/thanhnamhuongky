@@ -21,7 +21,7 @@ export function ProducerScreenShell({ product, eyebrow, title, children, hideSum
   return (
     <AppFrame contentClassName="p-0">
       <div className="min-h-screen overflow-x-hidden bg-[#F8EFE2] pb-24 text-[#150807]">
-        <header className="relative overflow-hidden bg-gradient-to-br from-[#3A0611] via-[#721A18] to-[#8B321F] px-4 pb-7 pt-12 text-white">
+        <header className="relative overflow-hidden bg-gradient-to-l from-[#77452f] to-[#1c1009] px-4 pb-7 pt-12 text-white">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.13),transparent_28%)]" />
           <div className="relative flex items-center gap-3">
             <img

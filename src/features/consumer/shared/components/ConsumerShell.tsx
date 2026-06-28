@@ -76,7 +76,6 @@ export function ConsumerShell({ children, activeTab }: ConsumerShellProps) {
   return (
     <AppFrame
       title={currentProductTitle}
-      subtitle={currentProductSubtitle}
       contentClassName="px-4 pt-4 pb-28 min-h-[calc(100vh-140px)]"
     >
       <div className="mb-4 flex items-center justify-between">

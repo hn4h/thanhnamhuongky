@@ -299,7 +299,7 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
     <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#F8EFE2] text-[#150807] shadow-[0_0_80px_rgba(74,45,30,0.32)]">
       <div className="min-h-screen overflow-x-hidden bg-[#F8EFE2] pb-24">
         {/* Header with cool blue/teal gradient for Cold Room */}
-        <header className="relative overflow-hidden bg-gradient-to-br from-[#0F1E36] via-[#1F3A60] to-[#2E548A] px-4 pb-6 pt-10 text-white">
+        <header className="relative overflow-hidden bg-gradient-to-l from-[#77452f] to-[#1c1009] px-4 pb-6 pt-10 text-white">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.1),transparent_28%)]" />
           <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full bg-[#3B82F6]/5 blur-xl pointer-events-none" />
           

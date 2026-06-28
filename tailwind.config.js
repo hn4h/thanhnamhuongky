@@ -65,7 +65,7 @@ export default {
       backgroundImage: {
         'gradient-lacquer': 'linear-gradient(135deg, #4A2D1E 0%, #7A3A18 100%)',
         'gradient-gold': 'linear-gradient(135deg, #C0965A 0%, #A77D42 100%)',
-        'gradient-header': 'linear-gradient(135deg, #3D2418 0%, #4A2D1E 50%, #3D2418 100%)',
+        'gradient-header': 'linear-gradient(to left, #77452f, #1c1009)',
       },
     },
   },

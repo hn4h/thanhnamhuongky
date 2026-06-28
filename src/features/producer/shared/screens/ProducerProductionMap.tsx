@@ -521,7 +521,7 @@ export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDet
 
   return (
     <AppFrameContent>
-      <header className="relative overflow-hidden bg-gradient-to-br from-[#3A0611] via-[#721A18] to-[#8B321F] px-4 pb-6 pt-10 text-white">
+      <header className="relative overflow-hidden bg-gradient-to-l from-[#77452f] to-[#1c1009] px-4 pb-6 pt-10 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.13),transparent_28%)]" />
         <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full bg-[#F59E0B]/5 blur-xl pointer-events-none" />
         

@@ -171,10 +171,7 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
         
         {/* Figma Inspired Premium Header */}
         <header 
-          className="relative overflow-hidden px-4 pb-6 pt-10 text-white"
-          style={{
-            background: 'linear-gradient(160deg, #1A0008 0%, #6B0018 55%, #8B2000 100%)'
-          }}
+          className="relative overflow-hidden px-4 pb-6 pt-10 text-white bg-gradient-to-l from-[#77452f] to-[#1c1009]"
         >
           {/* Glowing Accents */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.13),transparent_35%)] pointer-events-none" />

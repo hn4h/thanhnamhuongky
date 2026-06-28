@@ -145,7 +145,7 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
 
         {/* Profile Premium Header */}
         <header
-          className="relative overflow-hidden px-5 pb-7 pt-14 text-white bg-gradient-to-br from-[#3A0611] via-[#721A18] to-[#8B321F]"
+          className="relative overflow-hidden px-5 pb-7 pt-14 text-white bg-gradient-to-l from-[#77452f] to-[#1c1009]"
         >
           {/* Glowing Accents */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.13),transparent_28%)] pointer-events-none" />
