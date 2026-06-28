@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ChevronLeft, X, Boxes, Droplets, Gauge, Snowflake, Thermometer, Wind } from 'lucide-react'
 import { ProducerNav } from '../components/ProducerNav'
 import { ProducerScreenShell } from './ProducerScreenShell'
@@ -460,6 +461,21 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
             <p className="mt-4 text-xs font-bold text-[#806A5B] bg-[#FAF2E8] rounded-xl py-2 px-3 text-center">
               {selectedDetails.extra}
             </p>
+
+            <div className="mt-4">
+              <Link
+                to={selectedDetails.type === 'steam'
+                  ? `/producer/${product.key}/steamer-control`
+                  : `/producer/${product.key}/dehumidifier-control`}
+                className="flex items-center justify-center gap-1.5 w-full rounded-xl bg-gradient-to-l from-[#77452f] to-[#1c1009] py-3 text-xs font-black text-white hover:opacity-90 active:scale-[0.98] transition-all"
+              >
+                <span>
+                  {selectedDetails.type === 'steam'
+                    ? 'Chỉnh nhiệt độ lồng hấp thủ công'
+                    : 'Chỉnh thông số tủ lạnh thủ công'}
+                </span>
+              </Link>
+            </div>
           </div>
         )}
 
