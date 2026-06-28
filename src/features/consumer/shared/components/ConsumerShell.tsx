@@ -62,7 +62,16 @@ export function ConsumerShell({ children, activeTab }: ConsumerShellProps) {
   ]
 
   const currentProductTitle = productData ? productData.product.name : 'Đặc sản Thành Nam'
-  const currentProductSubtitle = productData ? `${productData.product.grade} · Lô ${productData.product.batch}` : 'Thông tin truy xuất nguồn gốc'
+  
+  const subtitles: Record<string, string> = {
+    'banh-gai': 'bánh gai nhất phẩm',
+    'banh-xiu-pao': 'bánh xíu páo nhất phẩm',
+    'keo-xiu-chau': 'kẹo sìu châu nhất phẩm',
+    'doi': 'kẹo dồi nhất phẩm',
+  }
+  const currentProductSubtitle = productData
+    ? (subtitles[productData.key] || `${productData.product.grade} · Lô ${productData.product.batch}`)
+    : 'Thông tin truy xuất nguồn gốc'
 
   return (
     <AppFrame
@@ -79,7 +88,7 @@ export function ConsumerShell({ children, activeTab }: ConsumerShellProps) {
           <span>Chọn vai trò</span>
         </Link>
 
-        {productKey && location.pathname !== `/consumer/${productKey}/scan` && (
+        {productKey && productKey !== 'scan' && productData && location.pathname !== `/consumer/${productKey}/scan` && (
           <Link
             to={`/consumer/${productKey}/scan`}
             className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-gold-600 hover:text-gold-800 transition"
@@ -95,7 +104,7 @@ export function ConsumerShell({ children, activeTab }: ConsumerShellProps) {
       </div>
 
       {/* Premium Bottom Navigation Tab Bar */}
-      {productKey && (
+      {productKey && productKey !== 'scan' && productData && (
         <nav className="fixed bottom-0 left-1/2 z-40 h-20 w-full max-w-[430px] -translate-x-1/2 border-t border-gold-200/50 bg-parchment-50/95 backdrop-blur-md px-2 shadow-[0_-8px_30px_rgba(74,45,30,0.12)]">
           <div className="flex h-full items-center justify-around">
             {navItems.map((item) => {

@@ -5,12 +5,12 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     key: 'banh-gai',
     product: {
       code: 'TNHK-BG-2026-0001',
-      name: 'Bánh Gai Thành Nam Hương Ký',
-      grade: 'Hộp Quà Sen Vàng',
+      name: 'Bánh Gai',
+      grade: 'Loại 1',
       batch: 'BG-0626-01',
       producedAt: '31/08/2026',
       expiresAt: '10/09/2026',
-      origin: 'Làng nghề Mỹ Lộc, Nam Định',
+      origin: '94 Trần Hưng Đạo, Nam Định',
       certificate: 'CERT-TNHK-BG-2026-014',
     },
     checks: [

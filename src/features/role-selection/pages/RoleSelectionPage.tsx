@@ -46,14 +46,7 @@ export function RoleSelectionPage() {
 
   const handleConsumerClick = (e: React.MouseEvent) => {
     e.preventDefault()
-    if (!selectedKey) {
-      setToast({
-        show: true,
-        message: 'Vui lòng chọn sản phẩm trước khi tiếp tục.',
-      })
-      return
-    }
-    navigate(`/consumer/${selectedKey}/scan`)
+    navigate('/consumer/scan')
   }
 
   return (

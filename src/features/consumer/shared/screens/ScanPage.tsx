@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { QrCode, Camera, AlertCircle, Sparkles, Check } from 'lucide-react'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import { QrCode, Camera, AlertCircle, Sparkles, Check, ArrowLeft } from 'lucide-react'
 import { AppFrame } from '../../../../shared/components/layout/AppFrame'
 import { findConsumerProduct, consumerProducts } from '../productRegistry'
 
@@ -69,17 +69,14 @@ export function ScanPage() {
       subtitle="Đang quét mã tem chính hãng Thành Nam Hương Ký."
     >
       <div className="px-4 py-6">
-        {/* Dynamic header selection to toggle product contexts directly */}
-        <div className="mb-6 rounded-xl border border-gold-200/40 bg-white/40 p-4 shadow-sm">
-          <p className="text-xs font-semibold text-lacquer-500 uppercase tracking-wider mb-2">
-            Đang cấu hình quét cho sản phẩm:
-          </p>
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-3.5 w-3.5 rounded-full bg-betel border border-white shrink-0" />
-            <strong className="text-sm text-lacquer-900 font-bold">
-              {currentProduct?.product.name || 'Bánh Gai'}
-            </strong>
-          </div>
+        <div className="mb-4 flex items-center justify-between">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-lacquer-400 hover:text-lacquer-600 transition"
+          >
+            <ArrowLeft size={14} />
+            <span>Chọn vai trò</span>
+          </Link>
         </div>
 
         {/* QR Scanner Container */}
@@ -160,9 +157,6 @@ export function ScanPage() {
                   }`}
                 >
                   <div>
-                    <span className="block text-xs uppercase tracking-wide text-gold-700">
-                      {p.product.grade}
-                    </span>
                     <span className="block text-sm text-lacquer-950 font-bold">
                       {p.product.name}
                     </span>
