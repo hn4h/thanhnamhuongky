@@ -8,8 +8,8 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       name: 'Bánh Gai Thành Nam Hương Ký',
       grade: 'Hộp Quà Sen Vàng',
       batch: 'BG-0626-01',
-      producedAt: '18/06/2026',
-      expiresAt: '28/06/2026',
+      producedAt: '31/08/2026',
+      expiresAt: '10/09/2026',
       origin: 'Làng nghề Mỹ Lộc, Nam Định',
       certificate: 'CERT-TNHK-BG-2026-014',
     },
@@ -22,7 +22,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     timeline: [
       {
         title: 'Tuyển chọn lá gai',
-        date: '17/06/2026',
+        date: '30/08/2026',
         detail: 'Lá gai nếp tươi được thu hoạch lúc sáng sớm tại vùng nguyên liệu hữu cơ, rửa sạch và luộc kỹ để giữ độ xanh đen tự nhiên.',
         icon: 'Leaf',
         iotData: [
@@ -32,7 +32,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       },
       {
         title: 'Giã lá & trộn bột nếp',
-        date: '18/06/2026',
+        date: '31/08/2026',
         detail: 'Lá gai luộc chín được giã mịn rồi trộn đều cùng bột gạo nếp cái hoa vàng thơm dẻo và mật mía đậm đà.',
         icon: 'Workflow',
         iotData: [
@@ -42,7 +42,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       },
       {
         title: 'Làm nhân đậu xanh sen',
-        date: '18/06/2026',
+        date: '31/08/2026',
         detail: 'Đậu xanh hấp chín giã nhuyễn trộn cùi dừa sợi, mứt sen và hương hoa bưởi chưng cất tự nhiên.',
         icon: 'Layers',
         iotData: [
@@ -52,7 +52,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       },
       {
         title: 'Gói lá chuối & Hấp chín',
-        date: '18/06/2026',
+        date: '31/08/2026',
         detail: 'Bánh được gói nhiều lớp lá chuối khô đã rửa sạch, xếp vào buồng hấp nhiệt lượng lớn kiểm soát áp suất hơi.',
         icon: 'Flame',
         iotData: [
@@ -62,7 +62,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       },
       {
         title: 'Đóng hộp và gán QR Code',
-        date: '19/06/2026',
+        date: '01/09/2026',
         detail: 'Sản phẩm nguội tự nhiên, đóng hộp quà tặng cao cấp và in dán tem mã hóa QR truy xuất nguồn gốc duy nhất.',
         icon: 'QrCode',
         iotData: [

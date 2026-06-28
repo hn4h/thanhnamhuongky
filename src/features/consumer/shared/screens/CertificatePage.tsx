@@ -24,18 +24,18 @@ export function CertificatePage() {
   return (
     <ConsumerShell activeTab="certificate">
       <section className="space-y-6">
-        
+
         {/* Certificate Card Immersive Design */}
         <div className="relative overflow-hidden rounded-2xl border-[3px] border-double border-gold-400 bg-[#FCF6EC] p-6 shadow-lacquer/10 animate-fadeIn">
-          
+
           {/* Subtle Guilloche/Ornate Watermark Background */}
-          <div className="absolute inset-0 opacity-[0.04] pointer-events-none select-none" 
-               style={{ 
-                 backgroundImage: "url('/images/texture-pattern.png')", 
-                 backgroundSize: '150px' 
-               }} 
+          <div className="absolute inset-0 opacity-[0.04] pointer-events-none select-none"
+            style={{
+              backgroundImage: "url('/images/texture-pattern.png')",
+              backgroundSize: '150px'
+            }}
           />
-          
+
           {/* Traditional Ornate Header */}
           <div className="text-center relative">
             <Sparkles size={18} className="mx-auto text-gold mb-1" />
@@ -56,7 +56,7 @@ export function CertificatePage() {
             <p className="indent-4">
               Hệ thống quản lý chất lượng phi tập trung của **Thành Nam Hương Ký** chứng nhận sản phẩm đặc sản truyền thống:
             </p>
-            
+
             <div className="my-4 rounded-xl border border-gold-200/50 bg-[#F5EBDA]/50 p-4 space-y-2">
               <div className="flex justify-between border-b border-gold-200/30 pb-1.5">
                 <span className="text-lacquer-400 font-semibold uppercase text-[9px]">Sản phẩm:</span>
@@ -87,25 +87,27 @@ export function CertificatePage() {
 
           {/* Verification Stamps and Signatures (Luxury touch) */}
           <div className="mt-8 flex items-center justify-between border-t border-gold-200/30 pt-6">
-            
+
             {/* Wax Seal Stamp Watermark look-alike */}
             <div className="relative flex h-16 w-16 items-center justify-center opacity-85">
               <div className="absolute h-14 w-14 rounded-full border border-dashed border-[#8b1c1c]/40 bg-[#8b1c1c]/5" />
               <ShieldCheck size={28} className="text-[#8b1c1c]/60" />
-              <span className="absolute text-[6px] font-bold uppercase tracking-wider text-[#8b1c1c]/50 animate-[spin_20s_linear_infinite]">
+              <span className="absolute text-[6px] font-bold uppercase tracking-wider text-[#8b1c1c]/50">
                 • Đã Kiểm Định •
               </span>
             </div>
 
             {/* Mock Signatures */}
-            <div className="text-right">
+            <div className="text-center">
               <span className="block text-[8px] font-bold uppercase text-lacquer-400">
                 Thành Nam Hương Ký
               </span>
-              <span className="block text-[9px] font-serif italic text-lacquer-900 mt-2 font-bold select-none opacity-80">
-                Lê Thành Nam
-              </span>
-              <span className="mt-1 block text-[7px] font-semibold text-lacquer-400 uppercase tracking-widest">
+              <img
+                src="/images/sign.png"
+                alt="Chữ ký Lê Thành Nam"
+                className="mx-auto h-12 object-contain my-1"
+              />
+              <span className="block text-[7px] font-semibold text-lacquer-400 uppercase tracking-widest">
                 Đại diện nghệ nhân
               </span>
             </div>

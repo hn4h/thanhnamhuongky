@@ -79,7 +79,7 @@ export function ProductProfilePage() {
               <div
                 key={field.label}
                 style={{ animationDelay: `${idx * 80}ms` }}
-                className="flex gap-4 rounded-2xl border border-gold-100/60 bg-white p-4.5 shadow-sm transition hover:shadow-md opacity-0 animate-fadeIn"
+                className="flex gap-4 rounded-2xl border border-gold-100/60 bg-white p-5 shadow-sm transition hover:shadow-md opacity-0 animate-fadeIn"
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold-50 text-gold-700">
                   <Icon size={20} />

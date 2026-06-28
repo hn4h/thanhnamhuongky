@@ -55,7 +55,7 @@ export function QualityPage() {
               <div
                 key={item.label}
                 style={{ animationDelay: `${idx * 100}ms` }}
-                className="rounded-2xl border border-gold-100/70 bg-white p-4.5 text-center shadow-sm hover:shadow-md transition opacity-0 animate-fadeIn"
+                className="rounded-2xl border border-gold-100/70 bg-white p-5 text-center shadow-sm hover:shadow-md transition opacity-0 animate-fadeIn"
               >
                 <span className="block text-[10px] font-bold text-lacquer-400 uppercase tracking-wider mb-3">
                   {item.label}

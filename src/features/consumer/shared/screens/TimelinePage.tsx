@@ -47,12 +47,12 @@ export function TimelinePage() {
               className="relative opacity-0 animate-fadeIn"
             >
               {/* Timeline Connector node */}
-              <span className="absolute left-[-38px] top-1 flex h-7 w-7 items-center justify-center rounded-full bg-lacquer text-gold border border-gold-300 shadow-md">
+              <span className="absolute left-[-38px] top-4 flex h-7 w-7 items-center justify-center rounded-full bg-lacquer text-gold border border-gold-300 shadow-md">
                 {getIcon(step.icon)}
               </span>
 
               {/* Log Details Card */}
-              <div className="rounded-2xl border border-gold-100/70 bg-white p-4.5 shadow-sm hover:shadow-md transition">
+              <div className="rounded-2xl border border-gold-100/70 bg-white p-5 shadow-sm hover:shadow-md transition">
                 <div className="flex items-center justify-between gap-2 border-b border-gold-100/50 pb-2 mb-3">
                   <h4 className="font-serif font-bold text-sm text-lacquer-950 leading-tight">
                     {step.title}
