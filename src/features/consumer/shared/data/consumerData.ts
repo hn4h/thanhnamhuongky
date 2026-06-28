@@ -308,92 +308,92 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
   'doi': {
     key: 'doi',
     product: {
-      code: 'TNHK-D-2026-0122',
-      name: 'Dồi Sụn Xông Khói Hương Ký',
-      grade: 'Gói Thực Phẩm Tiêu Chuẩn',
-      batch: 'D-0626-02',
+      code: 'TNHK-KD-2026-0122',
+      name: 'Kẹo Dồi Cổ Truyền Hương Ký',
+      grade: 'Hộp Đặc Sản Truyền Thống',
+      batch: 'DO-0626-02',
       producedAt: '18/06/2026',
-      expiresAt: '03/07/2026',
+      expiresAt: '18/12/2026',
       origin: 'Cơ sở chế biến Thành Nam',
-      certificate: 'CERT-TNHK-D-2026-039',
+      certificate: 'CERT-TNHK-KD-2026-039',
     },
     checks: [
       'Tem QR chính hãng hoạt động',
-      'Mã Serial khớp lô sản xuất D-0626-02',
-      'Bảo quản lạnh ổn định dưới 4°C',
-      'Hút chân không căng chuẩn, không rò khí',
+      'Mã Serial khớp lô sản xuất DO-0626-02',
+      'Bảo quản khô ráo, tránh ánh nắng',
+      'Túi đóng kín, giữ nguyên độ giòn',
     ],
     timeline: [
       {
-        title: 'Sơ chế nguyên liệu tươi',
+        title: 'Rang chín lạc nhân',
         date: '17/06/2026',
-        detail: 'Lòng non heo tươi được làm sạch khử mùi bằng dấm tỏi. Sụn họng heo băm nhỏ hòa trộn thịt nạc vai xay mịn.',
+        detail: 'Lạc nhân được tuyển chọn hạt mẩy, rang chín vàng đều, tách vỏ sần sật để làm phần nhân kẹo ngọt bùi béo ngậy.',
         icon: 'Leaf',
         iotData: [
-          { label: 'Nhiệt độ thịt xay', value: '4°C' }
+          { label: 'Nhiệt độ rang lạc', value: '150°C' }
         ]
       },
       {
-        title: 'Trộn nhân thảo mộc',
+        title: 'Nấu mạch nha & kéo tơ',
         date: '17/06/2026',
-        detail: 'Hỗn hợp sụn thịt được trộn đều cùng hạt sen ninh nhuyễn, rau răm, hành hoa và hạt tiêu bắc nghiền vỡ.',
+        detail: 'Đường kính và mạch nha được nấu đến nhiệt độ chuẩn, sau đó tiến hành kéo tơ và đánh bột nhiều lần để tạo lớp vỏ trắng ngà, giòn tan.',
         icon: 'Layers',
         iotData: [
-          { label: 'Tỷ lệ tiêu đen', value: '1.5%' }
+          { label: 'Nhiệt độ nồi kẹo', value: '120°C' },
+          { label: 'Thời gian nấu', value: '18 phút' }
         ]
       },
       {
-        title: 'Nhồi dồi & Hấp chín',
+        title: 'Nhồi nhân lạc & Cuộn kẹo',
         date: '18/06/2026',
-        detail: 'Nhồi nhân vào lòng non bằng máy đùn áp suất thấp tránh vỡ, sau đó cho vào nồi hấp cách thủy để chín đều sụn bên trong.',
+        detail: 'Nhân lạc rang giòn được trải đều lên lớp vỏ kẹo mạch nha mỏng, cuộn tròn khéo léo thành hình ống dài thuôn giống chiếc dồi.',
         icon: 'Workflow',
         iotData: [
-          { label: 'Nhiệt độ hấp', value: '88°C' },
-          { label: 'Thời gian hấp', value: '35 phút' }
+          { label: 'Nhiệt độ môi trường', value: '25°C' },
+          { label: 'Độ ẩm môi trường', value: '58%' }
         ]
       },
       {
-        title: 'Xông khói gỗ sồi & Đóng gói',
+        title: 'Cắt khúc & Đóng gói',
         date: '18/06/2026',
-        detail: 'Xông khói nhẹ bằng dăm gỗ sồi nhập khẩu tạo mùi thơm phảng phất đặc biệt. Đóng gói hút chân không và đưa vào kho lạnh bảo quản.',
+        detail: 'Kẹo dồi được cắt thành từng khúc vừa ăn, lăn qua lớp bột nếp thơm nhẹ rồi đóng gói túi zipper giữ độ giòn.',
         icon: 'Flame',
         iotData: [
-          { label: 'Nhiệt độ xông khói', value: '72°C' },
-          { label: 'Nhiệt độ bảo quản lạnh', value: '3.2°C' }
+          { label: 'Độ ẩm đóng gói', value: '< 15%' }
         ]
       }
     ],
     quality: [
-      { label: 'Độ dai sần sật', value: 90, max: 100, unit: '%' },
-      { label: 'Hương thảo mộc', value: 93, max: 100, unit: '%' },
-      { label: 'Độ an toàn vi sinh', value: 99, max: 100, unit: '%' },
-      { label: 'Đánh giá AI chất lượng', value: 92, max: 100, unit: 'điểm' }
+      { label: 'Độ giòn tan vỏ kẹo', value: 92, max: 100, unit: '%' },
+      { label: 'Độ bùi ngậy lạc rang', value: 95, max: 100, unit: '%' },
+      { label: 'Độ dẻo mạch nha', value: 88, max: 100, unit: '%' },
+      { label: 'Đánh giá AI chất lượng', value: 90, max: 100, unit: 'điểm' }
     ],
-    grade: 'Hạng Chất Lượng Cao (A)',
+    grade: 'Hạng Đặc Sản Truyền Thống (A)',
     heritage: [
       {
-        title: 'Biến tấu dồi sụn Thành Nam',
-        story: 'Kế thừa tinh hoa dồi truyền thống Việt Nam, Hương Ký thêm thắt sụn non băm nhỏ và xông khói gỗ sồi để đem đến món dồi dai giòn sần sật hiện đại, phù hợp cho các bữa nhậu gia đình ấm cúng.',
+        title: 'Hương vị Kẹo Dồi Nam Định',
+        story: 'Kẹo dồi là thức quà quê độc đáo của vùng đất Thành Nam. Tên gọi bắt nguồn từ hình dáng thon dài màu trắng ngà. Lớp vỏ mạch nha kéo mỏng giòn tan, ôm trọn nhân lạc rang bùi ngậy tạo nên hương vị khó quên khi thưởng thức cùng trà nóng.',
         imagePlaceholder: 'heritage_doi_1'
       }
     ],
     flavor: {
-      sweet: 20,
-      savory: 92,
-      aroma: 89,
-      bitterness: 8,
-      richness: 82
+      sweet: 85,
+      savory: 15,
+      aroma: 90,
+      bitterness: 5,
+      richness: 80
     },
     pairings: [
       {
-        title: 'Mắm Tôm Chanh Sủi Bọt',
-        description: 'Vị mặn mòi béo đậm đà của mắm tôm đánh sủi tăm vắt chanh ớt nâng tầm vị sụn sần sật giòn rụm.',
-        imagePlaceholder: 'pairing_mamtom'
+        title: 'Trà Xanh Thái Nguyên Nóng',
+        description: 'Vị chát nhẹ, ấm nóng của trà làm dịu đi vị ngọt sắc của mạch nha, tôn vinh vị bùi thơm của lạc rang.',
+        imagePlaceholder: 'pairing_tra'
       },
       {
-        title: 'Bia Hơi Hà Nội Lạnh',
-        description: 'Một cốc bia hơi mát lạnh sủi bọt rửa sạch vòm họng béo ngậy, làm bùng nổ hương vị thảo mộc trong khoang miệng.',
-        imagePlaceholder: 'pairing_bia'
+        title: 'Trà Hoa Cúc Mật Ong',
+        description: 'Hương thanh tao tao nhã của hoa cúc kết hợp cùng mạch nha tạo nên sự thư thái tuyệt vời cho buổi thưởng trà.',
+        imagePlaceholder: 'pairing_tra_cuc'
       }
     ],
     theme: {

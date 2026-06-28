@@ -3,8 +3,8 @@ import { doiData } from './data'
 
 export const doiModule: ProducerProductModule = {
   key: 'doi',
-  name: 'Dồi',
-  shortName: 'Dồi',
+  name: 'Kẹo Dồi',
+  shortName: 'Kẹo Dồi',
   description: 'Dòng đặc sản đóng gói cần kiểm soát chặt nhiệt độ bảo quản.',
   origin: 'Nam Định',
   theme: {

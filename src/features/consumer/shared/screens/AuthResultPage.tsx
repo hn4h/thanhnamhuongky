@@ -35,7 +35,7 @@ export function AuthResultPage() {
           
           {/* Main Wax Seal Stamp */}
           <div className="absolute z-10 h-32 w-32 rounded-full border-4 border-double border-gold bg-[#8b1c1c] text-parchment-100 shadow-[0_10px_25px_rgba(139,28,28,0.4)] flex flex-col items-center justify-center p-3 animate-stampPulse">
-            <Award size={40} className="text-gold animate-[spin_12s_linear_infinite]" />
+            <Award size={40} className="text-gold" />
             <span className="mt-1 font-serif text-[10px] uppercase font-bold tracking-[0.25em] text-gold-300">
               Chính Hãng
             </span>

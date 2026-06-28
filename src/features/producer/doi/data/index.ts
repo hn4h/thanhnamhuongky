@@ -9,8 +9,8 @@ export const doiData: ProducerProductData = {
     { key: 'quality', label: 'Điểm chất lượng AI', value: '88', unit: '/100', type: 'quality', status: 'good' },
   ],
   batches: [
-    { id: 'DO-0626-01', name: 'Dồi truyền thống hút chân không', status: 'in-progress', startedAt: '11/06/2026', expectedAt: '11/06/2026', quantity: '420 gói', qualityScore: 88, notes: 'Theo dõi nhiệt kho mát sau đóng gói.' },
-    { id: 'DO-0626-02', name: 'Dồi hộp quà đặc sản', status: 'hold', startedAt: '10/06/2026', expectedAt: '11/06/2026', quantity: '120 hộp', qualityScore: 81, notes: 'Tạm giữ để kiểm tra nhãn bảo quản.' },
+    { id: 'DO-0626-01', name: 'Kẹo dồi truyền thống túi zipper', status: 'in-progress', startedAt: '11/06/2026', expectedAt: '11/06/2026', quantity: '420 gói', qualityScore: 88, notes: 'Theo dõi nhiệt độ và độ ẩm sau đóng gói.' },
+    { id: 'DO-0626-02', name: 'Kẹo dồi hộp quà đặc sản', status: 'hold', startedAt: '10/06/2026', expectedAt: '11/06/2026', quantity: '120 hộp', qualityScore: 81, notes: 'Tạm giữ để kiểm tra nhãn bảo quản.' },
   ],
   alerts: [
     { id: 'AL-DO-01', title: 'Lô đang tạm giữ', severity: 'high', message: 'Mẻ DO-0626-02 cần kiểm tra nhãn nhiệt độ bảo quản trước khi xuất.', createdAt: '5 phút trước' },
