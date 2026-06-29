@@ -38,7 +38,11 @@ export function CertificatePage() {
 
           {/* Traditional Ornate Header */}
           <div className="text-center relative">
-            <Sparkles size={18} className="mx-auto text-gold mb-1" />
+            <img
+              src="/images/Logo tách nền.png"
+              alt="Logo Thành Nam Hương Ký"
+              className="mx-auto h-20 w-auto object-contain mb-3"
+            />
             <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8A6238]">
               Thành Nam Hương Ký
             </p>

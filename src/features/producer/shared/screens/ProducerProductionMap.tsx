@@ -252,7 +252,7 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: Zone
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
-                      <Wind size={14} className={product.key === 'banh-xiu-pao' ? 'text-[#4C79B8]' : 'text-[#8B5CF6]'} />
+                      <Wind size={14} className={product.key === 'banh-xiu-pao' ? 'text-[#4C79B8]' : 'text-[#0D9488]'} />
                       {product.key === 'banh-xiu-pao' ? 'NH3' : 'VOC'}
                     </span>
                     <span className="text-[#150807] font-black">

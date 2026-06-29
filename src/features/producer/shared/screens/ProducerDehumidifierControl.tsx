@@ -14,7 +14,14 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
   const navigate = useNavigate()
   const [rooms, setRooms] = useState(() => [...coldRooms])
 
+  // Track syncing status for each chamber and field.
+  // Format: { [id-field]: 'syncing' | 'synced' | null }
+  const [syncStatus, setSyncStatus] = useState<Record<string, 'syncing' | 'synced' | null>>({})
+  // Keep track of active timeouts so we can cancel them on subsequent changes
+  const [timeouts, setTimeouts] = useState<Record<string, NodeJS.Timeout>>({})
+
   const handleUpdateRoom = (id: string, field: 'temp' | 'dehumidifier' | 'ventilation', value: any) => {
+    // 1. Update local mock data immediately for responsiveness
     const idx = coldRooms.findIndex((r) => r.id === id)
     if (idx !== -1) {
       ;(coldRooms[idx] as any)[field] = value
@@ -35,6 +42,61 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
       }
     }
     setRooms([...coldRooms])
+
+    // 2. Trigger IoT syncing animation
+    const key = `${id}-${field}`
+    
+    // Clear existing timeouts for this specific key
+    if (timeouts[key]) {
+      clearTimeout(timeouts[key])
+    }
+
+    setSyncStatus((prev) => ({ ...prev, [key]: 'syncing' }))
+
+    // Simulate sending IoT command to physical device (takes 1.2 seconds)
+    const syncTimeout = setTimeout(() => {
+      setSyncStatus((prev) => ({ ...prev, [key]: 'synced' }))
+
+      // Fade out the 'synced' checkmark after 1 second
+      const fadeTimeout = setTimeout(() => {
+        setSyncStatus((prev) => ({ ...prev, [key]: null }))
+      }, 1000)
+
+      setTimeouts((prev) => ({ ...prev, [key]: fadeTimeout }))
+    }, 1200)
+
+    setTimeouts((prev) => ({ ...prev, [key]: syncTimeout }))
+  }
+
+  const isRoomSyncing = (id: string) => {
+    return ['temp', 'dehumidifier', 'ventilation'].some((field) => syncStatus[`${id}-${field}`] === 'syncing')
+  }
+
+  const renderSyncIndicator = (id: string, field: 'temp' | 'dehumidifier' | 'ventilation') => {
+    const status = syncStatus[`${id}-${field}`]
+    if (!status) return null
+
+    if (status === 'syncing') {
+      return (
+        <span className="flex items-center gap-1 text-[10px] font-bold text-[#D97706] animate-pulse">
+          <svg className="animate-spin h-3 w-3 text-[#D97706]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Gửi lệnh...
+        </span>
+      )
+    }
+
+    if (status === 'synced') {
+      return (
+        <span className="flex items-center gap-1 text-[10px] font-black text-[#10B981] animate-[fadeIn_0.3s_ease-out]">
+          <span className="text-[12px]">✓</span> Đã nhận
+        </span>
+      )
+    }
+
+    return null
   }
 
   return (
@@ -110,11 +172,16 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
             const currentStatus = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
               ? (isXiuPao ? 'NH3 tăng' : 'VOC tăng')
               : room.status
+            const isSyncing = isRoomSyncing(room.id)
 
             return (
               <div
                 key={room.id}
-                className="relative overflow-hidden rounded-[24px] border border-[#EFE4DC] bg-white p-5 shadow-[0_12px_28px_rgba(57,28,12,0.04)] transition-all duration-300 hover:scale-[1.01]"
+                className={`relative overflow-hidden rounded-[24px] border p-5 transition-all duration-300 hover:scale-[1.01] ${
+                  isSyncing
+                    ? 'border-[#F59E0B] bg-white shadow-[0_0_20px_rgba(245,158,11,0.12)] animate-[pulse_2s_infinite]'
+                    : 'border-[#EFE4DC] bg-white shadow-[0_12px_28px_rgba(57,28,12,0.04)]'
+                }`}
               >
                 {/* Visual indicator line on top */}
                 <div
@@ -155,7 +222,10 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
                         <Snowflake size={14} className="text-[#806A5B]" />
                         Nhiệt độ bảo quản
                       </span>
-                      <span className="text-sm font-extrabold text-[#150807]">{room.temp}°C</span>
+                      <div className="flex items-center gap-2">
+                        {renderSyncIndicator(room.id, 'temp')}
+                        <span className="text-sm font-extrabold text-[#150807]">{room.temp}°C</span>
+                      </div>
                     </div>
                     <div className="relative flex items-center">
                       <input
@@ -172,10 +242,13 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
                   {/* Dehumidifier Toggle */}
                   <div className="flex items-center justify-between py-2 border-t border-[#FAF2E8] mt-2">
                     <div>
-                      <span className="text-xs font-black text-[#150807] flex items-center gap-1">
-                        <Droplets size={14} className="text-[#806A5B]" />
-                        Chế độ hút ẩm
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black text-[#150807] flex items-center gap-1">
+                          <Droplets size={14} className="text-[#806A5B]" />
+                          Chế độ hút ẩm
+                        </span>
+                        {renderSyncIndicator(room.id, 'dehumidifier')}
+                      </div>
                       <p className="text-[10px] font-bold text-[#806A5B] mt-0.5">Kích hoạt hệ thống hút ẩm sâu</p>
                     </div>
                     <button
@@ -196,10 +269,13 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
                   {/* Fan/Ventilation Toggle */}
                   <div className="flex items-center justify-between py-2 border-t border-[#FAF2E8]">
                     <div>
-                      <span className="text-xs font-black text-[#150807] flex items-center gap-1">
-                        <Wind size={14} className="text-[#806A5B]" />
-                        Hệ thống thoát gió
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black text-[#150807] flex items-center gap-1">
+                          <Wind size={14} className="text-[#806A5B]" />
+                          Hệ thống thoát gió
+                        </span>
+                        {renderSyncIndicator(room.id, 'ventilation')}
+                      </div>
                       <p className="text-[10px] font-bold text-[#806A5B] mt-0.5">Bật quạt thông gió phụ trợ</p>
                     </div>
                     <button
