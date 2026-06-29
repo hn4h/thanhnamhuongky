@@ -14,7 +14,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
   const navigate = useNavigate()
   const [chambers, setChambers] = useState(() => [...steamChambers])
 
-  const handleUpdateChamber = (id: string, field: 'temp' | 'humidity', value: number) => {
+  const handleUpdateChamber = (id: string, field: 'temp' | 'humidity' | 'pressure', value: number) => {
     const idx = steamChambers.findIndex((c) => c.id === id)
     if (idx !== -1) {
       ;(steamChambers[idx] as any)[field] = value
@@ -84,7 +84,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                 <div
                   className="absolute top-0 left-0 right-0 h-1"
                   style={{
-                    backgroundColor: isAlert ? '#B23B2F' : isOff ? '#9CA3AF' : '#4A9F57',
+                      backgroundColor: isAlert ? '#B23B2F' : isOff ? '#9CA3AF' : '#4A9F57',
                   }}
                 />
 
@@ -154,18 +154,36 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     </div>
                   </div>
 
+                  {/* Pressure Slider */}
+                  <div>
+                    <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
+                      <span className="flex items-center gap-1">
+                        <Gauge size={14} className="text-[#806A5B]" />
+                        Áp suất buồng hấp
+                      </span>
+                      <span className="text-sm font-extrabold text-[#150807]">{chamber.pressure.toFixed(1)} bar</span>
+                    </div>
+                    <div className="relative flex items-center">
+                      <input
+                        type="range"
+                        min="0"
+                        max="3"
+                        step="0.1"
+                        value={chamber.pressure}
+                        onChange={(e) => handleUpdateChamber(chamber.id, 'pressure', parseFloat(e.target.value))}
+                        className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
                   {/* Additional Telemetry readout */}
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#FAF2E8] text-[11px] text-[#806A5B] font-bold">
-                    <span className="flex items-center gap-1">
-                      <Gauge size={12} className="text-[#806A5B]" />
-                      Áp suất: {chamber.pressure.toFixed(1)} bar
-                    </span>
-                    {chamber.progress > 0 && (
-                      <span className="text-right text-[#721A18]">
+                  {chamber.progress > 0 && (
+                    <div className="flex justify-end pt-2 border-t border-[#FAF2E8] text-[11px] text-[#721A18] font-bold">
+                      <span>
                         Tiến độ: {chamber.progress}% · Còn {chamber.remainingMinutes}m
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )
