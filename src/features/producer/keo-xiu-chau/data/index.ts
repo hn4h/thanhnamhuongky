@@ -2,10 +2,10 @@ import type { ProducerProductData } from '../../shared/types'
 
 export const keoXiuChauData: ProducerProductData = {
   metrics: [
-    { key: 'syrupTemp', label: 'Nhiệt độ nồi kẹo', value: '118', unit: '°C', type: 'temperature', status: 'good' },
-    { key: 'cookingTime', label: 'Thời gian nấu kẹo', value: '17.5', unit: 'phút', type: 'time', status: 'good' },
-    { key: 'prepAreaTemp', label: 'Nhiệt độ môi trường', value: '26', unit: '°C', type: 'temperature', status: 'good' },
-    { key: 'prepAreaHumidity', label: 'Độ ẩm môi trường', value: '56', unit: '%', type: 'humidity', status: 'good' },
+    { key: 'syrupTemp', label: 'Nhiệt độ nồi kẹo', value: '125', unit: '°C', type: 'temperature', status: 'good', aiRecommendation: 'Nhiệt độ nồi kẹo duy trì ở 125°C (chuẩn 120°C - 130°C), đảm bảo mạch nha có độ dẻo và màu hổ phách đẹp.' },
+    { key: 'cookingTime', label: 'Thời gian nấu kẹo', value: '10', unit: 'phút', type: 'time', status: 'good', aiRecommendation: 'Thời gian nấu đạt 10 phút (nằm trong khoảng chuẩn từ 8:00 - 12:30 phút). Chuẩn bị đổ khuôn cán kẹo.' },
+    { key: 'prepAreaTemp', label: 'Nhiệt độ môi trường', value: '26', unit: '°C', type: 'temperature', status: 'good', aiRecommendation: 'Nhiệt độ phòng chế biến tối ưu (22 - 28°C), giúp vừng lạc bám dính tốt.' },
+    { key: 'prepAreaHumidity', label: 'Độ ẩm môi trường', value: '56', unit: '%', type: 'humidity', status: 'good', aiRecommendation: 'Độ ẩm đạt chuẩn (55% - 65% RH), tránh hiện tượng kẹo bị chảy nước.' },
     { key: 'quality', label: 'Điểm chất lượng AI', value: '89', unit: '/100', type: 'quality', status: 'good' },
   ],
   batches: [

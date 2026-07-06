@@ -9,7 +9,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       grade: 'Loại 1',
       batch: 'BG-0626-01',
       producedAt: '31/08/2026',
-      expiresAt: '10/09/2026',
+      expiresAt: '06/09/2026',
       origin: '94 Trần Hưng Đạo, Nam Định',
       certificate: 'CERT-TNHK-BG-2026-014',
     },
@@ -57,7 +57,8 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
         icon: 'Flame',
         iotData: [
           { label: 'Nhiệt độ lò hấp', value: '102°C' },
-          { label: 'Áp suất hơi', value: '1.25 bar' }
+          { label: 'Áp suất hơi', value: '1.25 bar' },
+          { label: 'Thời gian hấp', value: '120 phút' }
         ]
       },
       {
@@ -122,9 +123,9 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       name: 'Bánh Xíu Páo Thượng Hạng',
       grade: 'Hộp Truyền Thống',
       batch: 'XP-0626-04',
-      producedAt: '19/06/2026',
-      expiresAt: '24/06/2026',
-      origin: 'Phố Khách cổ, Nam Định',
+      producedAt: '31/08/2026',
+      expiresAt: '05/09/2026',
+      origin: '28 Nguyễn Trãi - Phường Nam Định - Tỉnh Ninh Bình',
       certificate: 'CERT-TNHK-XP-2026-088',
     },
     checks: [
@@ -136,7 +137,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     timeline: [
       {
         title: 'Chuẩn bị vỏ ngàn lớp',
-        date: '19/06/2026',
+        date: '31/08/2026',
         detail: 'Kỹ thuật cán hai loại bột nước và bột dầu lặp đi lặp lại nhiều lần để tạo ra các lớp vỏ bánh mỏng xếp chồng khéo léo.',
         icon: 'Workflow',
         iotData: [
@@ -146,7 +147,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       },
       {
         title: 'Chế biến nhân thịt xá xíu',
-        date: '19/06/2026',
+        date: '31/08/2026',
         detail: 'Thịt heo tươi thái hạt lựu ướp ngũ vị hương, dầu hào, mật ong và tỏi băm rán vàng óng kèm trứng cút luộc.',
         icon: 'Layers',
         iotData: [
@@ -156,7 +157,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       },
       {
         title: 'Tạo hình và Quét trứng',
-        date: '19/06/2026',
+        date: '31/08/2026',
         detail: 'Nhồi nhân vào vỏ bánh tròn, tạo các nếp gấp đỉnh bánh như bánh bao rồi quét một lớp lòng đỏ trứng gà tạo màu vàng óng.',
         icon: 'Leaf',
         iotData: [
@@ -165,12 +166,14 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       },
       {
         title: 'Nướng bánh nhiệt độ cao',
-        date: '19/06/2026',
+        date: '31/08/2026',
         detail: 'Nướng qua 2 chu kỳ nhiệt độ cao, phun nước ẩm xen kẽ để vỏ bánh xốp giòn mà nhân bên trong không bị khô.',
         icon: 'Flame',
         iotData: [
-          { label: 'Nhiệt độ lò nướng', value: '198°C' },
-          { label: 'Thời gian nướng', value: '25 phút' }
+          { label: 'Nhiệt độ nướng Lần 1', value: '232°C' },
+          { label: 'Thời gian nướng Lần 1', value: '30 phút' },
+          { label: 'Nhiệt độ nướng Lần 2', value: '249°C' },
+          { label: 'Thời gian nướng Lần 2', value: '15 phút' }
         ]
       }
     ],
@@ -216,13 +219,13 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
   'keo-xiu-chau': {
     key: 'keo-xiu-chau',
     product: {
-      code: 'TNHK-XC-2026-0105',
+      code: 'TNHK-SC-2026-0105',
       name: 'Kẹo Sìu Châu',
       grade: 'Hộp Quà Đặc Sản',
       batch: 'XC-0626-02',
       producedAt: '18/06/2026',
       expiresAt: '18/12/2026',
-      origin: 'Làng nghề gia truyền Nam Định',
+      origin: '596 Điện Biên - Phường Nam Định - Tỉnh Ninh Bình',
       certificate: 'CERT-TNHK-XC-2026-211',
     },
     checks: [
@@ -248,8 +251,9 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
         detail: 'Đường cát hòa nước cùng mạch nha nếp thơm ngọt, đun lửa riu riu và khuấy liên tục cho đến khi hỗn hợp có màu mật ong hổ phách.',
         icon: 'Workflow',
         iotData: [
-          { label: 'Nhiệt độ chảo đường', value: '135°C' },
-          { label: 'Độ keo mạch nha', value: '88%' }
+          { label: 'Nhiệt độ chảo đường', value: '125°C' },
+          { label: 'Độ keo mạch nha', value: '88%' },
+          { label: 'Thời gian nấu', value: '10 phút' }
         ]
       },
       {
@@ -340,7 +344,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
         icon: 'Layers',
         iotData: [
           { label: 'Nhiệt độ nồi kẹo', value: '120°C' },
-          { label: 'Thời gian nấu', value: '18 phút' }
+          { label: 'Thời gian nấu', value: '10 phút' }
         ]
       },
       {

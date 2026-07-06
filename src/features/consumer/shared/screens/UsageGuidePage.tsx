@@ -15,24 +15,43 @@ export function UsageGuidePage() {
 
   const sections = [
     {
-      title: 'Thưởng thức tốt nhất',
-      tips: [
-        `Nên dùng ${product.name} cùng trà ấm để cân bằng vị giác.`,
-        productKey === 'banh-xiu-pao' ? 'Làm nóng lại bằng lò vi sóng hoặc nồi chiên không dầu 1-2 phút trước khi ăn để vỏ giòn nhân chảy.' : 'Không ăn kèm các thức uống có gas hoặc quá ngọt.',
-        'Thưởng thức chậm rãi để cảm nhận trọn vẹn hương vị truyền thống.'
-      ]
+      title: (productKey === 'banh-gai' || productKey === 'banh-xiu-pao') ? 'Hướng dẫn thưởng thức' : 'Thưởng thức tốt nhất',
+      tips: productKey === 'banh-gai'
+        ? [
+            'Hấp bánh bằng xửng hấp khoảng 8–9 phút trước khi dùng.',
+            'Nếu bánh được lấy từ ngăn đá, hãy rã đông hoàn toàn rồi mới hấp.',
+            'Bánh ngon nhất khi vừa hấp xong, để nguội bớt rồi bóc lớp lá chuối và thưởng thức.',
+            'Ngoài ra, sau khi hấp, bạn có thể để bánh vào ngăn mát tủ lạnh 5–10 phút để bánh có độ dẻo, dai và hương vị thơm ngon hơn.'
+          ]
+        : productKey === 'banh-xiu-pao'
+          ? [
+              'Bánh Xíu Páo Thượng Hạng ngon nhất khi dùng cùng một tách trà ấm để cân bằng vị giác và làm nổi bật hương vị.',
+              'Trước khi thưởng thức, làm nóng bánh bằng nồi chiên không dầu ở khoảng 5–7 phút để vỏ bánh giòn thơm. Khi làm nóng, nên cho 1–2 thìa cà phê nước sạch vào đáy nồi hoặc xung quanh bánh để giữ độ ẩm, giúp bánh không bị khô.',
+              'Không sử dụng lò vi sóng để làm nóng bánh vì nhân bánh có trứng, dễ ảnh hưởng đến kết cấu và hương vị.',
+              'Hãy thưởng thức chậm rãi để cảm nhận trọn vẹn lớp vỏ thơm giòn, phần nhân đậm đà và tinh hoa ẩm thực truyền thống.'
+            ]
+          : [
+              `Nên dùng ${product.name} cùng trà ấm để cân bằng vị giác.`,
+              productKey === 'banh-xiu-pao' ? 'Làm nóng lại bằng lò vi sóng hoặc nồi chiên không dầu 1-2 phút trước khi ăn để vỏ giòn nhân chảy.' : 'Không ăn kèm các thức uống có gas hoặc quá ngọt.',
+              'Thưởng thức chậm rãi để cảm nhận trọn vẹn hương vị truyền thống.'
+            ]
     },
     {
-      title: 'Bảo quản đúng cách',
-      tips: [
-        productKey === 'doi' 
-          ? 'Bảo quản bắt buộc trong tủ lạnh: tủ mát dùng trong 15 ngày, tủ đá dùng trong 3 tháng.' 
-          : 'Để ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.',
-        productKey === 'doi'
-          ? 'Sau khi cắt bao bì, sử dụng hết trong vòng 24 giờ.'
-          : 'Sau khi mở bao bì, nên bọc kín và dùng sớm để giữ nguyên độ ẩm/độ giòn vỏ bánh.',
-        'Tuyệt đối không sử dụng nếu phát hiện bao bì rách, xì hơi hoặc ẩm mốc.'
-      ]
+      title: (productKey === 'banh-gai' || productKey === 'banh-xiu-pao') ? 'Hướng dẫn bảo quản' : 'Bảo quản đúng cách',
+      tips: (productKey === 'banh-gai' || productKey === 'banh-xiu-pao')
+        ? [
+            'Bảo quản bánh ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.',
+            'Nếu muốn bảo quản lâu hơn, nên để bánh trong ngăn đá tủ lạnh. Cách này giúp kéo dài thời gian bảo quản thêm đến 12 ngày mà vẫn giữ được chất lượng bánh.'
+          ]
+        : [
+            productKey === 'doi' 
+              ? 'Bảo quản bắt buộc trong tủ lạnh: tủ mát dùng trong 15 ngày, tủ đá dùng trong 3 tháng.' 
+              : 'Để ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.',
+            productKey === 'doi'
+              ? 'Sau khi cắt bao bì, sử dụng hết trong vòng 24 giờ.'
+              : 'Sau khi mở bao bì, nên bọc kín và dùng sớm để giữ nguyên độ ẩm/độ giòn vỏ bánh.',
+            'Tuyệt đối không sử dụng nếu phát hiện bao bì rách, xì hơi hoặc ẩm mốc.'
+          ]
     },
     {
       title: 'Làm quà biếu tặng',
