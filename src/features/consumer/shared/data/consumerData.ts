@@ -10,7 +10,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       batch: 'BG-0626-01',
       producedAt: '31/08/2026',
       expiresAt: '06/09/2026',
-      origin: '94 Trần Hưng Đạo, Nam Định',
+      origin: '94 Trần Hưng Đạo, Phường Nam Định, Tỉnh Ninh Bình',
       certificate: 'CERT-TNHK-BG-2026-014',
     },
     checks: [
@@ -318,7 +318,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
       batch: 'DO-0626-02',
       producedAt: '18/06/2026',
       expiresAt: '18/12/2026',
-      origin: 'Cơ sở chế biến Thành Nam',
+      origin: '596 Điện Biên - Phường Nam Định - Tỉnh Ninh Bình',
       certificate: 'CERT-TNHK-KD-2026-039',
     },
     checks: [

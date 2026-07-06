@@ -96,20 +96,57 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
 
   const t = translations[lang]
 
-  // Mock Producer Data customized for Thanh Nam Huong Ky
-  const producerData = {
-    fullName: 'Nguyễn Thành Nam',
-    email: 'nam.nguyen@thanhnamhuongky.vn',
-    phone: '0912 345 678',
-    facility: 'Cơ Sở Bánh Kẹo Truyền Thống Thành Nam Hương Ký',
-    location: 'Lộc Vượng, TP. Nam Định, Nam Định',
-    license: 'GPSX-TNHK-2021-0089',
-    avatar: 'TN',
-    memberYear: '2021',
-    batches: 38,
-    ovens: 8,
-    years: '15 năm'
+  // Dynamic Producer Data based on product key mapped for Thanh Nam Huong Ky
+  const getProducerData = (key: string) => {
+    switch (key) {
+      case 'banh-gai':
+        return {
+          fullName: 'Trần Thị Thanh Huyền',
+          email: 'huyentrantt35@thanhnamhuongky.com.vn',
+          phone: '0854386316',
+          facility: '94 Trần Hưng Đạo, Phường Nam Định, Tỉnh Ninh Bình',
+          location: '94 Trần Hưng Đạo, Phường Nam Định, Tỉnh Ninh Bình',
+          license: 'GPSX-TNHK-2021-0089',
+          avatar: 'TH',
+          memberYear: '2021',
+          batches: 38,
+          ovens: 8,
+          years: '15 năm'
+        }
+      case 'banh-xiu-pao':
+        return {
+          fullName: 'Đỗ Thu Thủy',
+          email: 'Thuydot43@thanhnamhuongky.com.vn',
+          phone: '0947469722',
+          facility: '28 Nguyễn Trãi - Phường Nam Định - Tỉnh Ninh Bình',
+          location: '28 Nguyễn Trãi - Phường Nam Định - Tỉnh Ninh Bình',
+          license: 'GPSX-TNHK-2021-0090',
+          avatar: 'TT',
+          memberYear: '2021',
+          batches: 42,
+          ovens: 6,
+          years: '12 năm'
+        }
+      case 'keo-xiu-chau':
+      case 'doi':
+      default:
+        return {
+          fullName: 'Ngô Thanh Lan',
+          email: 'Lanngot21@thanhnamhuongky.com.vn',
+          phone: '0947007557',
+          facility: '596 Điện Biên - Phường Nam Định - Tỉnh Ninh Bình',
+          location: '596 Điện Biên - Phường Nam Định - Tỉnh Ninh Bình',
+          license: 'GPSX-TNHK-2021-0091',
+          avatar: 'TL',
+          memberYear: '2021',
+          batches: 30,
+          ovens: 4,
+          years: '10 năm'
+        }
+    }
   }
+
+  const producerData = getProducerData(product.key)
 
   const personalInfoItems = [
     { icon: User, label: t.fullName, value: producerData.fullName },
