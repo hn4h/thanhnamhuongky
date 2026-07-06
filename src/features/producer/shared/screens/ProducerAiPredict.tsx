@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react'
-import { 
-  BrainCircuit, 
-  Wind, 
-  Thermometer, 
-  Droplets, 
-  AlertTriangle, 
-  CheckCircle, 
-  TrendingUp, 
-  Settings2, 
+import {
+  BrainCircuit,
+  Wind,
+  Thermometer,
+  Droplets,
+  AlertTriangle,
+  CheckCircle,
+  TrendingUp,
+  Settings2,
   ArrowLeft,
   ChevronLeft,
   Loader2,
@@ -21,21 +21,38 @@ type ProducerAiPredictProps = {
   product: ProducerProductModule
 }
 
-// Initial mock data for VOC chart over 12 days
+// Initial mock data for VOC chart over 12 days (Bánh Gai)
 // Day 1 to 7 are actual historical, Day 8 to 12 are AI predictions
 const INITIAL_VOC_DAYS = [
-  { day: 1, value: 85, isForecast: false },
-  { day: 2, value: 92, isForecast: false },
-  { day: 3, value: 98, isForecast: false },
-  { day: 4, value: 90, isForecast: false },
-  { day: 5, value: 104, isForecast: false },
-  { day: 6, value: 109, isForecast: false },
-  { day: 7, value: 115, isForecast: false }, // End of actual
-  { day: 8, value: 119, isForecast: true },  // Start of forecast
-  { day: 9, value: 128, isForecast: true },  // Exceeds default 120 threshold
-  { day: 10, value: 135, isForecast: true }, // Exceeds default 120 threshold
-  { day: 11, value: 123, isForecast: true }, // Exceeds default 120 threshold
-  { day: 12, value: 110, isForecast: true }
+  { day: 1, value: 25, isForecast: false },
+  { day: 2, value: 29, isForecast: false },
+  { day: 3, value: 35, isForecast: false },
+  { day: 4, value: 42, isForecast: false },
+  { day: 5, value: 49, isForecast: false },
+  { day: 6, value: 56, isForecast: false },
+  { day: 7, value: 62, isForecast: false }, // End of actual
+  { day: 8, value: 68, isForecast: true },  // Start of forecast
+  { day: 9, value: 75, isForecast: true },
+  { day: 10, value: 83, isForecast: true },  // Exceeds warning threshold (60 ppb)
+  { day: 11, value: 92, isForecast: true },  // Exceeds warning threshold (60 ppb)
+  { day: 12, value: 95, isForecast: true }
+]
+
+// Initial mock data for NH3 chart over 12 days (Xíu Páo)
+// Day 1 to 7 are actual historical, Day 8 to 12 are AI predictions
+const INITIAL_NH3_DAYS = [
+  { day: 1, value: 18, isForecast: false },
+  { day: 2, value: 19, isForecast: false },
+  { day: 3, value: 20, isForecast: false },
+  { day: 4, value: 19, isForecast: false },
+  { day: 5, value: 22, isForecast: false },
+  { day: 6, value: 23, isForecast: false },
+  { day: 7, value: 24, isForecast: false }, // End of actual
+  { day: 8, value: 25, isForecast: true },  // Start of forecast
+  { day: 9, value: 27, isForecast: true },  // Exceeds warning threshold (20 ppm)
+  { day: 10, value: 28, isForecast: true }, // Exceeds warning threshold (20 ppm)
+  { day: 11, value: 26, isForecast: true }, // Exceeds warning threshold (20 ppm)
+  { day: 12, value: 23, isForecast: true }
 ]
 
 export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
@@ -44,24 +61,18 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
   const gasLabel = isXiuPao ? 'NH3' : 'VOC'
   const gasUnit = isXiuPao ? 'ppm' : 'ppb'
   const defaultThreshold = isXiuPao ? 20 : 60
-  
+
   // States
   const [warningThreshold, setWarningThreshold] = useState<number>(defaultThreshold)
   const [tempReduced, setTempReduced] = useState<boolean>(false)
   const [tempLoading, setTempLoading] = useState<boolean>(false)
-  
+
   const [humidityReduced, setHumidityReduced] = useState<boolean>(false)
   const [humidityLoading, setHumidityLoading] = useState<boolean>(false)
 
-  // Map values dynamically
+  // Select initial days data depending on the product key
   const initialDays = useMemo(() => {
-    return INITIAL_VOC_DAYS.map(d => {
-      // Map 0-200 range to appropriate ranges:
-      // For NH3: range 0 - 50 (divide by 4.8)
-      // For VOC: range 0 - 100 (divide by 2)
-      let val = isXiuPao ? Math.round(d.value / 4.8) : Math.round(d.value / 2.0)
-      return { ...d, value: val }
-    })
+    return isXiuPao ? INITIAL_NH3_DAYS : INITIAL_VOC_DAYS
   }, [isXiuPao])
 
   // Trigger quick action to lower temperature
@@ -108,6 +119,11 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
     return vocPoints.filter(p => p.value > warningThreshold)
   }, [vocPoints, warningThreshold])
 
+  const peakDay = useMemo(() => {
+    if (exceededDays.length === 0) return 0
+    return exceededDays.reduce((max, d) => d.value > max.value ? d : max, exceededDays[0]).day
+  }, [exceededDays])
+
   const hasWarning = exceededDays.length > 0
 
   // Chart plotting constants
@@ -149,15 +165,13 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
       </div>
 
       {/* Main warning summary */}
-      <div className={`mb-5 rounded-[24px] border p-5 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all ${
-        hasWarning 
-          ? 'border-[#EAA18F] bg-[#FFF8F6]' 
-          : 'border-[#E0D7D0] bg-white'
-      }`}>
+      <div className={`mb-5 rounded-[24px] border p-5 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all ${hasWarning
+        ? 'border-[#EAA18F] bg-[#FFF8F6]'
+        : 'border-[#E0D7D0] bg-white'
+        }`}>
         <div className="flex items-start gap-4">
-          <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl ${
-            hasWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'
-          }`}>
+          <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl ${hasWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'
+            }`}>
             {hasWarning ? (
               <AlertTriangle size={24} strokeWidth={2.3} className="animate-bounce" />
             ) : (
@@ -166,13 +180,13 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
           </span>
           <div className="min-w-0 flex-1">
             <h2 className="text-[18px] font-black text-[#150807] leading-snug">
-              {hasWarning 
-                ? `Dự báo chỉ số ${gasLabel} Kho 1 vượt ngưỡng` 
+              {hasWarning
+                ? `Dự báo chỉ số ${gasLabel} Kho 1 vượt ngưỡng`
                 : `Chỉ số ${gasLabel} Kho 1 được tối ưu hóa`}
             </h2>
             <p className="mt-1.5 text-sm font-bold text-[#806A5B] leading-relaxed">
-              {hasWarning 
-                ? `Hệ thống AI phát hiện chỉ số ${gasLabel} dự kiến tăng cao, đạt đỉnh ${Math.max(...exceededDays.map(d=>d.value))} ${gasUnit} tại ngày thứ ${exceededDays[0].day > 9 ? exceededDays[0].day : `0${exceededDays[0].day}`}. Cần can thiệp môi trường kho.` 
+              {hasWarning
+                ? `Hệ thống AI phát hiện chỉ số ${gasLabel} dự kiến tăng cao, đạt đỉnh ${Math.max(...exceededDays.map(d => d.value))} ${gasUnit} tại ngày thứ ${peakDay > 9 ? peakDay : `0${peakDay}`}. Cần can thiệp môi trường kho.`
                 : `Môi trường kho bảo quản ${isXiuPao ? 'nhân bánh xíu páo' : 'lá bánh gai'} đang đạt các chỉ số vi sinh tối ưu. Không có nguy cơ tăng ${gasLabel} bất thường trong vòng 12 ngày tới.`}
             </p>
           </div>
@@ -193,11 +207,10 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
               <button
                 disabled={tempReduced || tempLoading}
                 onClick={handleLowerTemp}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs font-black transition active:scale-98 ${
-                  tempReduced 
-                    ? 'bg-[#EDF9F0] text-[#4A9F57] border border-[#4A9F57]/30' 
-                    : 'bg-[#721A18] text-white hover:bg-[#852220] shadow-[0_4px_12px_rgba(114,26,24,0.18)]'
-                }`}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs font-black transition active:scale-98 ${tempReduced
+                  ? 'bg-[#EDF9F0] text-[#4A9F57] border border-[#4A9F57]/30'
+                  : 'bg-[#721A18] text-white hover:bg-[#852220] shadow-[0_4px_12px_rgba(114,26,24,0.18)]'
+                  }`}
               >
                 {tempLoading ? (
                   <>
@@ -220,11 +233,10 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
               <button
                 disabled={humidityReduced || humidityLoading}
                 onClick={handleLowerHumidity}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs font-black transition active:scale-98 ${
-                  humidityReduced 
-                    ? 'bg-[#EDF9F0] text-[#4A9F57] border border-[#4A9F57]/30' 
-                    : 'bg-[#721A18] text-white hover:bg-[#852220] shadow-[0_4px_12px_rgba(114,26,24,0.18)]'
-                }`}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs font-black transition active:scale-98 ${humidityReduced
+                  ? 'bg-[#EDF9F0] text-[#4A9F57] border border-[#4A9F57]/30'
+                  : 'bg-[#721A18] text-white hover:bg-[#852220] shadow-[0_4px_12px_rgba(114,26,24,0.18)]'
+                  }`}
               >
                 {humidityLoading ? (
                   <>
@@ -333,19 +345,19 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
 
             {/* Warning threshold limit line */}
             <g>
-              <line 
-                x1={padding.left} 
-                x2={width - padding.right} 
-                y1={yFor(warningThreshold)} 
-                y2={yFor(warningThreshold)} 
-                stroke="#B23B2F" 
-                strokeWidth="4" 
-                strokeDasharray="10 10" 
+              <line
+                x1={padding.left}
+                x2={width - padding.right}
+                y1={yFor(warningThreshold)}
+                y2={yFor(warningThreshold)}
+                stroke="#B23B2F"
+                strokeWidth="4"
+                strokeDasharray="10 10"
               />
-              <text 
-                x={width - padding.right - 8} 
-                y={yFor(warningThreshold) - 10} 
-                textAnchor="end" 
+              <text
+                x={width - padding.right - 8}
+                y={yFor(warningThreshold) - 10}
+                textAnchor="end"
                 className="fill-[#B23B2F] text-[15px] font-black"
               >
                 Ngưỡng {warningThreshold} {gasUnit}
@@ -356,13 +368,13 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
             <polyline fill="none" points={actualPath} stroke="#214D35" strokeLinecap="round" strokeLinejoin="round" strokeWidth="6" />
 
             {/* Forecast line (Solid) */}
-            <path 
-              d={`M ${forecastPath}`} 
-              fill="none" 
-              stroke="#C78116" 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth="6" 
+            <path
+              d={`M ${forecastPath}`}
+              fill="none"
+              stroke="#C78116"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="6"
             />
 
             {/* Data point circle markers */}
@@ -373,29 +385,29 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
 
               return (
                 <g key={`marker-${point.day}`}>
-                  <circle 
-                    cx={cx} 
-                    cy={cy} 
-                    r="8" 
-                    fill={point.isForecast ? '#C78116' : '#214D35'} 
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r="8"
+                    fill={point.isForecast ? '#C78116' : '#214D35'}
                     stroke={isWarningPoint ? '#B23B2F' : '#FFFFFF'}
                     strokeWidth={isWarningPoint ? '4' : '2'}
                   />
                   {/* Floating tooltip values on key days */}
                   {(point.day === 7 || point.day === 9 || point.day === 10) && (
                     <g>
-                      <rect 
-                        x={cx - 22} 
-                        y={cy - 34} 
-                        width="44" 
-                        height="22" 
-                        rx="6" 
-                        fill={isWarningPoint ? '#B23B2F' : '#4F423B'} 
+                      <rect
+                        x={cx - 22}
+                        y={cy - 34}
+                        width="44"
+                        height="22"
+                        rx="6"
+                        fill={isWarningPoint ? '#B23B2F' : '#4F423B'}
                       />
-                      <text 
-                        x={cx} 
-                        y={cy - 19} 
-                        textAnchor="middle" 
+                      <text
+                        x={cx}
+                        y={cy - 19}
+                        textAnchor="middle"
                         className="fill-white text-[12px] font-extrabold"
                       >
                         {point.value}
@@ -441,9 +453,8 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
                 <h4 className="text-base font-black text-[#150807] mt-0.5">Mẻ {isXiuPao ? 'XP' : 'BG'}-2026-06</h4>
                 <p className="text-xs font-bold text-[#806A5B] mt-1">Quá trình bảo quản nguyên liệu cho {product.name} Thành Phương.</p>
               </div>
-              <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${
-                hasWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'
-              }`}>
+              <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${hasWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'
+                }`}>
                 {hasWarning ? 'Đang giám sát' : 'Quy trình đạt chuẩn'}
               </span>
             </div>
@@ -452,7 +463,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
               <div>
                 <p className="font-bold text-[#806A5B]">Dự báo {gasLabel} cực đại</p>
                 <strong className={`mt-0.5 block text-sm font-black ${hasWarning ? 'text-[#B23B2F]' : 'text-[#214D35]'}`}>
-                  {Math.max(...vocPoints.map(d=>d.value))} {gasUnit}
+                  {Math.max(...vocPoints.map(d => d.value))} {gasUnit}
                 </strong>
               </div>
               <div>

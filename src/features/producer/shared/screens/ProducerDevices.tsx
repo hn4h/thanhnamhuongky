@@ -272,15 +272,15 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
     : room.status
 
   const vocData = useMemo(() => {
-    if (room.id === 'Tủ 1') {
+    if (room.id === 'Tủ 1' && !isXiuPao) {
       return [
-        { day: 1, value: Math.round(targetVal * 0.4) },
-        { day: 2, value: Math.round(targetVal * 0.45) },
-        { day: 3, value: Math.round(targetVal * 0.55) },
-        { day: 4, value: Math.round(targetVal * 0.6) },
-        { day: 5, value: Math.round(targetVal * 0.7) },
-        { day: 6, value: Math.round(targetVal * 0.8) },
-        { day: 7, value: targetVal },
+        { day: 1, value: 25 },
+        { day: 2, value: 29 },
+        { day: 3, value: 35 },
+        { day: 4, value: 42 },
+        { day: 5, value: 49 },
+        { day: 6, value: 56 },
+        { day: 7, value: 62 },
       ]
     }
     // Generate 7 days of historical VOC/NH3 data ending at targetVal

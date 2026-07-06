@@ -18,7 +18,7 @@ export const steamChambers = [
 ]
 
 export const coldRooms = [
-  { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 68, nh3: 25, status: 'VOC tăng', dehumidifier: true, ventilation: false },
+  { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 62, nh3: 25, status: 'VOC tăng', dehumidifier: true, ventilation: false },
   { id: 'Tủ 2', item: 'Đậu xanh', temp: 0, humidity: 45, voc: 25, nh3: 12, status: 'Ổn định', dehumidifier: false, ventilation: false },
   { id: 'Tủ 3', item: 'Dừa nạo', temp: -2, humidity: 42, voc: 18, nh3: 8, status: 'Ổn định', dehumidifier: false, ventilation: true },
   { id: 'Tủ 4', item: 'Bánh thành phẩm', temp: 2.5, humidity: 52, voc: 35, nh3: 15, status: 'Theo dõi', dehumidifier: true, ventilation: true },
