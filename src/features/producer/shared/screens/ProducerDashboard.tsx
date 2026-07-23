@@ -57,7 +57,7 @@ export function ProducerDashboard({ product }: ProducerDashboardProps) {
               <Thermometer size={20} strokeWidth={2.3} />
             </span>
             <div>
-              <span className="text-sm font-black text-[#150807]">Lồng hấp thông minh</span>
+              <span className="text-sm font-black text-[#150807]">{isXiuPao ? 'Lò nướng thông minh' : 'Lồng hấp thông minh'}</span>
               <p className="text-[10px] font-bold text-[#806A5B] mt-0.5">Điều khiển nhiệt độ & độ ẩm</p>
             </div>
           </Link>

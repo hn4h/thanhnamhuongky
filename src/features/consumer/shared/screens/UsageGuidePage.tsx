@@ -44,11 +44,9 @@ export function UsageGuidePage() {
             'Nếu muốn bảo quản lâu hơn, nên để bánh trong ngăn đá tủ lạnh. Cách này giúp kéo dài thời gian bảo quản thêm đến 12 ngày mà vẫn giữ được chất lượng bánh.'
           ]
         : [
-            productKey === 'doi' 
-              ? 'Bảo quản bắt buộc trong tủ lạnh: tủ mát dùng trong 15 ngày, tủ đá dùng trong 3 tháng.' 
-              : 'Để ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.',
-            productKey === 'doi'
-              ? 'Sau khi cắt bao bì, sử dụng hết trong vòng 24 giờ.'
+            'Để ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.',
+            (productKey === 'keo-xiu-chau' || productKey === 'doi')
+              ? 'Sau khi mở bao bì, nên bọc kín và dùng sớm để giữ nguyên độ giòn vỏ kẹo.'
               : 'Sau khi mở bao bì, nên bọc kín và dùng sớm để giữ nguyên độ ẩm/độ giòn vỏ bánh.',
             'Tuyệt đối không sử dụng nếu phát hiện bao bì rách, xì hơi hoặc ẩm mốc.'
           ]
@@ -56,7 +54,9 @@ export function UsageGuidePage() {
     {
       title: 'Làm quà biếu tặng',
       tips: [
-        'Vỏ hộp thiết kế họa tiết cung đình sang trọng, thích hợp biếu tặng đối tác.',
+        (productKey === 'keo-xiu-chau' || productKey === 'doi')
+          ? 'Vỏ kẹo thiết kế họa tiết cung đình sang trọng, thích hợp biếu tặng đối tác.'
+          : 'Vỏ hộp thiết kế họa tiết cung đình sang trọng, thích hợp biếu tặng đối tác.',
         'Chứng thư số đính kèm giúp người nhận dễ dàng quét kiểm chứng xuất xứ.',
         'Đại diện cho văn hóa ẩm thực truyền thống Thành Nam hào sảng.'
       ]

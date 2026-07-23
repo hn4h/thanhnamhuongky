@@ -17,12 +17,37 @@ export const steamChambers = [
   { id: 'Lồng 5', batch: 'Chờ mẻ', temp: 27, humidity: 55, pressure: 0, status: 'Nghỉ', progress: 0, remainingMinutes: 0 },
 ]
 
+export function getSteamChambers(productKey?: string) {
+  if (productKey === 'banh-xiu-pao') {
+    return [
+      { id: 'Lồng 1', batch: 'XP-0626-01', temp: 242, humidity: 12, pressure: 0, status: 'Ổn định', progress: 65, remainingMinutes: 14 },
+      { id: 'Lồng 2', batch: 'XP-0626-02', temp: 238, humidity: 10, pressure: 0, status: 'Đang nướng', progress: 48, remainingMinutes: 21 },
+      { id: 'Lồng 3', batch: 'XP-0626-03', temp: 280, humidity: 8, pressure: 0, status: 'Quá nhiệt', progress: 82, remainingMinutes: 9 },
+      { id: 'Lồng 4', batch: 'XP-0626-04', temp: 246, humidity: 14, pressure: 0, status: 'Ổn định', progress: 55, remainingMinutes: 18 },
+      { id: 'Lồng 5', batch: 'XP-0626-05', temp: 235, humidity: 11, pressure: 0, status: 'Ổn định', progress: 28, remainingMinutes: 25 },
+    ]
+  }
+  return steamChambers
+}
+
 export const coldRooms = [
   { id: 'Tủ 1', item: 'Lá gai', temp: 4, humidity: 62, voc: 62, nh3: 25, status: 'VOC tăng', dehumidifier: true, ventilation: false },
   { id: 'Tủ 2', item: 'Đậu xanh', temp: 0, humidity: 45, voc: 25, nh3: 12, status: 'Ổn định', dehumidifier: false, ventilation: false },
   { id: 'Tủ 3', item: 'Dừa nạo', temp: -2, humidity: 42, voc: 18, nh3: 8, status: 'Ổn định', dehumidifier: false, ventilation: true },
   { id: 'Tủ 4', item: 'Bánh thành phẩm', temp: 2.5, humidity: 52, voc: 35, nh3: 15, status: 'Theo dõi', dehumidifier: true, ventilation: true },
 ]
+
+export function getColdRooms(productKey?: string) {
+  if (productKey === 'banh-xiu-pao') {
+    return [
+      { id: 'Tủ 1', item: 'Nhân thịt xá xíu', temp: 4, humidity: 72, voc: 62, nh3: 22, status: 'NH3 tăng', dehumidifier: true, ventilation: false },
+      { id: 'Tủ 2', item: 'Bột mì & mỡ heo', temp: 0, humidity: 45, voc: 25, nh3: 12, status: 'Ổn định', dehumidifier: false, ventilation: false },
+      { id: 'Tủ 3', item: 'Trứng muối', temp: -2, humidity: 42, voc: 18, nh3: 8, status: 'Ổn định', dehumidifier: false, ventilation: true },
+      { id: 'Tủ 4', item: 'Bánh xíu páo TP', temp: 2.5, humidity: 52, voc: 35, nh3: 15, status: 'Theo dõi', dehumidifier: true, ventilation: true },
+    ]
+  }
+  return coldRooms
+}
 
 type SteamerIconProps = {
   tone: 'good' | 'ripe' | 'watch' | 'critical' | 'empty'
@@ -156,13 +181,14 @@ type ZoneDiagramCardProps = {
 }
 
 function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: ZoneDiagramCardProps) {
+  const isXiuPao = product.key === 'banh-xiu-pao'
   const items = type === 'steam'
     ? [
-        { id: 1, name: 'Lồng 1', tone: 'good' as const },
-        { id: 2, name: 'Lồng 2', tone: 'ripe' as const },
-        { id: 3, name: 'Lồng 3', tone: 'critical' as const },
-        { id: 4, name: 'Lồng 4', tone: 'good' as const },
-        { id: 5, name: 'Lồng 5', tone: 'empty' as const },
+        { id: 1, name: isXiuPao ? 'Lò 1' : 'Lồng 1', tone: 'good' as const },
+        { id: 2, name: isXiuPao ? 'Lò 2' : 'Lồng 2', tone: 'ripe' as const },
+        { id: 3, name: isXiuPao ? 'Lò 3' : 'Lồng 3', tone: 'critical' as const },
+        { id: 4, name: isXiuPao ? 'Lò 4' : 'Lồng 4', tone: 'good' as const },
+        { id: 5, name: isXiuPao ? 'Lò 5' : 'Lồng 5', tone: 'empty' as const },
       ]
     : [
         { id: 1, name: 'Tủ 1', tone: 'critical' as const },
@@ -215,7 +241,7 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: Zone
                         Nhiệt độ
                       </span>
                       <span className="text-[#150807] font-black">
-                        {steamChambers[item.id - 1].temp} °C
+                        {getSteamChambers(product.key)[item.id - 1].temp} °C
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
@@ -224,18 +250,20 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: Zone
                         Độ ẩm
                       </span>
                       <span className="text-[#150807] font-black">
-                        {steamChambers[item.id - 1].humidity} %
+                        {getSteamChambers(product.key)[item.id - 1].humidity} %
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
-                        <Gauge size={14} className="text-[#1f77b4]" />
-                        Áp suất
-                      </span>
-                      <span className="text-[#150807] font-black">
-                        {Math.round(steamChambers[item.id - 1].pressure * 100)} cb
-                      </span>
-                    </div>
+                    {!isXiuPao && (
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="flex items-center gap-1.5 text-[#806A5B] font-bold">
+                          <Gauge size={14} className="text-[#1f77b4]" />
+                          Áp suất
+                        </span>
+                        <span className="text-[#150807] font-black">
+                          {Math.round(getSteamChambers(product.key)[item.id - 1].pressure * 100)} cb
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
                 {/* Tooltip Arrow */}
@@ -257,8 +285,8 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: Zone
                     </span>
                     <span className="text-[#150807] font-black">
                       {product.key === 'banh-xiu-pao' 
-                        ? `${coldRooms[item.id - 1].nh3} ppm` 
-                        : `${coldRooms[item.id - 1].voc} ppb`}
+                        ? `${getColdRooms(product.key)[item.id - 1].nh3} ppm` 
+                        : `${getColdRooms(product.key)[item.id - 1].voc} ppb`}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
@@ -267,7 +295,7 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: Zone
                       Nhiệt độ
                     </span>
                     <span className="text-[#150807] font-black">
-                      {coldRooms[item.id - 1].temp} °C
+                      {getColdRooms(product.key)[item.id - 1].temp} °C
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
@@ -276,7 +304,7 @@ function ZoneDiagramCard({ name, icon: Icon, type, onSelectSlot, product }: Zone
                       Độ ẩm
                     </span>
                     <span className="text-[#150807] font-black">
-                      {coldRooms[item.id - 1].humidity} %
+                      {getColdRooms(product.key)[item.id - 1].humidity} %
                     </span>
                   </div>
                 </div>
@@ -310,29 +338,33 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
     if (!selectedItem) return null
 
     if (selectedItem.type === 'steam') {
-      const chamber = steamChambers[selectedItem.id - 1]
+      const isXiuPao = product.key === 'banh-xiu-pao'
+      const chamber = getSteamChambers(product.key)[selectedItem.id - 1]
       const tone = selectedItem.id === 1 || selectedItem.id === 4 ? 'good' :
                    selectedItem.id === 2 ? 'ripe' :
                    selectedItem.id === 3 ? 'critical' : 'empty'
       return {
         type: 'steam' as const,
-        title: `Lồng Hấp Công Nghiệp ${selectedItem.id}`,
+        title: (isXiuPao ? 'Lò Nướng Công Nghiệp ' : 'Lồng Hấp Công Nghiệp ') + selectedItem.id,
         subtitle: `Mẻ: ${chamber.batch}`,
-        status: chamber.status,
+        status: chamber.status === 'Đang hấp' ? (isXiuPao ? 'Đang nướng' : 'Đang hấp') : chamber.status,
         progress: chamber.progress,
         tone,
-        metrics: [
+        metrics: isXiuPao ? [
+          { icon: Thermometer, label: 'Nhiệt', value: `${chamber.temp}°C` },
+          { icon: Droplets, label: 'Độ ẩm', value: `${chamber.humidity}%` },
+        ] : [
           { icon: Thermometer, label: 'Nhiệt', value: `${chamber.temp}°C` },
           { icon: Droplets, label: 'Độ ẩm', value: `${chamber.humidity}%` },
           { icon: Gauge, label: 'Áp suất', value: `${chamber.pressure} bar` },
         ],
         extra: chamber.progress > 0 
           ? `${chamber.progress}% quy trình · Còn ${chamber.remainingMinutes} phút`
-          : 'Lồng hấp công nghiệp đang chờ mẻ mới'
+          : (isXiuPao ? 'Lò nướng công nghiệp đang chờ mẻ mới' : 'Lồng hấp công nghiệp đang chờ mẻ mới')
       }
     } else {
-      const room = coldRooms[selectedItem.id - 1]
       const isXiuPao = product.key === 'banh-xiu-pao'
+      const room = getColdRooms(product.key)[selectedItem.id - 1]
       const itemsMap: Record<string, Record<string, string>> = {
         'banh-gai': {
           'Tủ 1': 'Lá gai',
@@ -389,9 +421,9 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
   return (
     <ProducerScreenShell product={product} eyebrow={product.name} title="Sơ Đồ" hideSummary>
       <div className="space-y-6">
-        {/* Sơ đồ Lồng Hấp */}
+        {/* Sơ đồ Lồng Hấp / Lò Nướng */}
         <ZoneDiagramCard
-          name="Lồng Hấp Công Nghiệp"
+          name={product.key === 'banh-xiu-pao' ? 'Lò Nướng Công Nghiệp' : 'Lồng Hấp Công Nghiệp'}
           icon={Thermometer}
           type="steam"
           onSelectSlot={(row, col, tone) => handleSelectSlot('steam', row, col, tone)}
@@ -433,7 +465,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
               </span>
             </div>
 
-            <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+            <div className={`mt-5 grid ${selectedDetails.metrics.length === 2 ? 'grid-cols-2' : 'grid-cols-3'} gap-2 text-center`}>
               {selectedDetails.metrics.map((m, idx) => (
                 <SensorMini key={idx} icon={m.icon} label={m.label} value={m.value} />
               ))}
@@ -443,7 +475,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
             {selectedDetails.type === 'steam' && selectedDetails.progress !== undefined && selectedDetails.progress > 0 && (
               <div className="mt-4 rounded-[18px] bg-[#FAF2E8] p-3">
                 <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-1.5">
-                  <span>Tiến độ hấp</span>
+                  <span>{product.key === 'banh-xiu-pao' ? 'Tiến độ nướng' : 'Tiến độ hấp'}</span>
                   <span>{selectedDetails.progress}%</span>
                 </div>
                 <div className="h-3 overflow-hidden rounded-full bg-[#E8D9C8] shadow-[inset_0_1px_2px_rgba(74,45,30,0.12)]">
@@ -471,7 +503,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
               >
                 <span>
                   {selectedDetails.type === 'steam'
-                    ? 'Chỉnh nhiệt độ lồng hấp thủ công'
+                    ? (product.key === 'banh-xiu-pao' ? 'Chỉnh nhiệt độ lò nướng thủ công' : 'Chỉnh nhiệt độ lồng hấp thủ công')
                     : 'Chỉnh thông số tủ lạnh thủ công'}
                 </span>
               </Link>
@@ -532,7 +564,8 @@ type SteamChamberDetailProps = {
   onBack: () => void
 }
 
-export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDetailProps) {
+export function SteamChamberDetail({ product, chamber: initialChamber, onBack }: SteamChamberDetailProps) {
+  const chamber = getSteamChambers(product.key).find((c) => c.id === initialChamber.id) || initialChamber
   const trendData = useMemo(() => createTrendData(chamber), [chamber])
 
   return (
@@ -550,7 +583,9 @@ export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDet
           >
             <ChevronLeft size={20} />
           </button>
-          <span className="text-[12px] font-medium tracking-wider text-[#FDF4E7]/55 uppercase">Lồng hấp công nghiệp</span>
+          <span className="text-[12px] font-medium tracking-wider text-[#FDF4E7]/55 uppercase">
+            {product.key === 'banh-xiu-pao' ? 'Lò nướng công nghiệp' : 'Lồng hấp công nghiệp'}
+          </span>
           <div className="w-9 h-9" /> {/* Spacer */}
         </div>
 
@@ -562,11 +597,11 @@ export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDet
         </div>
 
         <p className="relative mt-1 text-[12px] font-bold text-[#C9AAA5]">
-          B-2026-03 · {chamber.id} · Bánh gai Thành Nam
+          B-2026-03 · {product.key === 'banh-xiu-pao' ? chamber.id.replace('Lồng', 'Lò') : chamber.id} · {product.key === 'banh-xiu-pao' ? 'Bánh xíu páo Thành Phương' : 'Bánh gai Thành Nam'}
         </p>
 
         <div className="relative mt-5 flex items-center justify-between gap-5 text-xs font-bold text-[#D6BDBC]">
-          <span>{chamber.progress}% quy trình hấp</span>
+          <span>{chamber.progress}% quy trình {product.key === 'banh-xiu-pao' ? 'nướng' : 'hấp'}</span>
           <strong className="text-[#E2CC47]">{chamber.remainingMinutes} phút</strong>
         </div>
         <div className="relative mt-2 h-2 overflow-hidden rounded-full bg-white/18">
@@ -577,10 +612,12 @@ export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDet
       <main className="px-4 pb-28 pt-7">
         <section>
           <h2 className="text-[26px] font-black leading-tight text-[#150807]">Chỉ số hiện tại</h2>
-          <div className="mt-7 grid grid-cols-3 gap-3">
+          <div className={`mt-7 grid ${product.key === 'banh-xiu-pao' ? 'grid-cols-2' : 'grid-cols-3'} gap-3`}>
             <DetailMetric icon={Thermometer} tone="orange" value={`${chamber.temp}°C`} label="Nhiệt độ" />
             <DetailMetric icon={Droplets} tone="blue" value={`${chamber.humidity}%`} label="Độ ẩm" />
-            <DetailMetric icon={Gauge} tone="gold" value={`${chamber.pressure.toFixed(1)} bar`} label="Áp suất" />
+            {product.key !== 'banh-xiu-pao' && (
+              <DetailMetric icon={Gauge} tone="gold" value={`${chamber.pressure.toFixed(1)} bar`} label="Áp suất" />
+            )}
           </div>
         </section>
 
@@ -591,7 +628,7 @@ export function SteamChamberDetail({ product, chamber, onBack }: SteamChamberDet
               <p className="mt-1 text-sm font-bold text-[#7A665B]">15 phút gần nhất · mỗi phút một mốc</p>
             </div>
           </div>
-          <TrendChart data={trendData} />
+          <TrendChart data={trendData} hidePressure={product.key === 'banh-xiu-pao'} />
         </section>
       </main>
       <ProducerNav product={product} />
@@ -689,9 +726,10 @@ function createTrendData(chamber: (typeof steamChambers)[number]): TrendPoint[] 
 
 type TrendChartProps = {
   data: TrendPoint[]
+  hidePressure?: boolean
 }
 
-function TrendChart({ data }: TrendChartProps) {
+function TrendChart({ data, hidePressure = false }: TrendChartProps) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
   
   const width = 1000
@@ -702,9 +740,9 @@ function TrendChart({ data }: TrendChartProps) {
   
   const xFor = (index: number) => padding.left + (plotWidth * index) / (data.length - 1)
   
-  // Scale so that 200 is at y=50, 0 is at y=470 (plotHeight = 420)
-  // y = 470 - (value / 200) * 420
-  const yFor = (value: number) => padding.top + plotHeight - (value / 200) * plotHeight
+  // Scale so that yLimit is 300 when hidePressure (high temp for ovens) or 200
+  const yLimit = hidePressure ? 300 : 200
+  const yFor = (value: number) => padding.top + plotHeight - (value / yLimit) * plotHeight
   
   const pointsFor = (key: 'temperature' | 'humidity' | 'pressure') =>
     data.map((point, index) => `${xFor(index)},${yFor(point[key])}`).join(' ')
@@ -728,12 +766,14 @@ function TrendChart({ data }: TrendChartProps) {
   const hoveredPoint = hoveredIdx !== null ? data[hoveredIdx] : null
   const hoveredX = hoveredIdx !== null ? xFor(hoveredIdx) : 0
 
+  const ticks = hidePressure ? [0, 100, 200, 300] : [0, 50, 150, 200]
+
   return (
     <div className="relative rounded-[22px] border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.08)] transition-all duration-300">
       <svg 
         viewBox={`0 0 ${width} ${height}`} 
         role="img" 
-        aria-label="Biểu đồ nhiệt độ, độ ẩm và áp suất trong 15 phút gần nhất" 
+        aria-label={hidePressure ? "Biểu đồ nhiệt độ và độ ẩm trong 15 phút gần nhất" : "Biểu đồ nhiệt độ, độ ẩm và áp suất trong 15 phút gần nhất"} 
         className="h-auto w-full select-none"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -780,14 +820,18 @@ function TrendChart({ data }: TrendChartProps) {
         {/* Temperature: Orange #ff7f0e */}
         <polyline fill="none" points={pointsFor('temperature')} stroke="#ff7f0e" strokeLinecap="round" strokeLinejoin="round" strokeWidth="5" />
         {/* Pressure: Blue #1f77b4 */}
-        <polyline fill="none" points={pointsFor('pressure')} stroke="#1f77b4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="5" />
+        {!hidePressure && (
+          <polyline fill="none" points={pointsFor('pressure')} stroke="#1f77b4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="5" />
+        )}
 
         {/* Data points */}
         {data.map((point, index) => (
           <g key={`dots-${point.minute}`}>
             <circle cx={xFor(index)} cy={yFor(point.humidity)} r="6" fill="#2ca02c" stroke="#fff" strokeWidth="1.5" />
             <circle cx={xFor(index)} cy={yFor(point.temperature)} r="6" fill="#ff7f0e" stroke="#fff" strokeWidth="1.5" />
-            <circle cx={xFor(index)} cy={yFor(point.pressure)} r="6" fill="#1f77b4" stroke="#fff" strokeWidth="1.5" />
+            {!hidePressure && (
+              <circle cx={xFor(index)} cy={yFor(point.pressure)} r="6" fill="#1f77b4" stroke="#fff" strokeWidth="1.5" />
+            )}
           </g>
         ))}
 
@@ -806,7 +850,9 @@ function TrendChart({ data }: TrendChartProps) {
             {/* Highlighted dots */}
             <circle cx={hoveredX} cy={yFor(hoveredPoint!.humidity)} r="9" fill="#2ca02c" stroke="#fff" strokeWidth="2" />
             <circle cx={hoveredX} cy={yFor(hoveredPoint!.temperature)} r="9" fill="#ff7f0e" stroke="#fff" strokeWidth="2" />
-            <circle cx={hoveredX} cy={yFor(hoveredPoint!.pressure)} r="9" fill="#1f77b4" stroke="#fff" strokeWidth="2" />
+            {!hidePressure && (
+              <circle cx={hoveredX} cy={yFor(hoveredPoint!.pressure)} r="9" fill="#1f77b4" stroke="#fff" strokeWidth="2" />
+            )}
           </g>
         )}
       </svg>
@@ -838,23 +884,25 @@ function TrendChart({ data }: TrendChartProps) {
             </span>
             <span className="text-[#150807]">{hoveredPoint.humidity} %</span>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#1f77b4]" />
-              Áp suất
-            </span>
-            <span className="text-[#150807]">
-              {hoveredPoint.pressure} cb ({ (hoveredPoint.pressure / 100).toFixed(1) } bar)
-            </span>
-          </div>
+          {!hidePressure && (
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#1f77b4]" />
+                Áp suất
+              </span>
+              <span className="text-[#150807]">
+                {hoveredPoint.pressure} cb ({ (hoveredPoint.pressure / 100).toFixed(1) } bar)
+              </span>
+            </div>
+          )}
         </div>
       )}
 
       {/* Legend */}
-      <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[12px] font-black text-[#6F4B35]">
+      <div className={`mt-4 grid ${hidePressure ? 'grid-cols-2' : 'grid-cols-3'} gap-2 text-center text-[12px] font-black text-[#6F4B35]`}>
         <LegendItem color="#ff7f0e" label="Nhiệt độ (°C)" />
         <LegendItem color="#2ca02c" label="Độ ẩm (%)" />
-        <LegendItem color="#1f77b4" label="Áp suất (cb)" />
+        {!hidePressure && <LegendItem color="#1f77b4" label="Áp suất (cb)" />}
       </div>
     </div>
   )

@@ -3,7 +3,7 @@ import { ChevronLeft, Thermometer, Droplets, Gauge } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { AppFrame } from '../../../../shared/components/layout/AppFrame'
 import { ProducerNav } from '../components/ProducerNav'
-import { steamChambers, SteamerIcon } from './ProducerProductionMap'
+import { getSteamChambers, SteamerIcon } from './ProducerProductionMap'
 import type { ProducerProductModule } from '../types'
 
 type ProducerSteamerControlProps = {
@@ -12,7 +12,8 @@ type ProducerSteamerControlProps = {
 
 export function ProducerSteamerControl({ product }: ProducerSteamerControlProps) {
   const navigate = useNavigate()
-  const [chambers, setChambers] = useState(() => [...steamChambers])
+  const isXiuPao = product.key === 'banh-xiu-pao'
+  const [chambers, setChambers] = useState(() => getSteamChambers(product.key))
   
   // Track syncing status for each chamber and field.
   // Format: { [id-field]: 'syncing' | 'synced' | null }
@@ -21,22 +22,26 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
   const [timeouts, setTimeouts] = useState<Record<string, NodeJS.Timeout>>({})
 
   const handleUpdateChamber = (id: string, field: 'temp' | 'humidity' | 'pressure', value: number) => {
-    // 1. Update local mock data immediately for responsiveness
-    const idx = steamChambers.findIndex((c) => c.id === id)
-    if (idx !== -1) {
-      ;(steamChambers[idx] as any)[field] = value
-
-      if (field === 'temp') {
-        if (value > 100) {
-          steamChambers[idx].status = 'Quá nhiệt'
-        } else if (value === 27) {
-          steamChambers[idx].status = 'Nghỉ'
-        } else {
-          steamChambers[idx].status = 'Ổn định'
+    // 1. Update local state
+    setChambers((prev) =>
+      prev.map((c) => {
+        if (c.id === id || (isXiuPao && c.id.replace('Lồng', 'Lò') === id)) {
+          const updated = { ...c, [field]: value }
+          if (field === 'temp') {
+            if (isXiuPao) {
+              if (value > 270) updated.status = 'Quá nhiệt'
+              else updated.status = 'Ổn định'
+            } else {
+              if (value > 100) updated.status = 'Quá nhiệt'
+              else if (value === 27) updated.status = 'Nghỉ'
+              else updated.status = 'Ổn định'
+            }
+          }
+          return updated
         }
-      }
-    }
-    setChambers([...steamChambers])
+        return c
+      })
+    )
 
     // 2. Trigger IoT syncing animation
     const key = `${id}-${field}`
@@ -119,14 +124,16 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
           </div>
 
           <div className="relative mt-4 flex items-baseline justify-between">
-            <h1 className="text-[22px] font-extrabold tracking-tight text-[#FDF4E7]">Lồng Hấp Thông Minh</h1>
+            <h1 className="text-[22px] font-extrabold tracking-tight text-[#FDF4E7]">
+              {isXiuPao ? 'Lò Nướng Thông Minh' : 'Lồng Hấp Thông Minh'}
+            </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FAF2E8]/10 text-[#F1C932] border border-[#FAF2E8]/20">
               IoT Active
             </span>
           </div>
 
           <p className="relative mt-1.5 text-[12px] font-bold text-[#D4AF37]">
-            Giám sát & điều chỉnh từ xa thông số nhiệt độ, độ ẩm lồng hấp
+            Giám sát & điều chỉnh từ xa thông số nhiệt độ, độ ẩm {isXiuPao ? 'lò nướng' : 'lồng hấp'}
           </p>
         </header>
 
@@ -161,8 +168,12 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                       <SteamerIcon tone={tone} />
                     </div>
                     <div>
-                      <h4 className="text-sm font-extrabold text-[#150807]">{chamber.id}</h4>
-                      <p className="text-[11px] font-bold text-[#806A5B] mt-0.5">Mẻ hấp: {chamber.batch}</p>
+                      <h4 className="text-sm font-extrabold text-[#150807]">
+                        {isXiuPao ? chamber.id.replace('Lồng', 'Lò') : chamber.id}
+                      </h4>
+                      <p className="text-[11px] font-bold text-[#806A5B] mt-0.5">
+                        {isXiuPao ? `Mẻ nướng: ${chamber.batch}` : `Mẻ hấp: ${chamber.batch}`}
+                      </p>
                     </div>
                   </div>
                   <span
@@ -174,7 +185,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                         : 'bg-[#EDF9F0] text-[#4A9F57]'
                     }`}
                   >
-                    {chamber.status}
+                    {chamber.status === 'Đang hấp' ? (isXiuPao ? 'Đang nướng' : 'Đang hấp') : chamber.status}
                   </span>
                 </div>
 
@@ -195,7 +206,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                       <input
                         type="range"
                         min="20"
-                        max="120"
+                        max={isXiuPao ? "320" : "120"}
                         value={chamber.temp}
                         onChange={(e) => handleUpdateChamber(chamber.id, 'temp', parseInt(e.target.value))}
                         className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
@@ -208,7 +219,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
                       <span className="flex items-center gap-1">
                         <Droplets size={14} className="text-[#806A5B]" />
-                        Độ ẩm buồng hấp
+                        Độ ẩm buồng {isXiuPao ? 'nướng' : 'hấp'}
                       </span>
                       <div className="flex items-center gap-2">
                         {renderSyncIndicator(chamber.id, 'humidity')}
@@ -218,7 +229,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     <div className="relative flex items-center">
                       <input
                         type="range"
-                        min="30"
+                        min={isXiuPao ? "0" : "30"}
                         max="100"
                         value={chamber.humidity}
                         onChange={(e) => handleUpdateChamber(chamber.id, 'humidity', parseInt(e.target.value))}
@@ -227,30 +238,32 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     </div>
                   </div>
 
-                  {/* Pressure Slider */}
-                  <div>
-                    <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
-                      <span className="flex items-center gap-1">
-                        <Gauge size={14} className="text-[#806A5B]" />
-                        Áp suất buồng hấp
-                      </span>
-                      <div className="flex items-center gap-2">
-                        {renderSyncIndicator(chamber.id, 'pressure')}
-                        <span className="text-sm font-extrabold text-[#150807]">{chamber.pressure.toFixed(1)} bar</span>
+                  {/* Pressure Slider (Only for non-XiuPao) */}
+                  {!isXiuPao && (
+                    <div>
+                      <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
+                        <span className="flex items-center gap-1">
+                          <Gauge size={14} className="text-[#806A5B]" />
+                          Áp suất buồng hấp
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {renderSyncIndicator(chamber.id, 'pressure')}
+                          <span className="text-sm font-extrabold text-[#150807]">{chamber.pressure.toFixed(1)} bar</span>
+                        </div>
+                      </div>
+                      <div className="relative flex items-center">
+                        <input
+                          type="range"
+                          min="0"
+                          max="3"
+                          step="0.1"
+                          value={chamber.pressure}
+                          onChange={(e) => handleUpdateChamber(chamber.id, 'pressure', parseFloat(e.target.value))}
+                          className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
+                        />
                       </div>
                     </div>
-                    <div className="relative flex items-center">
-                      <input
-                        type="range"
-                        min="0"
-                        max="3"
-                        step="0.1"
-                        value={chamber.pressure}
-                        onChange={(e) => handleUpdateChamber(chamber.id, 'pressure', parseFloat(e.target.value))}
-                        className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
-                      />
-                    </div>
-                  </div>
+                  )}
 
                   {/* Additional Telemetry readout */}
                   {chamber.progress > 0 && (

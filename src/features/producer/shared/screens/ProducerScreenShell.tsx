@@ -55,7 +55,7 @@ export function ProducerScreenShell({ product, eyebrow, title, children, hideSum
           {!hideSummary && (
             <div className="relative mt-7 grid grid-cols-4 rounded-[24px] border border-[#C9773E]/45 bg-white/10 px-1 py-5 text-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
               <div className="min-w-0">
-                <p className="text-xs font-bold text-[#C9AAA5]">Ca hấp</p>
+                <p className="text-xs font-bold text-[#C9AAA5]">{product.key === 'banh-xiu-pao' ? 'Ca nướng' : 'Ca hấp'}</p>
                 <strong className="mt-2 block text-lg font-black text-[#93F0A2]">Mở</strong>
               </div>
               <div className="min-w-0 border-l border-white/18">

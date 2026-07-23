@@ -41,18 +41,18 @@ const INITIAL_VOC_DAYS = [
 // Initial mock data for NH3 chart over 12 days (Xíu Páo)
 // Day 1 to 7 are actual historical, Day 8 to 12 are AI predictions
 const INITIAL_NH3_DAYS = [
-  { day: 1, value: 18, isForecast: false },
-  { day: 2, value: 19, isForecast: false },
-  { day: 3, value: 20, isForecast: false },
-  { day: 4, value: 19, isForecast: false },
-  { day: 5, value: 22, isForecast: false },
-  { day: 6, value: 23, isForecast: false },
+  { day: 1, value: 6, isForecast: false },
+  { day: 2, value: 8, isForecast: false },
+  { day: 3, value: 11, isForecast: false },
+  { day: 4, value: 14, isForecast: false },
+  { day: 5, value: 17, isForecast: false },
+  { day: 6, value: 19, isForecast: false },
   { day: 7, value: 24, isForecast: false }, // End of actual
-  { day: 8, value: 25, isForecast: true },  // Start of forecast
-  { day: 9, value: 27, isForecast: true },  // Exceeds warning threshold (20 ppm)
-  { day: 10, value: 28, isForecast: true }, // Exceeds warning threshold (20 ppm)
-  { day: 11, value: 26, isForecast: true }, // Exceeds warning threshold (20 ppm)
-  { day: 12, value: 23, isForecast: true }
+  { day: 8, value: 26, isForecast: true },  // Start of forecast
+  { day: 9, value: 28, isForecast: true },  // Exceeds warning threshold (20 ppm)
+  { day: 10, value: 31, isForecast: true }, // Exceeds warning threshold (20 ppm)
+  { day: 11, value: 29, isForecast: true }, // Exceeds warning threshold (20 ppm)
+  { day: 12, value: 25, isForecast: true }
 ]
 
 export function ProducerAiPredict({ product }: ProducerAiPredictProps) {

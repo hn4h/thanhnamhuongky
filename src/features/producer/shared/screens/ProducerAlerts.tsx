@@ -50,13 +50,15 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
   const [alerts, setAlerts] = useState<CustomAlert[]>(() => [
     {
       id: 'AL-01',
-      title: 'Lồng hấp buồng A quá nhiệt & quá áp suất',
-      message: 'Nhiệt độ hiện tại: 108°C (ngưỡng 105°C), Áp suất: 2.1 bar (ngưỡng 1.8 bar). Vui lòng xử lý xả áp suất khẩn cấp.',
+      title: isXiuPao ? 'Lò nướng buồng 3 quá nhiệt' : 'Lồng hấp buồng A quá nhiệt & quá áp suất',
+      message: isXiuPao
+        ? 'Nhiệt độ hiện tại: 280°C (ngưỡng 250°C) Vui lòng xử lý xả nhiệt độ khẩn cấp.'
+        : 'Nhiệt độ hiện tại: 108°C (ngưỡng 105°C), Áp suất: 2.1 bar (ngưỡng 1.8 bar). Vui lòng xử lý xả áp suất khẩn cấp.',
       createdAt: '2 phút trước',
       severity: 'high',
       isRead: false,
       category: 'critical',
-      metadata: 'Khu hấp A · Cảm biến SNS-BG-01'
+      metadata: isXiuPao ? 'Lò nướng 3 · Cảm biến SNS-XP-03' : 'Khu hấp A · Cảm biến SNS-BG-01'
     },
     {
       id: 'AL-02',
@@ -285,7 +287,9 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
                           <h2 className="text-[13px] font-bold text-[#2C1810] leading-tight leading-snug">{alert.title}</h2>
                           <p className="mt-1 text-[11px] leading-5 text-[#6B4C3B]">
                             {alert.id === 'AL-01' && steamVented 
-                              ? 'Hệ thống buồng IoT đã thực hiện xả hơi tự động. Áp suất buồng hiện đã trở lại ngưỡng an toàn: 1.1 bar, Nhiệt độ buồng hấp: 95°C.' 
+                              ? (isXiuPao 
+                                  ? 'Hệ thống lò nướng IoT đã thực hiện xả nhiệt độ khẩn cấp. Nhiệt độ lò nướng 3 hiện đã trở lại ngưỡng an toàn: 242°C.' 
+                                  : 'Hệ thống buồng IoT đã thực hiện xả hơi tự động. Áp suất buồng hiện đã trở lại ngưỡng an toàn: 1.1 bar, Nhiệt độ buồng hấp: 95°C.')
                               : alert.id === 'AL-02' 
                                 ? `Nồng độ ${isXiuPao ? 'NH3' : 'VOC'} hiện tại: ${
                                     isXiuPao
@@ -321,12 +325,12 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
                                 {ventingLoading ? (
                                   <>
                                     <Loader2 size={13} className="animate-spin" />
-                                    <span>Đang gửi lệnh xả...</span>
+                                    <span>{isXiuPao ? 'Đang gửi lệnh xả nhiệt...' : 'Đang gửi lệnh xả...'}</span>
                                   </>
                                 ) : (
                                   <>
                                     <Wind size={13} />
-                                    <span>Xả hơi tự động</span>
+                                    <span>{isXiuPao ? 'Xả nhiệt khẩn cấp' : 'Xả hơi tự động'}</span>
                                   </>
                                 )}
                               </button>
@@ -342,7 +346,7 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
                             <div className="flex-1 flex items-center justify-between bg-[#EDF9F0] border border-[#4A9F57]/20 rounded-xl p-2 text-xs text-[#214D35] font-semibold">
                               <span className="flex items-center gap-1.5">
                                 <Check size={14} className="text-[#4A9F57]" />
-                                Đã xử lý xả hơi
+                                {isXiuPao ? 'Đã xử lý xả nhiệt' : 'Đã xử lý xả hơi'}
                               </span>
                               <button 
                                 type="button"

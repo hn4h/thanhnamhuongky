@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { ChevronLeft, Droplets, Gauge, Snowflake, Thermometer, Wind, AlertTriangle } from 'lucide-react'
 import { ProducerScreenShell } from './ProducerScreenShell'
-import { coldRooms, steamChambers, SteamChamberDetail, SensorMini } from './ProducerProductionMap'
+import { coldRooms, getColdRooms, getSteamChambers, SteamChamberDetail, SensorMini } from './ProducerProductionMap'
 import { ProducerNav } from '../components/ProducerNav'
 import type { ProducerProductModule } from '../types'
 
@@ -10,12 +10,14 @@ type ProducerDevicesProps = {
 }
 
 export function ProducerDevices({ product }: ProducerDevicesProps) {
-  const [selectedChamber, setSelectedChamber] = useState<(typeof steamChambers)[number] | null>(null)
-  const [selectedRoom, setSelectedRoom] = useState<(typeof coldRooms)[number] | null>(null)
+  const chambersList = useMemo(() => getSteamChambers(product.key), [product.key])
+  const roomsList = useMemo(() => getColdRooms(product.key), [product.key])
+  const [selectedChamber, setSelectedChamber] = useState<(typeof chambersList)[number] | null>(null)
+  const [selectedRoom, setSelectedRoom] = useState<(typeof roomsList)[number] | null>(null)
   const [activeTab, setActiveTab] = useState<'steamer' | 'storage'>('steamer')
 
-  const hasSteamerWarning = useMemo(() => steamChambers.some((chamber) => chamber.status === 'Quá nhiệt'), [])
-  const hasStorageWarning = useMemo(() => coldRooms.some((room) => room.status === 'VOC tăng' || room.status === 'NH3 tăng'), [])
+  const hasSteamerWarning = useMemo(() => chambersList.some((chamber) => chamber.status === 'Quá nhiệt'), [chambersList])
+  const hasStorageWarning = useMemo(() => roomsList.some((room) => room.status === 'VOC tăng' || room.status === 'NH3 tăng'), [roomsList])
 
   if (selectedChamber) {
     return <SteamChamberDetail chamber={selectedChamber} product={product} onBack={() => setSelectedChamber(null)} />
@@ -38,11 +40,11 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
               : 'text-[#806A5B] hover:text-[#721A18]'
           }`}
         >
-          <span>Lồng hấp công nghiệp</span>
+          <span>{product.key === 'banh-xiu-pao' ? 'Lò nướng công nghiệp' : 'Lồng hấp công nghiệp'}</span>
           <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
             activeTab === 'steamer' ? 'bg-white/20 text-white' : 'bg-[#EFE4DC] text-[#721A18]'
           }`}>
-            {steamChambers.length}
+            {chambersList.length}
           </span>
           {hasSteamerWarning && (
             <span className="absolute top-2.5 right-2.5 flex h-2 w-2">
@@ -80,7 +82,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
         <section className="space-y-4">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold text-[#806A5B]">
-              Theo dõi nhiệt độ, độ ẩm, áp suất và tiến độ từng lồng hấp công nghiệp.
+              Theo dõi nhiệt độ, độ ẩm{product.key === 'banh-xiu-pao' ? '' : ', áp suất'} và tiến độ từng {product.key === 'banh-xiu-pao' ? 'lò nướng' : 'lồng hấp'} công nghiệp.
             </p>
             {hasSteamerWarning && (
               <span className="rounded-full bg-[#FCE8E3] px-2 py-0.5 text-[10px] font-black text-[#B23B2F] border border-[#EAA18F]">
@@ -90,7 +92,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
           </div>
 
           <div className="grid gap-3">
-            {steamChambers.map((chamber) => {
+            {chambersList.map((chamber) => {
               const isWarning = chamber.status === 'Quá nhiệt'
               const isIdle = chamber.progress === 0
 
@@ -107,12 +109,16 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
                         <Thermometer size={24} strokeWidth={2.3} />
                       </span>
                       <div className="min-w-0">
-                        <h3 className="text-lg font-black text-[#150807]">{chamber.id}</h3>
-                        <p className="truncate text-sm font-bold text-[#806A5B]">{chamber.batch}</p>
+                        <h3 className="text-lg font-black text-[#150807]">
+                          {product.key === 'banh-xiu-pao' ? chamber.id.replace('Lồng', 'Lò') : chamber.id}
+                        </h3>
+                        <p className="truncate text-sm font-bold text-[#806A5B]">
+                          {product.key === 'banh-xiu-pao' ? `Mẻ nướng: ${chamber.batch}` : chamber.batch}
+                        </p>
                       </div>
                     </div>
                     <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
-                      {chamber.status}
+                      {chamber.status === 'Đang hấp' ? (product.key === 'banh-xiu-pao' ? 'Đang nướng' : 'Đang hấp') : chamber.status}
                     </span>
                   </div>
 
@@ -127,14 +133,16 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
                       />
                     </div>
                     <p className="mt-2 text-sm font-bold text-[#6F4B35]">
-                      {isIdle ? 'Lồng đang chờ mẻ mới' : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
+                      {isIdle ? (product.key === 'banh-xiu-pao' ? 'Lò đang chờ mẻ mới' : 'Lồng đang chờ mẻ mới') : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
                     </p>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                  <div className={`mt-4 grid ${product.key === 'banh-xiu-pao' ? 'grid-cols-2' : 'grid-cols-3'} gap-2 text-center`}>
                     <SensorMini icon={Thermometer} label="Nhiệt" value={`${chamber.temp}°C`} />
                     <SensorMini icon={Droplets} label="Độ ẩm" value={`${chamber.humidity}%`} />
-                    <SensorMini icon={Gauge} label="Áp suất" value={`${chamber.pressure} bar`} />
+                    {product.key !== 'banh-xiu-pao' && (
+                      <SensorMini icon={Gauge} label="Áp suất" value={`${chamber.pressure} bar`} />
+                    )}
                   </div>
                 </button>
               )
@@ -156,7 +164,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
           </div>
 
           <div className="grid gap-3">
-            {coldRooms.map((room) => {
+            {roomsList.map((room) => {
               const isWarning = room.status === 'VOC tăng' || room.status === 'NH3 tăng'
               const isXiuPao = product.key === 'banh-xiu-pao'
               const itemsMap: Record<string, Record<string, string>> = {
@@ -235,7 +243,8 @@ type ColdRoomDetailProps = {
   onBack: () => void
 }
 
-function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
+function ColdRoomDetail({ product, room: initialRoom, onBack }: ColdRoomDetailProps) {
+  const room = getColdRooms(product.key).find((r) => r.id === initialRoom.id) || initialRoom
   const isXiuPao = product.key === 'banh-xiu-pao'
   const itemsMap: Record<string, Record<string, string>> = {
     'banh-gai': {
@@ -272,6 +281,17 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
     : room.status
 
   const vocData = useMemo(() => {
+    if (room.id === 'Tủ 1' && isXiuPao) {
+      return [
+        { day: 1, value: 6 },
+        { day: 2, value: 8 },
+        { day: 3, value: 11 },
+        { day: 4, value: 14 },
+        { day: 5, value: 17 },
+        { day: 6, value: 19 },
+        { day: 7, value: 24 },
+      ]
+    }
     if (room.id === 'Tủ 1' && !isXiuPao) {
       return [
         { day: 1, value: 25 },
@@ -293,7 +313,7 @@ function ColdRoomDetail({ product, room, onBack }: ColdRoomDetailProps) {
       { day: 6, value: Math.round(targetVal * 0.89) },
       { day: 7, value: targetVal },
     ]
-  }, [room, targetVal])
+  }, [room, targetVal, isXiuPao])
 
   return (
     <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#F8EFE2] text-[#150807] shadow-[0_0_80px_rgba(74,45,30,0.32)]">

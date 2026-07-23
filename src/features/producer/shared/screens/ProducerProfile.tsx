@@ -246,7 +246,9 @@ export function ProducerProfile({ product }: ProducerProfileProps) {
             {/* Column 2 - Divider left */}
             <div className="flex flex-col items-center py-1.5 text-center border-l border-[#EFE4DC]">
               <span className="text-[20px] font-extrabold text-[#3A0611] leading-none">{producerData.ovens}</span>
-              <span className="text-[10px] font-bold text-[#806A5B] uppercase tracking-wider mt-1.5 leading-tight">{t.ovens}</span>
+              <span className="text-[10px] font-bold text-[#806A5B] uppercase tracking-wider mt-1.5 leading-tight">
+                {product.key === 'banh-xiu-pao' ? 'Lò nướng' : t.ovens}
+              </span>
             </div>
 
             {/* Column 3 - Divider left */}

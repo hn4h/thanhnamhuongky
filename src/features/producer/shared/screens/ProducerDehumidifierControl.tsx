@@ -3,7 +3,7 @@ import { ChevronLeft, Thermometer, Droplets, Wind, Snowflake } from 'lucide-reac
 import { useNavigate } from 'react-router-dom'
 import { AppFrame } from '../../../../shared/components/layout/AppFrame'
 import { ProducerNav } from '../components/ProducerNav'
-import { coldRooms, StorageIcon } from './ProducerProductionMap'
+import { coldRooms, getColdRooms, StorageIcon } from './ProducerProductionMap'
 import type { ProducerProductModule } from '../types'
 
 type ProducerDehumidifierControlProps = {
@@ -12,7 +12,7 @@ type ProducerDehumidifierControlProps = {
 
 export function ProducerDehumidifierControl({ product }: ProducerDehumidifierControlProps) {
   const navigate = useNavigate()
-  const [rooms, setRooms] = useState(() => [...coldRooms])
+  const [rooms, setRooms] = useState(() => getColdRooms(product.key))
 
   // Track syncing status for each chamber and field.
   // Format: { [id-field]: 'syncing' | 'synced' | null }
@@ -21,27 +21,31 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
   const [timeouts, setTimeouts] = useState<Record<string, NodeJS.Timeout>>({})
 
   const handleUpdateRoom = (id: string, field: 'temp' | 'dehumidifier' | 'ventilation', value: any) => {
-    // 1. Update local mock data immediately for responsiveness
-    const idx = coldRooms.findIndex((r) => r.id === id)
-    if (idx !== -1) {
-      ;(coldRooms[idx] as any)[field] = value
-
-      if (id === 'Tủ 1') {
-        const room = coldRooms[idx]
-        const isXiuPao = product.key === 'banh-xiu-pao'
-        // If temperature <= 3 OR both dehumidifier and ventilation are active, resolve warning
-        if (room.temp <= 3 || (room.dehumidifier && room.ventilation)) {
-          room.status = 'Ổn định'
-          room.voc = 28
-          room.nh3 = 12
-        } else {
-          room.status = isXiuPao ? 'NH3 tăng' : 'VOC tăng'
-          room.voc = 68
-          room.nh3 = 25
+    // 1. Update local state
+    setRooms((prevRooms) =>
+      prevRooms.map((r) => {
+        if (r.id === id) {
+          const updated = { ...r, [field]: value }
+          if (id === 'Tủ 1') {
+            const isXiuPao = product.key === 'banh-xiu-pao'
+            // If temperature <= 3 OR both dehumidifier and ventilation are active, resolve warning
+            if (updated.temp <= 3 || (updated.dehumidifier && updated.ventilation)) {
+              updated.status = 'Ổn định'
+              updated.voc = 28
+              updated.nh3 = 12
+              updated.humidity = 45
+            } else {
+              updated.status = isXiuPao ? 'NH3 tăng' : 'VOC tăng'
+              updated.voc = 68
+              updated.nh3 = 22
+              updated.humidity = 72
+            }
+          }
+          return updated
         }
-      }
-    }
-    setRooms([...coldRooms])
+        return r
+      })
+    )
 
     // 2. Trigger IoT syncing animation
     const key = `${id}-${field}`
