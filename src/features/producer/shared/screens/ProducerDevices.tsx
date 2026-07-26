@@ -40,7 +40,7 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
               : 'text-[#806A5B] hover:text-[#721A18]'
           }`}
         >
-          <span>{product.key === 'banh-xiu-pao' ? 'Lò nướng công nghiệp' : 'Lồng hấp công nghiệp'}</span>
+          <span>{product.key === 'banh-xiu-pao' ? 'Lò nướng công nghiệp' : (product.key === 'keo-xiu-chau' || product.key === 'doi') ? 'Nồi nấu kẹo công nghiệp' : 'Lồng hấp công nghiệp'}</span>
           <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
             activeTab === 'steamer' ? 'bg-white/20 text-white' : 'bg-[#EFE4DC] text-[#721A18]'
           }`}>
@@ -82,7 +82,9 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
         <section className="space-y-4">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold text-[#806A5B]">
-              Theo dõi nhiệt độ, độ ẩm{product.key === 'banh-xiu-pao' ? '' : ', áp suất'} và tiến độ từng {product.key === 'banh-xiu-pao' ? 'lò nướng' : 'lồng hấp'} công nghiệp.
+              {product.key === 'keo-xiu-chau'
+                ? 'Theo dõi nhiệt độ nấu kẹo và tiến độ từng nồi nấu công nghiệp.'
+                : `Theo dõi nhiệt độ, độ ẩm${product.key === 'banh-xiu-pao' ? '' : ', áp suất'} và tiến độ từng ${product.key === 'banh-xiu-pao' ? 'lò nướng' : 'lồng hấp'} công nghiệp.`}
             </p>
             {hasSteamerWarning && (
               <span className="rounded-full bg-[#FCE8E3] px-2 py-0.5 text-[10px] font-black text-[#B23B2F] border border-[#EAA18F]">
@@ -110,15 +112,15 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
                       </span>
                       <div className="min-w-0">
                         <h3 className="text-lg font-black text-[#150807]">
-                          {product.key === 'banh-xiu-pao' ? chamber.id.replace('Lồng', 'Lò') : chamber.id}
+                          {product.key === 'banh-xiu-pao' ? chamber.id.replace('Lồng', 'Lò') : (product.key === 'keo-xiu-chau' || product.key === 'doi') ? chamber.id.replace('Lồng', 'Nồi') : chamber.id}
                         </h3>
                         <p className="truncate text-sm font-bold text-[#806A5B]">
-                          {product.key === 'banh-xiu-pao' ? `Mẻ nướng: ${chamber.batch}` : chamber.batch}
+                          {product.key === 'banh-xiu-pao' ? `Mẻ nướng: ${chamber.batch}` : (product.key === 'keo-xiu-chau' || product.key === 'doi') ? `Mẻ nấu: ${chamber.batch}` : chamber.batch}
                         </p>
                       </div>
                     </div>
                     <span className={`rounded-full px-3 py-1 text-xs font-black ${isWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'}`}>
-                      {chamber.status === 'Đang hấp' ? (product.key === 'banh-xiu-pao' ? 'Đang nướng' : 'Đang hấp') : chamber.status}
+                      {chamber.status === 'Đang hấp' ? (product.key === 'banh-xiu-pao' ? 'Đang nướng' : (product.key === 'keo-xiu-chau' || product.key === 'doi') ? 'Đang nấu' : 'Đang hấp') : chamber.status}
                     </span>
                   </div>
 
@@ -133,14 +135,16 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
                       />
                     </div>
                     <p className="mt-2 text-sm font-bold text-[#6F4B35]">
-                      {isIdle ? (product.key === 'banh-xiu-pao' ? 'Lò đang chờ mẻ mới' : 'Lồng đang chờ mẻ mới') : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
+                      {isIdle ? (product.key === 'banh-xiu-pao' ? 'Lò đang chờ mẻ mới' : (product.key === 'keo-xiu-chau' || product.key === 'doi') ? 'Nồi đang chờ mẻ mới' : 'Lồng đang chờ mẻ mới') : `Còn ${chamber.remainingMinutes} phút sẽ xong`}
                     </p>
                   </div>
 
-                  <div className={`mt-4 grid ${product.key === 'banh-xiu-pao' ? 'grid-cols-2' : 'grid-cols-3'} gap-2 text-center`}>
-                    <SensorMini icon={Thermometer} label="Nhiệt" value={`${chamber.temp}°C`} />
-                    <SensorMini icon={Droplets} label="Độ ẩm" value={`${chamber.humidity}%`} />
-                    {product.key !== 'banh-xiu-pao' && (
+                  <div className={`mt-4 grid ${product.key === 'banh-xiu-pao' ? 'grid-cols-2' : (product.key === 'keo-xiu-chau' || product.key === 'doi') ? 'grid-cols-1' : 'grid-cols-3'} gap-2 text-center`}>
+                    <SensorMini icon={Thermometer} label={(product.key === 'keo-xiu-chau' || product.key === 'doi') ? 'Nhiệt độ nấu' : 'Nhiệt'} value={`${chamber.temp}°C`} />
+                    {product.key !== 'keo-xiu-chau' && product.key !== 'doi' && (
+                      <SensorMini icon={Droplets} label="Độ ẩm" value={`${chamber.humidity}%`} />
+                    )}
+                    {product.key !== 'banh-xiu-pao' && product.key !== 'keo-xiu-chau' && product.key !== 'doi' && (
                       <SensorMini icon={Gauge} label="Áp suất" value={`${chamber.pressure} bar`} />
                     )}
                   </div>
@@ -184,13 +188,13 @@ export function ProducerDevices({ product }: ProducerDevicesProps) {
                   'Tủ 1': 'Mạch nha',
                   'Tủ 2': 'Lạc nhân',
                   'Tủ 3': 'Vừng rang',
-                  'Tủ 4': 'Kẹo dồi thành phẩm',
+                  'Tủ 4': 'Kẹo Dồi TP',
                 },
                 'keo-xiu-chau': {
                   'Tủ 1': 'Mạch nha',
                   'Tủ 2': 'Lạc nhân',
                   'Tủ 3': 'Vừng rang',
-                  'Tủ 4': 'Kẹo sìu châu TP',
+                  'Tủ 4': 'Kẹo Sìu Châu TP',
                 }
               }
               const itemLabel = itemsMap[product.key]?.[room.id] || room.item
@@ -263,13 +267,13 @@ function ColdRoomDetail({ product, room: initialRoom, onBack }: ColdRoomDetailPr
       'Tủ 1': 'Mạch nha',
       'Tủ 2': 'Lạc nhân',
       'Tủ 3': 'Vừng rang',
-      'Tủ 4': 'Kẹo dồi thành phẩm',
+      'Tủ 4': 'Kẹo Dồi TP',
     },
     'keo-xiu-chau': {
       'Tủ 1': 'Mạch nha',
       'Tủ 2': 'Lạc nhân',
       'Tủ 3': 'Vừng rang',
-      'Tủ 4': 'Kẹo sìu châu TP',
+      'Tủ 4': 'Kẹo Sìu Châu TP',
     }
   }
   const itemLabel = itemsMap[product.key]?.[room.id] || room.item
@@ -344,7 +348,7 @@ function ColdRoomDetail({ product, room: initialRoom, onBack }: ColdRoomDetailPr
           </div>
 
           <p className="relative mt-1 text-[12px] font-bold text-[#AEC2DC]">
-            B-2026-03 · Cảm biến hoạt động · {product.name} Thành Phương
+            B-2026-03 · Cảm biến hoạt động · {product.key === 'keo-xiu-chau' ? 'Kẹo Sìu Châu' : product.key === 'doi' ? 'Kẹo Dồi' : `${product.name} Thành Phương`}
           </p>
 
           <div className="relative mt-5 flex items-center justify-between gap-5 text-xs font-bold text-[#D0DFEE]">

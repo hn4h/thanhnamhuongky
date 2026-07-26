@@ -12,6 +12,7 @@ type ProducerDashboardProps = {
 
 export function ProducerDashboard({ product }: ProducerDashboardProps) {
   const isXiuPao = product.key === 'banh-xiu-pao'
+  const isKeoChau = product.key === 'keo-xiu-chau' || product.key === 'doi'
   // Recalculate latest alert dynamically based on coldRooms state
   const latestAlert = coldRooms.some(r => r.status === 'VOC tăng' || r.status === 'NH3 tăng')
     ? {
@@ -57,8 +58,8 @@ export function ProducerDashboard({ product }: ProducerDashboardProps) {
               <Thermometer size={20} strokeWidth={2.3} />
             </span>
             <div>
-              <span className="text-sm font-black text-[#150807]">{isXiuPao ? 'Lò nướng thông minh' : 'Lồng hấp thông minh'}</span>
-              <p className="text-[10px] font-bold text-[#806A5B] mt-0.5">Điều khiển nhiệt độ & độ ẩm</p>
+              <span className="text-sm font-black text-[#150807]">{isXiuPao ? 'Lò nướng thông minh' : isKeoChau ? 'Nồi nấu kẹo thông minh' : 'Lồng hấp thông minh'}</span>
+              <p className="text-[10px] font-bold text-[#806A5B] mt-0.5">{isKeoChau ? 'Điều khiển nhiệt độ nấu kẹo' : 'Điều khiển nhiệt độ & độ ẩm'}</p>
             </div>
           </Link>
 

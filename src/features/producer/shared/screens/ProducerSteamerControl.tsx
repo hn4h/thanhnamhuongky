@@ -13,6 +13,7 @@ type ProducerSteamerControlProps = {
 export function ProducerSteamerControl({ product }: ProducerSteamerControlProps) {
   const navigate = useNavigate()
   const isXiuPao = product.key === 'banh-xiu-pao'
+  const isKeoChau = product.key === 'keo-xiu-chau' || product.key === 'doi'
   const [chambers, setChambers] = useState(() => getSteamChambers(product.key))
   
   // Track syncing status for each chamber and field.
@@ -25,11 +26,15 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
     // 1. Update local state
     setChambers((prev) =>
       prev.map((c) => {
-        if (c.id === id || (isXiuPao && c.id.replace('Lồng', 'Lò') === id)) {
+        if (c.id === id || (isXiuPao && c.id.replace('Lồng', 'Lò') === id) || (isKeoChau && c.id.replace('Lồng', 'Nồi') === id)) {
           const updated = { ...c, [field]: value }
           if (field === 'temp') {
             if (isXiuPao) {
               if (value > 270) updated.status = 'Quá nhiệt'
+              else updated.status = 'Ổn định'
+            } else if (isKeoChau) {
+              if (value >= 135) updated.status = 'Quá nhiệt'
+              else if (value < 50) updated.status = 'Nghỉ'
               else updated.status = 'Ổn định'
             } else {
               if (value > 100) updated.status = 'Quá nhiệt'
@@ -125,7 +130,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
 
           <div className="relative mt-4 flex items-baseline justify-between">
             <h1 className="text-[22px] font-extrabold tracking-tight text-[#FDF4E7]">
-              {isXiuPao ? 'Lò Nướng Thông Minh' : 'Lồng Hấp Thông Minh'}
+              {isXiuPao ? 'Lò Nướng Thông Minh' : isKeoChau ? 'Nồi Nấu Kẹo Thông Minh' : 'Lồng Hấp Thông Minh'}
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FAF2E8]/10 text-[#F1C932] border border-[#FAF2E8]/20">
               IoT Active
@@ -133,7 +138,11 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
           </div>
 
           <p className="relative mt-1.5 text-[12px] font-bold text-[#D4AF37]">
-            Giám sát & điều chỉnh từ xa thông số nhiệt độ, độ ẩm {isXiuPao ? 'lò nướng' : 'lồng hấp'}
+            {isXiuPao
+              ? 'Giám sát & điều chỉnh từ xa thông số nhiệt độ, độ ẩm lò nướng'
+              : isKeoChau
+              ? 'Giám sát & điều chỉnh từ xa thông số nhiệt độ nấu kẹo'
+              : 'Giám sát & điều chỉnh từ xa thông số nhiệt độ, độ ẩm lồng hấp'}
           </p>
         </header>
 
@@ -169,10 +178,10 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     </div>
                     <div>
                       <h4 className="text-sm font-extrabold text-[#150807]">
-                        {isXiuPao ? chamber.id.replace('Lồng', 'Lò') : chamber.id}
+                        {isXiuPao ? chamber.id.replace('Lồng', 'Lò') : isKeoChau ? chamber.id.replace('Lồng', 'Nồi') : chamber.id}
                       </h4>
                       <p className="text-[11px] font-bold text-[#806A5B] mt-0.5">
-                        {isXiuPao ? `Mẻ nướng: ${chamber.batch}` : `Mẻ hấp: ${chamber.batch}`}
+                        {isXiuPao ? `Mẻ nướng: ${chamber.batch}` : isKeoChau ? `Mẻ nấu: ${chamber.batch}` : `Mẻ hấp: ${chamber.batch}`}
                       </p>
                     </div>
                   </div>
@@ -185,7 +194,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                         : 'bg-[#EDF9F0] text-[#4A9F57]'
                     }`}
                   >
-                    {chamber.status === 'Đang hấp' ? (isXiuPao ? 'Đang nướng' : 'Đang hấp') : chamber.status}
+                    {chamber.status === 'Đang hấp' ? (isXiuPao ? 'Đang nướng' : isKeoChau ? 'Đang nấu' : 'Đang hấp') : chamber.status}
                   </span>
                 </div>
 
@@ -195,7 +204,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
                       <span className="flex items-center gap-1">
                         <Thermometer size={14} className="text-[#806A5B]" />
-                        Nhiệt độ hoạt động
+                        {isKeoChau ? 'Nhiệt độ nấu kẹo' : 'Nhiệt độ hoạt động'}
                       </span>
                       <div className="flex items-center gap-2">
                         {renderSyncIndicator(chamber.id, 'temp')}
@@ -206,7 +215,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                       <input
                         type="range"
                         min="20"
-                        max={isXiuPao ? "320" : "120"}
+                        max={isXiuPao ? "320" : isKeoChau ? "180" : "120"}
                         value={chamber.temp}
                         onChange={(e) => handleUpdateChamber(chamber.id, 'temp', parseInt(e.target.value))}
                         className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
@@ -214,32 +223,34 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     </div>
                   </div>
 
-                  {/* Humidity Slider */}
-                  <div>
-                    <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
-                      <span className="flex items-center gap-1">
-                        <Droplets size={14} className="text-[#806A5B]" />
-                        Độ ẩm buồng {isXiuPao ? 'nướng' : 'hấp'}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        {renderSyncIndicator(chamber.id, 'humidity')}
-                        <span className="text-sm font-extrabold text-[#150807]">{chamber.humidity}%</span>
+                  {/* Humidity Slider (Only for non-KeoChau) */}
+                  {!isKeoChau && (
+                    <div>
+                      <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
+                        <span className="flex items-center gap-1">
+                          <Droplets size={14} className="text-[#806A5B]" />
+                          Độ ẩm buồng {isXiuPao ? 'nướng' : 'hấp'}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {renderSyncIndicator(chamber.id, 'humidity')}
+                          <span className="text-sm font-extrabold text-[#150807]">{chamber.humidity}%</span>
+                        </div>
+                      </div>
+                      <div className="relative flex items-center">
+                        <input
+                          type="range"
+                          min={isXiuPao ? "0" : "30"}
+                          max="100"
+                          value={chamber.humidity}
+                          onChange={(e) => handleUpdateChamber(chamber.id, 'humidity', parseInt(e.target.value))}
+                          className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
+                        />
                       </div>
                     </div>
-                    <div className="relative flex items-center">
-                      <input
-                        type="range"
-                        min={isXiuPao ? "0" : "30"}
-                        max="100"
-                        value={chamber.humidity}
-                        onChange={(e) => handleUpdateChamber(chamber.id, 'humidity', parseInt(e.target.value))}
-                        className="w-full accent-[#721A18] h-2 bg-[#E8D9C8] rounded-lg appearance-none cursor-pointer"
-                      />
-                    </div>
-                  </div>
+                  )}
 
-                  {/* Pressure Slider (Only for non-XiuPao) */}
-                  {!isXiuPao && (
+                  {/* Pressure Slider (Only for non-XiuPao & non-KeoChau) */}
+                  {!isXiuPao && !isKeoChau && (
                     <div>
                       <div className="flex justify-between items-center text-xs font-bold text-[#6F4B35] mb-2">
                         <span className="flex items-center gap-1">

@@ -120,7 +120,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     key: 'banh-xiu-pao',
     product: {
       code: 'TNHK-XP-2026-0038',
-      name: 'Bánh Xíu Páo Thượng Hạng',
+      name: 'Bánh Xíu Páo',
       grade: 'Hộp Truyền Thống',
       batch: 'XP-0626-04',
       producedAt: '31/08/2026',

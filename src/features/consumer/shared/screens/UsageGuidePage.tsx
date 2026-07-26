@@ -25,7 +25,7 @@ export function UsageGuidePage() {
           ]
         : productKey === 'banh-xiu-pao'
           ? [
-              'Bánh Xíu Páo Thượng Hạng ngon nhất khi dùng cùng một tách trà ấm để cân bằng vị giác và làm nổi bật hương vị.',
+              'Bánh Xíu Páo ngon nhất khi dùng cùng một tách trà ấm để cân bằng vị giác và làm nổi bật hương vị.',
               'Trước khi thưởng thức, làm nóng bánh bằng nồi chiên không dầu ở khoảng 5–7 phút để vỏ bánh giòn thơm. Khi làm nóng, nên cho 1–2 thìa cà phê nước sạch vào đáy nồi hoặc xung quanh bánh để giữ độ ẩm, giúp bánh không bị khô.',
               'Không sử dụng lò vi sóng để làm nóng bánh vì nhân bánh có trứng, dễ ảnh hưởng đến kết cấu và hương vị.',
               'Hãy thưởng thức chậm rãi để cảm nhận trọn vẹn lớp vỏ thơm giòn, phần nhân đậm đà và tinh hoa ẩm thực truyền thống.'
