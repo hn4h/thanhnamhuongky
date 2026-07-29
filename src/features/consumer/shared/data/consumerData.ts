@@ -120,7 +120,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     key: 'banh-xiu-pao',
     product: {
       code: 'TNHK-XP-2026-0038',
-      name: 'Bánh Xíu Páo Thượng Hạng',
+      name: 'Bánh Xíu Páo',
       grade: 'Hộp Truyền Thống',
       batch: 'XP-0626-04',
       producedAt: '31/08/2026',
@@ -220,7 +220,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     key: 'keo-xiu-chau',
     product: {
       code: 'TNHK-SC-2026-0105',
-      name: 'Kẹo Sìu Châu',
+      name: 'Kẹo Sìu Châu Truyền Thống',
       grade: 'Hộp Quà Đặc Sản',
       batch: 'XC-0626-02',
       producedAt: '18/06/2026',
@@ -313,7 +313,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     key: 'doi',
     product: {
       code: 'TNHK-KD-2026-0122',
-      name: 'Kẹo Dồi',
+      name: 'Kẹo Dồi Gia Truyền',
       grade: 'Hộp Đặc Sản Truyền Thống',
       batch: 'DO-0626-02',
       producedAt: '18/06/2026',

@@ -53,11 +53,10 @@ export function RoleSelectionPage() {
     <main className="mx-auto min-h-screen w-full max-w-[430px] bg-[#1a0a00] text-[#FDF4E7] shadow-[0_0_80px_rgba(74,45,30,0.32)] relative">
       {/* Toast Warning */}
       <div
-        className={`absolute top-6 left-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-red-500/30 bg-[#2d0f0f]/95 px-4 py-3.5 text-[#FCA5A5] shadow-2xl backdrop-blur-md transition-all duration-300 ${
-          toast.show
-            ? 'opacity-100 translate-y-0'
-            : 'opacity-0 -translate-y-4 pointer-events-none'
-        }`}
+        className={`absolute top-6 left-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-red-500/30 bg-[#2d0f0f]/95 px-4 py-3.5 text-[#FCA5A5] shadow-2xl backdrop-blur-md transition-all duration-300 ${toast.show
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 -translate-y-4 pointer-events-none'
+          }`}
       >
         <AlertCircle size={18} className="shrink-0 text-red-400" />
         <span className="text-xs font-medium">{toast.message}</span>
@@ -65,7 +64,7 @@ export function RoleSelectionPage() {
 
       <section
         className="relative isolate flex min-h-screen flex-col overflow-hidden bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/images/start-background.png')" }}
+        style={{ backgroundImage: "url('/images/bg.png')" }}
       >
         <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(74,45,30,0.48)_0%,rgba(74,45,30,0.76)_48%,rgba(26,10,0,0.94)_100%)]" />
 
@@ -78,7 +77,7 @@ export function RoleSelectionPage() {
               Thành Nam Hương Ký
             </p>
             <h1 className="text-center font-serif text-[32px] font-bold leading-[1.15] tracking-normal text-[#FDF4E7]">
-              Thành Nam Hương Ký
+              TN - Smart
             </h1>
           </div>
 
@@ -118,11 +117,10 @@ export function RoleSelectionPage() {
               </button>
 
               <div
-                className={`absolute bottom-full mb-2 left-0 right-0 overflow-hidden rounded-2xl border border-gold/30 bg-[#1a0a00]/95 backdrop-blur-md shadow-[0_-12px_30px_rgba(0,0,0,0.5)] transition-all duration-200 origin-bottom ${
-                  isOpen
-                    ? 'opacity-100 scale-100'
-                    : 'opacity-0 scale-95 pointer-events-none'
-                }`}
+                className={`absolute bottom-full mb-2 left-0 right-0 overflow-hidden rounded-2xl border border-gold/30 bg-[#1a0a00]/95 backdrop-blur-md shadow-[0_-12px_30px_rgba(0,0,0,0.5)] transition-all duration-200 origin-bottom ${isOpen
+                  ? 'opacity-100 scale-100'
+                  : 'opacity-0 scale-95 pointer-events-none'
+                  }`}
               >
                 <div className="py-1">
                   {producerProducts.map((product) => (
@@ -133,11 +131,10 @@ export function RoleSelectionPage() {
                         setSelectedKey(product.key)
                         setIsOpen(false)
                       }}
-                      className={`flex w-full items-center px-5 py-3.5 text-left text-sm transition-colors hover:bg-gold/15 ${
-                        selectedKey === product.key
-                          ? 'bg-gold/10 text-gold font-semibold'
-                          : 'text-[#FDF4E7]/80'
-                      }`}
+                      className={`flex w-full items-center px-5 py-3.5 text-left text-sm transition-colors hover:bg-gold/15 ${selectedKey === product.key
+                        ? 'bg-gold/10 text-gold font-semibold'
+                        : 'text-[#FDF4E7]/80'
+                        }`}
                     >
                       {product.name}
                     </button>

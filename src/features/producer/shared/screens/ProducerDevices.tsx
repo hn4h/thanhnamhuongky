@@ -349,7 +349,7 @@ function ColdRoomDetail({ product, room: initialRoom, onBack }: ColdRoomDetailPr
 
           <div className="relative mt-5 flex items-center justify-between gap-5 text-xs font-bold text-[#D0DFEE]">
             <span>Trạng thái hệ thống bảo quản</span>
-            <strong className={`${
+            <strong className={`whitespace-nowrap shrink-0 ${
               room.status === 'VOC tăng' || room.status === 'NH3 tăng' ? 'text-[#F59E0B]' :
               room.status === 'Theo dõi' ? 'text-[#F59E0B]' :
               'text-[#34D399]'

@@ -3,8 +3,8 @@ import { banhXiuPaoData } from './data'
 
 export const banhXiuPaoModule: ProducerProductModule = {
   key: 'banh-xiu-pao',
-  name: 'Bánh xíu páo',
-  shortName: 'Xíu páo',
+  name: 'Bánh Xíu Páo',
+  shortName: 'Bánh Xíu Páo',
   description: 'Bánh nướng nhân thịt đặc sản Nam Định.',
   origin: 'Nam Định',
   theme: {
