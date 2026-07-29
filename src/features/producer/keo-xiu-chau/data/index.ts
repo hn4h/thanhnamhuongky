@@ -9,8 +9,8 @@ export const keoXiuChauData: ProducerProductData = {
     { key: 'quality', label: 'Điểm chất lượng AI', value: '89', unit: '/100', type: 'quality', status: 'good' },
   ],
   batches: [
-    { id: 'KC-0626-01', name: 'Kẹo xìu châu lạc rang', status: 'in-progress', startedAt: '11/06/2026', expectedAt: '11/06/2026', quantity: '620 gói', qualityScore: 89, notes: 'Theo dõi độ giòn sau làm nguội.' },
-    { id: 'KC-0626-02', name: 'Kẹo xìu châu hộp quà', status: 'ready', startedAt: '09/06/2026', expectedAt: '10/06/2026', quantity: '260 hộp', qualityScore: 92, notes: 'Mẻ đóng hộp đạt màu đẹp.' },
+    { id: 'KC-0626-01', name: 'Kẹo Sìu Châu lạc rang', status: 'in-progress', startedAt: '11/06/2026', expectedAt: '11/06/2026', quantity: '620 gói', qualityScore: 89, notes: 'Theo dõi độ giòn sau làm nguội.' },
+    { id: 'KC-0626-02', name: 'Kẹo Sìu Châu hộp quà', status: 'ready', startedAt: '09/06/2026', expectedAt: '10/06/2026', quantity: '260 hộp', qualityScore: 92, notes: 'Mẻ đóng hộp đạt màu đẹp.' },
   ],
   alerts: [
     { id: 'AL-KC-01', title: 'Độ giòn cần theo dõi', severity: 'medium', message: 'AI dự báo độ ẩm môi trường có thể làm giảm độ giòn trong 2 giờ tới.', createdAt: '12 phút trước' },

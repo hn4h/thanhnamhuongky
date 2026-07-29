@@ -37,6 +37,7 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<AlertFilter>('all')
   const isXiuPao = product.key === 'banh-xiu-pao'
+  const isKeoChau = product.key === 'keo-xiu-chau' || product.key === 'doi'
 
   // IoT Interactive States
   const [steamVented, setSteamVented] = useState<boolean>(false)
@@ -50,15 +51,17 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
   const [alerts, setAlerts] = useState<CustomAlert[]>(() => [
     {
       id: 'AL-01',
-      title: isXiuPao ? 'Lò nướng buồng 3 quá nhiệt' : 'Lồng hấp buồng A quá nhiệt & quá áp suất',
-      message: isXiuPao
-        ? 'Nhiệt độ hiện tại: 280°C (ngưỡng 250°C) Vui lòng xử lý xả nhiệt độ khẩn cấp.'
-        : 'Nhiệt độ hiện tại: 108°C (ngưỡng 105°C), Áp suất: 2.1 bar (ngưỡng 1.8 bar). Vui lòng xử lý xả áp suất khẩn cấp.',
+      title: isKeoChau ? 'Nhiệt độ nồi số 3 quá nhiệt' : isXiuPao ? 'Lò nướng buồng 3 quá nhiệt' : 'Lồng hấp buồng A quá nhiệt & quá áp suất',
+      message: isKeoChau
+        ? 'Nhiệt độ hiện tại: 142°C (ngưỡng 130°C) Vui lòng xử lý xả nhiệt độ khẩn cấp.'
+        : isXiuPao
+          ? 'Nhiệt độ hiện tại: 280°C (ngưỡng 250°C) Vui lòng xử lý xả nhiệt độ khẩn cấp.'
+          : 'Nhiệt độ hiện tại: 108°C (ngưỡng 105°C), Áp suất: 2.1 bar (ngưỡng 1.8 bar). Vui lòng xử lý xả áp suất khẩn cấp.',
       createdAt: '2 phút trước',
       severity: 'high',
       isRead: false,
       category: 'critical',
-      metadata: isXiuPao ? 'Lò nướng 3 · Cảm biến SNS-XP-03' : 'Khu hấp A · Cảm biến SNS-BG-01'
+      metadata: isKeoChau ? (product.key === 'doi' ? 'Nồi nấu kẹo 3 · Cảm biến SNS-KD-03' : 'Nồi nấu kẹo 3 · Cảm biến SNS-KC-03') : isXiuPao ? 'Lò nướng 3 · Cảm biến SNS-XP-03' : 'Khu hấp A · Cảm biến SNS-BG-01'
     },
     {
       id: 'AL-02',
@@ -287,9 +290,11 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
                           <h2 className="text-[13px] font-bold text-[#2C1810] leading-tight leading-snug">{alert.title}</h2>
                           <p className="mt-1 text-[11px] leading-5 text-[#6B4C3B]">
                             {alert.id === 'AL-01' && steamVented 
-                              ? (isXiuPao 
-                                  ? 'Hệ thống lò nướng IoT đã thực hiện xả nhiệt độ khẩn cấp. Nhiệt độ lò nướng 3 hiện đã trở lại ngưỡng an toàn: 242°C.' 
-                                  : 'Hệ thống buồng IoT đã thực hiện xả hơi tự động. Áp suất buồng hiện đã trở lại ngưỡng an toàn: 1.1 bar, Nhiệt độ buồng hấp: 95°C.')
+                              ? (isKeoChau
+                                  ? 'Hệ thống nồi nấu kẹo IoT đã thực hiện xả nhiệt độ khẩn cấp. Nhiệt độ nồi số 3 hiện đã trở lại ngưỡng an toàn: 125°C.'
+                                  : isXiuPao 
+                                    ? 'Hệ thống lò nướng IoT đã thực hiện xả nhiệt độ khẩn cấp. Nhiệt độ lò nướng 3 hiện đã trở lại ngưỡng an toàn: 242°C.' 
+                                    : 'Hệ thống buồng IoT đã thực hiện xả hơi tự động. Áp suất buồng hiện đã trở lại ngưỡng an toàn: 1.1 bar, Nhiệt độ buồng hấp: 95°C.')
                               : alert.id === 'AL-02' 
                                 ? `Nồng độ ${isXiuPao ? 'NH3' : 'VOC'} hiện tại: ${
                                     isXiuPao
@@ -325,12 +330,12 @@ export function ProducerAlerts({ product }: ProducerAlertsProps) {
                                 {ventingLoading ? (
                                   <>
                                     <Loader2 size={13} className="animate-spin" />
-                                    <span>{isXiuPao ? 'Đang gửi lệnh xả nhiệt...' : 'Đang gửi lệnh xả...'}</span>
+                                    <span>{isXiuPao || isKeoChau ? 'Đang gửi lệnh xả nhiệt...' : 'Đang gửi lệnh xả...'}</span>
                                   </>
                                 ) : (
                                   <>
                                     <Wind size={13} />
-                                    <span>{isXiuPao ? 'Xả nhiệt khẩn cấp' : 'Xả hơi tự động'}</span>
+                                    <span>{isXiuPao || isKeoChau ? 'Xả nhiệt khẩn cấp' : 'Xả hơi tự động'}</span>
                                   </>
                                 )}
                               </button>

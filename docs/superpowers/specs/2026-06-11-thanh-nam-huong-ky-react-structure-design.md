@@ -6,7 +6,7 @@ Create a React MVP prototype for **Thanh Nam hương ký**, focused on tradition
 
 1. Bánh gai
 2. Bánh xíu páo
-3. Kẹo xìu châu
+3. Kẹo sìu châu
 4. Dồi
 
 The prototype uses frontend mock data only. There is no API and no backend.
@@ -18,7 +18,7 @@ The app has two high-level flows:
 - **Consumer flow**: starts with QR scan and authenticates a bánh gai product before showing product profile, certificate, production timeline, quality data, heritage, and usage guidance.
 - **Producer flow**: contains four product-scoped producer modules. Each module has the same eight screen types, but its data, metrics, labels, and optional UI sections are isolated from the other products.
 
-Producer modules must not mix product data. For example, `producer/banh-gai` must not show bánh xíu páo, kẹo xìu châu, or dồi information.
+Producer modules must not mix product data. For example, `producer/banh-gai` must not show bánh xíu páo, kẹo sìu châu, or dồi information.
 
 ## Technical Scope
 
@@ -285,7 +285,7 @@ Minimum verification after scaffold:
 
 ## Implementation Assumptions
 
-- Use Vietnamese display names with accents in UI: `Bánh gai`, `Bánh xíu páo`, `Kẹo xìu châu`, `Dồi`.
+- Use Vietnamese display names with accents in UI: `Bánh gai`, `Bánh xíu páo`, `Kẹo sìu châu`, `Dồi`.
 - Consumer flow supports bánh gai only in the first MVP.
 - The role selection screen should show consumer entry and four producer product entries directly.
 - Exact mock values for quality, sensors, alerts, and AI insights can be invented during implementation, as long as each product keeps isolated data and bánh gai includes at least one metric not present in the others.

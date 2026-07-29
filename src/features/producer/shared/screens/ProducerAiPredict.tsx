@@ -58,6 +58,7 @@ const INITIAL_NH3_DAYS = [
 export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
   const navigate = useNavigate()
   const isXiuPao = product.key === 'banh-xiu-pao'
+  const isKeoChau = product.key === 'keo-xiu-chau'
   const gasLabel = isXiuPao ? 'NH3' : 'VOC'
   const gasUnit = isXiuPao ? 'ppm' : 'ppb'
   const defaultThreshold = isXiuPao ? 20 : 60
@@ -187,7 +188,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
             <p className="mt-1.5 text-sm font-bold text-[#806A5B] leading-relaxed">
               {hasWarning
                 ? `Hệ thống AI phát hiện chỉ số ${gasLabel} dự kiến tăng cao, đạt đỉnh ${Math.max(...exceededDays.map(d => d.value))} ${gasUnit} tại ngày thứ ${peakDay > 9 ? peakDay : `0${peakDay}`}. Cần can thiệp môi trường kho.`
-                : `Môi trường kho bảo quản ${isXiuPao ? 'nhân bánh xíu páo' : 'lá bánh gai'} đang đạt các chỉ số vi sinh tối ưu. Không có nguy cơ tăng ${gasLabel} bất thường trong vòng 12 ngày tới.`}
+                : `Môi trường kho bảo quản ${isXiuPao ? 'nhân bánh xíu páo' : isKeoChau ? 'nguyên liệu kẹo Sìu Châu' : 'lá bánh gai'} đang đạt các chỉ số vi sinh tối ưu. Không có nguy cơ tăng ${gasLabel} bất thường trong vòng 12 ngày tới.`}
             </p>
           </div>
         </div>
@@ -200,7 +201,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
               Gợi ý thông minh từ AI:
             </div>
             <p className="mt-2 text-xs font-bold text-[#6D5C54]">
-              Giảm nhiệt độ bảo quản kho về ${isXiuPao ? '-2' : '0'}°C và giảm độ ẩm kho xuống dưới 45% để kiểm soát vi sinh vật kỵ khí phân hủy chất hữu cơ trên ${isXiuPao ? 'nhân bánh xíu páo' : 'lá gai'}.
+              Giảm nhiệt độ bảo quản kho về {isXiuPao ? '-2' : '0'}°C và giảm độ ẩm kho xuống dưới 45% để kiểm soát vi sinh vật kỵ khí phân hủy chất hữu cơ trên {isXiuPao ? 'nhân bánh xíu páo' : isKeoChau ? 'kẹo Sìu Châu' : 'lá gai'}.
             </p>
 
             <div className="mt-4 flex flex-col gap-2">
@@ -281,7 +282,7 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
             <p className="text-xs font-bold text-[#806A5B]">Theo dõi thực tế & dự đoán 12 ngày</p>
           </div>
           <span className="rounded-full bg-[#FFF6E7] border border-[#F1C932]/30 px-3 py-1 text-xs font-black text-[#C78116]">
-            Kho {isXiuPao ? 'Nhân Bánh' : 'Lá Gai'}
+            Kho {isXiuPao ? 'Nhân Bánh' : isKeoChau ? 'Kẹo Sìu Châu' : 'Lá Gai'}
           </span>
         </div>
 
@@ -449,9 +450,9 @@ export function ProducerAiPredict({ product }: ProducerAiPredictProps) {
           <article className="rounded-2xl border border-[#EFE4DC] bg-white p-4 shadow-[0_12px_28px_rgba(57,28,12,0.06)]">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <span className="text-[11px] font-black uppercase tracking-wider text-[#A77D42]">Mẻ {isXiuPao ? 'Nhân Bánh' : 'Lá Gai'} Mới Nhất</span>
-                <h4 className="text-base font-black text-[#150807] mt-0.5">Mẻ {isXiuPao ? 'XP' : 'BG'}-2026-06</h4>
-                <p className="text-xs font-bold text-[#806A5B] mt-1">Quá trình bảo quản nguyên liệu cho {product.name} Thành Phương.</p>
+                <span className="text-[11px] font-black uppercase tracking-wider text-[#A77D42]">Mẻ {isXiuPao ? 'Nhân Bánh' : isKeoChau ? 'Kẹo Sìu Châu' : 'Lá Gai'} Mới Nhất</span>
+                <h4 className="text-base font-black text-[#150807] mt-0.5">Mẻ {isXiuPao ? 'XP' : isKeoChau ? 'KC' : 'BG'}-2026-06</h4>
+                <p className="text-xs font-bold text-[#806A5B] mt-1">Quá trình bảo quản nguyên liệu cho {product.name}.</p>
               </div>
               <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${hasWarning ? 'bg-[#FCE8E3] text-[#B23B2F]' : 'bg-[#EDF9F0] text-[#4A9F57]'
                 }`}>

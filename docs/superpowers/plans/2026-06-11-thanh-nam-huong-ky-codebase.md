@@ -4,7 +4,7 @@
 
 **Goal:** Scaffold a Vite React TypeScript app with the feature-based hybrid structure from the approved Thanh Nam hương ký spec.
 
-**Architecture:** The codebase uses shared producer screens driven by product-specific configs and isolated mock data. Consumer MVP is scoped to bánh gai, while producer routes are generated for bánh gai, bánh xíu páo, kẹo xìu châu, and dồi.
+**Architecture:** The codebase uses shared producer screens driven by product-specific configs and isolated mock data. Consumer MVP is scoped to bánh gai, while producer routes are generated for bánh gai, bánh xíu páo, kẹo sìu châu, and dồi.
 
 **Tech Stack:** Vite, React, TypeScript, React Router, Tailwind CSS, local mock data.
 

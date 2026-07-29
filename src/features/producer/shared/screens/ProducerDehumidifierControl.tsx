@@ -169,7 +169,7 @@ export function ProducerDehumidifierControl({ product }: ProducerDehumidifierCon
                 'Tủ 1': 'Mạch nha',
                 'Tủ 2': 'Lạc nhân',
                 'Tủ 3': 'Vừng rang',
-                'Tủ 4': 'Kẹo sìu châu TP',
+                'Tủ 4': 'Kẹo Sìu Châu TP',
               }
             }
             const itemLabel = itemsMap[product.key]?.[room.id] || room.item

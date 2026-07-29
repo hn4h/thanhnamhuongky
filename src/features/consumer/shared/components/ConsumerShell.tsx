@@ -66,7 +66,7 @@ export function ConsumerShell({ children, activeTab }: ConsumerShellProps) {
   const subtitles: Record<string, string> = {
     'banh-gai': 'bánh gai nhất phẩm',
     'banh-xiu-pao': 'bánh xíu páo nhất phẩm',
-    'keo-xiu-chau': 'kẹo sìu châu nhất phẩm',
+    'keo-xiu-chau': 'kẹo Sìu Châu nhất phẩm',
     'doi': 'kẹo dồi nhất phẩm',
   }
   const currentProductSubtitle = productData
