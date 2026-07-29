@@ -9,7 +9,8 @@ Dự án Web Application dành cho hệ thống **Thanh Hương Nam Kỳ**, đư
 2. [Cài đặt & Chạy Local](#-cài-đặt--chạy-local)
 3. [Hướng dẫn Deploy lên Vercel](#-hướng-dẫn-deploy-lên-vercel)
 4. [Cấu trúc dự án](#-cấu-trúc-dự-án)
-5. [Danh sách câu lệnh (Scripts)](#-danh-sách-câu-lệnh-scripts)
+5. [Hướng dẫn Chỉnh sửa & Cập nhật Nội dung](#-hướng-dẫn-chỉnh-sửa--cập-nhật-nội-dung)
+6. [Danh sách câu lệnh (Scripts)](#-danh-sách-câu-lệnh-scripts)
 
 ---
 
@@ -122,8 +123,8 @@ thanhhuongnamky/
 ├── src/
 │   ├── app/                # Provider, Router chính
 │   ├── features/           # Phân chia tính năng theo nghiệp vụ
-│   │   ├── consumer/       # Giao diện & xử lý cho Khách hàng
-│   │   ├── producer/       # Giao diện & xử lý cho Nhà sản xuất
+│   │   ├── consumer/       # Giao diện & dữ liệu cho Khách hàng
+│   │   ├── producer/       # Giao diện & dữ liệu cho Nhà sản xuất
 │   │   └── role-selection/ # Màn hình chọn vai trò người dùng
 │   ├── shared/             # Components, Hooks, Utilities dùng chung
 │   ├── main.tsx            # Entry point chính của React App
@@ -135,6 +136,69 @@ thanhhuongnamky/
 ├── vercel.json             # Cấu hình SPA rewrites cho Vercel
 └── vite.config.mjs         # Cấu hình Vite Bundler
 ```
+
+---
+
+## ✏️ Hướng dẫn Chỉnh sửa & Cập nhật Nội dung
+
+Toàn bộ dữ liệu hiển thị (văn bản, thông tin sản phẩm, mẻ bánh, thông số IoT, quy trình chế biến) đều được **tách riêng vào các file cấu hình và dữ liệu rõ ràng**, giúp đội ngũ dễ dàng cập nhật mà không làm ảnh hưởng tới giao diện hay logic ứng dụng.
+
+### 1. Thay đổi thông tin hiển thị cho Khách Hàng (Consumer Scan QR)
+Vị trí file dữ liệu:
+👉 **`src/features/consumer/shared/data/consumerData.ts`**
+
+Trong file này, bạn có thể chỉnh sửa:
+- **Thông tin sản phẩm**: Mã sản phẩm (`code`), tên (`name`), phân loại (`grade`), mã mẻ (`batch`), ngày sản xuất (`producedAt`), hạn sử dụng (`expiresAt`), địa chỉ cơ sở (`origin`), số chứng nhận (`certificate`).
+- **Danh sách kiểm tra an toàn (`checks`)**: Các dòng cam kết chất lượng khi khách hàng quét mã thành công.
+- **Quy trình chế biến / Truy xuất nguồn gốc (`timeline`)**:
+  - Tiêu đề bước (`title`), ngày thực hiện (`date`), mô tả chi tiết (`detail`).
+  - Các thông số IoT đo đạc thực tế (`iotData`: nhiệt độ, độ ẩm, tỷ lệ, áp suất...).
+- **Gợi ý thưởng thức & Trà đi kèm (`pairing`)**: Mô tả hương vị, trà khuyên dùng.
+- **Cam kết & Chứng nhận (`quality`)**: Tiêu chuẩn ISO/HACCP, chứng nhận OCOP...
+
+---
+
+### 2. Thay đổi dữ liệu Nhà Sản Xuất (Producer Dashboard, Cảnh báo & Mẻ Bánh)
+Dữ liệu của từng dòng sản phẩm được lưu tại thư mục riêng dưới `src/features/producer/`:
+
+- **Bánh Gai**:
+  - Cấu hình chung & Theme: `src/features/producer/banh-gai/config.ts`
+  - Chỉ số IoT & Danh sách mẻ bánh: `src/features/producer/banh-gai/data/index.ts`
+- **Bánh Xíu Páo**:
+  - Cấu hình chung: `src/features/producer/banh-xiu-pao/config.ts`
+  - Dữ liệu mẻ & chỉ số: `src/features/producer/banh-xiu-pao/data/index.ts`
+- **Bánh Đội**:
+  - Cấu hình chung: `src/features/producer/doi/config.ts`
+  - Dữ liệu mẻ & chỉ số: `src/features/producer/doi/data/index.ts`
+- **Kẹo Xìu Châu**:
+  - Cấu hình chung: `src/features/producer/keo-xiu-chau/config.ts`
+  - Dữ liệu mẻ & chỉ số: `src/features/producer/keo-xiu-chau/data/index.ts`
+
+**Các mục thường sửa trong `data/index.ts`**:
+- `metrics`: Danh sách các chỉ số cảm biến (Nhiệt độ, Độ ẩm, Áp suất...) và **Đề xuất của AI** (`aiRecommendation`).
+- `batches`: Danh sách các mẻ bánh (Trạng thái mẻ, số lượng, ngày khởi tạo, tiến độ %).
+- `alerts`: Các cảnh báo hệ thống gửi tới nhà sản xuất (Mức độ nguy cơ `warning`/`critical`, nội dung cảnh báo).
+
+---
+
+### 3. Thêm mới hoặc Đổi tên/Theme màu sắc dòng sản phẩm
+Đăng ký sản phẩm trong registry hệ thống:
+- **Producer Registry**: `src/features/producer/shared/productRegistry.ts`
+- **Consumer Registry**: `src/features/consumer/shared/productRegistry.ts`
+
+Tại đây bạn có thể thay đổi: Tên hiển thị, mô tả ngắn, màu nền chủ đạo (`primary`, `accent`, `background`).
+
+---
+
+### 4. Thay đổi Hình ảnh, Banner & Logo
+Vị trí thư mục chứa ảnh:
+👉 **`public/images/`**
+
+- `bg.png`: Hình nền ứng dụng.
+- `Logo tách nền.png` & `logo.jpg`: Logo thương hiệu.
+- `sign.png`: Chữ ký xác thực chứng nhận.
+
+*Lưu ý*: Khi thay thế ảnh mới, giữ nguyên tên file hoặc cập nhật lại đường dẫn trong code tương ứng (ví dụ: `/images/bg.png`).
 
 ---
 
@@ -150,4 +214,4 @@ thanhhuongnamky/
 
 ## 💡 Lưu ý quan trọng khi cập nhật code
 - Mọi trang mới sử dụng React Router đều đã được hỗ trợ bởi [vercel.json](file:///c:/Data/FPT/thanhhuongnamky/vercel.json). Nếu thêm cấu hình API proxy hoặc redirect mới, cần bổ sung vào file `vercel.json`.
-- Luôn chạy `npm run build` trước khi gửi Pull Request hoặc push code lên repository.
+- Luôn chạy `npm run build` sau khi chỉnh sửa nội dung để đảm bảo không bị lỗi cú pháp TypeScript trước khi gửi Pull Request hoặc deploy.
