@@ -220,7 +220,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     key: 'keo-xiu-chau',
     product: {
       code: 'TNHK-SC-2026-0105',
-      name: 'Kẹo Sìu Châu',
+      name: 'Kẹo Sìu Châu Truyền Thống',
       grade: 'Hộp Quà Đặc Sản',
       batch: 'XC-0626-02',
       producedAt: '18/06/2026',
@@ -313,7 +313,7 @@ export const consumerProductsData: Record<string, ConsumerProductData> = {
     key: 'doi',
     product: {
       code: 'TNHK-KD-2026-0122',
-      name: 'Kẹo Dồi',
+      name: 'Kẹo Dồi Gia Truyền',
       grade: 'Hộp Đặc Sản Truyền Thống',
       batch: 'DO-0626-02',
       producedAt: '18/06/2026',

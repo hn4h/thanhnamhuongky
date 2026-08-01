@@ -3,8 +3,8 @@ import { banhGaiData } from './data'
 
 export const banhGaiModule: ProducerProductModule = {
   key: 'banh-gai',
-  name: 'Bánh gai',
-  shortName: 'Bánh gai',
+  name: 'Bánh Gai',
+  shortName: 'Bánh Gai',
   description: 'Dòng bánh truyền thống chủ lực của Thành Nam hương ký.',
   origin: 'Nam Định',
   theme: {

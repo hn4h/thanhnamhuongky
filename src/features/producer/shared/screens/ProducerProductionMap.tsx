@@ -470,7 +470,7 @@ export function ProducerProductionMap({ product }: ProducerProductionMapProps) {
                   {selectedDetails.subtitle}
                 </p>
               </div>
-              <span className={`rounded-full px-3 py-1 text-xs font-black ${
+              <span className={`whitespace-nowrap shrink-0 rounded-full px-3 py-1 text-xs font-black ${
                 selectedDetails.tone === 'good' ? 'bg-[#EDF9F0] text-[#4A9F57]' :
                 selectedDetails.tone === 'ripe' ? 'bg-[#FEFBE8] text-[#D97706]' :
                 selectedDetails.tone === 'watch' ? 'bg-[#FFF9E6] text-[#C78116]' :

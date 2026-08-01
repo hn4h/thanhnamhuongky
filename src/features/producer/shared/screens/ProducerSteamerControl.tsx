@@ -186,7 +186,7 @@ export function ProducerSteamerControl({ product }: ProducerSteamerControlProps)
                     </div>
                   </div>
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${
+                    className={`whitespace-nowrap shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${
                       isAlert
                         ? 'bg-[#FCE8E3] text-[#B23B2F]'
                         : isOff

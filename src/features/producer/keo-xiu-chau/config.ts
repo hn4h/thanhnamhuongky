@@ -4,7 +4,7 @@ import { keoXiuChauData } from './data'
 export const keoXiuChauModule: ProducerProductModule = {
   key: 'keo-xiu-chau',
   name: 'Kẹo Sìu Châu',
-  shortName: 'Sìu Châu',
+  shortName: 'Kẹo Sìu Châu',
   description: 'Kẹo lạc mạch nha truyền thống, phù hợp đóng gói quà biếu.',
   origin: 'Nam Định',
   theme: {
