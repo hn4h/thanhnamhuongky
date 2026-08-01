@@ -10,6 +10,7 @@ export type ProducerMetric = {
   type: MetricType
   status: 'good' | 'warning' | 'critical'
   aiRecommendation?: string
+  trend?: string
 }
 
 export type ProducerBatch = {

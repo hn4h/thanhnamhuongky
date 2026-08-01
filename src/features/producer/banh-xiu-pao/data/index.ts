@@ -23,7 +23,7 @@ export const banhXiuPaoData: ProducerProductData = {
     { key: 'ovenTemp', label: 'Nhiệt lò nướng', value: '240', unit: '°C', type: 'temperature', status: 'good', aiRecommendation: 'Nhiệt độ lò nướng ổn định trong dải 230°C - 250°C để vỏ giòn nhân chín thơm.' },
     { key: 'bakingTime', label: 'Thời gian nướng bánh', value: '35', unit: 'phút', type: 'time', status: 'good', aiRecommendation: 'Thời gian nướng đạt 35/45 phút (Giai đoạn 1: 30 phút ở 230°C, Giai đoạn 2: 15 phút ở 250°C).' },
     { key: 'fillingHumidity', label: 'Độ ẩm nhân', value: '42', unit: '%', type: 'humidity', status: 'good' },
-    { key: 'nh3Index', label: 'Chỉ số NH3 bảo quản', value: '12', unit: 'ppm', type: 'count', status: 'good', aiRecommendation: 'Chỉ số NH3 ổn định (12 ppm <= 20 ppm), kho bảo quản đạt chuẩn chống ôi thiu.' },
+    { key: 'nh3Index', label: 'Chỉ số NH3 bảo quản', value: '12', unit: 'ppm', type: 'count', status: 'good', trend: '→ ổn định', aiRecommendation: 'Chỉ số NH3 ổn định (12 ppm <= 20 ppm), kho bảo quản đạt chuẩn chống ôi thiu.' },
     { key: 'quality', label: 'Điểm chất lượng AI', value: '91', unit: '/100', type: 'quality', status: 'good' },
   ],
   batches: [

@@ -1,4 +1,4 @@
-import { Boxes, Clock3, Droplets, Gauge, Sparkles, Thermometer } from 'lucide-react'
+import { Boxes, Clock3, Droplets, Gauge, Loader2, Sparkles, Thermometer } from 'lucide-react'
 import type { ComponentType } from 'react'
 import type { MetricType, ProducerMetric } from '../types'
 
@@ -48,9 +48,26 @@ const trendByType: Record<MetricType, string> = {
   count: '→ ổn định',
 }
 
+export function getTrendColorClass(trendText: string): string {
+  if (!trendText) return 'text-[#D97706]'
+  const lower = trendText.toLowerCase()
+  if (trendText.includes('↗') || trendText.includes('+') || lower.includes('tăng') || lower.includes('đang chạy')) {
+    return 'text-[#16A34A]' // màu xanh lá cây cho xu hướng tăng hoặc đang chạy
+  }
+  if (trendText.includes('↘') || trendText.includes('-') || lower.includes('giảm')) {
+    return 'text-[#DC2626]' // màu đỏ cho xu hướng giảm
+  }
+  return 'text-[#D97706]' // màu vàng cho phần còn lại / ổn định
+}
+
 export function MetricCard({ metric }: MetricCardProps) {
   const Icon = iconByType[metric.type]
   const status = styleByStatus[metric.status]
+  const trendText = metric.trend ?? trendByType[metric.type] ?? '→ ổn định'
+  const trendColorClass = getTrendColorClass(trendText)
+
+  const isRunning = trendText.toLowerCase().includes('đang chạy')
+  const displayTrendText = isRunning ? trendText.replace(/^↗\s*/, '') : trendText
 
   return (
     <article className="min-w-0 overflow-hidden rounded-[22px] border border-[#EFE4DC] bg-white shadow-[0_12px_28px_rgba(57,28,12,0.08)]">
@@ -67,7 +84,10 @@ export function MetricCard({ metric }: MetricCardProps) {
           {metric.value}
           {metric.unit && <span className="ml-1 text-base font-bold text-[#806A5B]">{metric.unit}</span>}
         </p>
-        <p className={`mt-4 text-xs font-semibold ${status.trend}`}>{trendByType[metric.type]}</p>
+        <p className={`mt-4 text-xs font-bold ${trendColorClass} flex items-center gap-1.5`}>
+          {isRunning && <Loader2 size={13} className="animate-spin shrink-0" />}
+          <span>{displayTrendText}</span>
+        </p>
       </div>
 
       <div className="border-t border-[#EFE4DC] bg-gradient-to-r from-white to-[#FFFBF7] px-4 py-3 text-sm font-medium leading-5 text-[#3A0A04]">
